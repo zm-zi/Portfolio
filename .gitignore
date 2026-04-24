@@ -8,3 +8,35 @@ Desktop.ini
 .idea/
 *.swp
 *.swo
+
+# Dependency directories
+node_modules/
+jspm_packages/
+bower_components/
+
+# Build outputs
+dist/
+build/
+out/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS generated files
+Thumbs.db
+.DS_Store
+Desktop.ini
+ehthumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.claude/
