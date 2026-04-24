@@ -22,7 +22,7 @@ function createExplosion(x, y, color) {
             x: x + (Math.random() - 0.5) * 6,
             y: y + (Math.random() - 0.5) * 6,
             vx: Math.cos(a) * s, vy: Math.sin(a) * s,
-            life: 6 + Math.random() * 5, maxLife: 11,
+            life: 12 + Math.random() * 10, maxLife: 22,
             color: '#ffffff', size: 5 + Math.random() * 8,
             gravity: 0.02, isPixel: true, drawPass: PASS_FLASH,
             rot: Math.random() * 6.28, rotV: (Math.random() - 0.5) * 0.6
@@ -39,7 +39,7 @@ function createExplosion(x, y, color) {
         G.particles.push({
             x, y,
             vx: Math.cos(a) * s, vy: Math.sin(a) * s,
-            life: 18 + Math.random() * 14, maxLife: 32,
+            life: 36 + Math.random() * 28, maxLife: 64,
             color: mc[(Math.random() * 5) | 0], size: 5 + Math.random() * 10,
             gravity: 0.10, isPixel: true, drawPass: PASS_CORE,
             rot: Math.random() * 6.28, rotV: (Math.random() - 0.5) * 0.35
@@ -56,7 +56,7 @@ function createExplosion(x, y, color) {
         G.particles.push({
             x, y,
             vx: Math.cos(a) * s, vy: Math.sin(a) * s,
-            life: 10 + Math.random() * 12, maxLife: 22,
+            life: 20 + Math.random() * 24, maxLife: 44,
             color: bc[(Math.random() * 4) | 0], size: 2 + Math.random() * 5,
             gravity: 0.05, isPixel: true, drawPass: PASS_CORE,
             rot: Math.random() * 6.28, rotV: (Math.random() - 0.5) * 0.5
@@ -73,7 +73,7 @@ function createExplosion(x, y, color) {
         G.particles.push({
             x, y,
             vx: Math.cos(a) * s, vy: Math.sin(a) * s,
-            life: 25 + Math.random() * 15, maxLife: 40,
+            life: 50 + Math.random() * 30, maxLife: 80,
             color: dk[(Math.random() * 4) | 0], size: 6 + Math.random() * 12,
             gravity: 0.15, isPixel: true, drawPass: PASS_DEBRIS,
             rot: Math.random() * 6.28, rotV: (Math.random() - 0.5) * 0.15
@@ -90,10 +90,10 @@ function createExplosion(x, y, color) {
         G.particles.push({
             x, y,
             vx: Math.cos(a) * s, vy: Math.sin(a) * s,
-            life: 12 + Math.random() * 8, maxLife: 20,
+            life: 24 + Math.random() * 16, maxLife: 40,
             color: sc, size: 2 + Math.random() * 3,
             gravity: 0.02, isPixel: true, drawPass: PASS_SPARK,
-            sparkLen: 10 + Math.random() * 14,
+            sparkLen: 20 + Math.random() * 28,
             sparkDx: Math.cos(a), sparkDy: Math.sin(a)
         });
     }
@@ -106,7 +106,7 @@ function createExplosion(x, y, color) {
             x: x + (Math.random() - 0.5) * 12,
             y: y + (Math.random() - 0.5) * 12,
             vx: Math.cos(a) * s, vy: Math.sin(a) * s,
-            life: 30 + Math.random() * 15, maxLife: 45,
+            life: 60 + Math.random() * 30, maxLife: 90,
             color: '#444444', size: 10 + Math.random() * 14,
             gravity: -0.04, isPixel: true, drawPass: PASS_SMOKE,
             rot: Math.random() * 6.28, rotV: (Math.random() - 0.5) * 0.08
@@ -114,8 +114,8 @@ function createExplosion(x, y, color) {
     }
 
     // ── 冲击波（color 编码: 0=红, 1=绿, 2=白） ──
-    G.flashes.push({ x, y, r: 3, maxR: 45, life: 14, maxLife: 14, color: isGreen ? 1 : 0 });
-    G.flashes.push({ x, y, r: 2, maxR: 28, life: 8, maxLife: 8, color: 2 });
+    G.flashes.push({ x, y, r: 3, maxR: 45, life: 28, maxLife: 28, color: isGreen ? 1 : 0 });
+    G.flashes.push({ x, y, r: 2, maxR: 28, life: 16, maxLife: 16, color: 2 });
 }
 
 function createMissileTrail(x, y, angle) {
@@ -200,7 +200,9 @@ function drawParticles(ctx) {
                 ? `rgba(50,255,100,${(a * 0.5).toFixed(2)})`
                 : f.color === 3
                     ? `rgba(170,0,255,${(a * 0.5).toFixed(2)})`
-                    : `rgba(255,150,30,${(a * 0.5).toFixed(2)})`);
+                    : f.color === 4
+                        ? `rgba(50,100,255,${(a * 0.5).toFixed(2)})`
+                        : `rgba(255,150,30,${(a * 0.5).toFixed(2)})`);
             grd.addColorStop(1, 'rgba(0,0,0,0)');
             ctx.fillStyle = grd;
         }

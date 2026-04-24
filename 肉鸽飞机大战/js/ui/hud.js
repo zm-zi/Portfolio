@@ -15,7 +15,8 @@ function initUI() {
         levelNum: document.getElementById('level-num'),
         levelFill: document.getElementById('level-fill'),
         levelNext: document.getElementById('level-next'),
-        buffList: document.getElementById('buff-list')
+        buffList: document.getElementById('buff-list'),
+        stageInfo: document.getElementById('stage-info')
     };
 }
 
@@ -23,6 +24,17 @@ function initUI() {
 function updateHUD() {
     _hud.scoreVal.textContent = G.game.score;
     _hud.lifeVal.textContent = G.game.life;
+
+    // 关卡模式：显示关卡信息
+    if (G.game.gameMode === 'level') {
+        const level = getCurrentLevel();
+        if (level) {
+            _hud.stageInfo.style.display = '';
+            _hud.stageInfo.textContent = 'STAGE ' + level.id + '/' + LEVEL_DATA.length;
+        }
+    } else {
+        _hud.stageInfo.style.display = 'none';
+    }
     if (G.boss) {
         _hud.bossBarWrap.classList.add('active');
         const hpPercent = Math.max(0, G.boss.hp / G.boss.maxHp);
@@ -77,7 +89,7 @@ function updateBuffList() {
     const counts = {};
     list.forEach(id => { counts[id] = (counts[id] || 0) + 1; });
 
-    const rarityColors = { common: '#e8e8f0', rare: '#44ff88', epic: '#dd44dd', legendary: '#ff3333' };
+    const rarityColors = { common: '#e8e8f0', rare: '#00ff88', epic: '#bb66ff', legendary: '#ff3355' };
     let html = '';
     for (const id in counts) {
         const def = BUFF.get(id);

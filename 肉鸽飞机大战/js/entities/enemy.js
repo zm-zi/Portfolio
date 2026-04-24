@@ -20,6 +20,9 @@ function _getWhiteSilhouette(img) {
 // breathe: 是否启用呼吸缩放效果
 // hitFlash: 受击闪烁帧数，>0 时绘制白色闪光
 function drawWithOutline(ctx, img, x, y, w, h, outlineWidth, breathe, hitFlash) {
+    // 对齐到整像素，消除 60fps 下 dt>1 导致的子像素抖动
+    x = Math.round(x);
+    y = Math.round(y);
     const sil = _getWhiteSilhouette(img);
     const d = outlineWidth || 1;
 
@@ -117,8 +120,27 @@ const ENEMY = {
 // 敌人刷新入口
 function spawnEnemies() {
     if (G.bossSpawned) return;
+    if (G.bossWarning) return;
     if (G.bossDefeatTime > 0 && Date.now() - G.bossDefeatTime < 3000) return;
-    ENEMY.spawnAll(G, Date.now());
+
+    const now = Date.now();
+
+    if (G.game.gameMode === 'level') {
+        // 关卡模式：使用关卡配置的倍率，只刷新允许的敌人类型
+        const spawnMult = getLevelSpawnMult();
+        const hpMult = getLevelHpMult();
+        for (const def of ENEMY.all()) {
+            if (def.type === 'minion') {
+                // minion 由 Boss 召唤，不受关卡限制
+                if (def.spawn) def.spawn(G, now, spawnMult, hpMult);
+            } else if (isEnemyAllowedInLevel(def.type)) {
+                if (def.spawn) def.spawn(G, now, spawnMult, hpMult);
+            }
+        }
+    } else {
+        // 无尽模式：原有逻辑
+        ENEMY.spawnAll(G, now);
+    }
 }
 
 // 敌人更新入口
@@ -135,7 +157,11 @@ function drawEnemies() {
 function spawnBoss() {
     const def = BOSS.getByIndex(G.bossIndex);
     if (!def) return;
-    const hpScale = 1 + G.bossRound * BOSS_HP_SCALE_PER_ROUND;
+    let hpScale = 1 + G.bossRound * BOSS_HP_SCALE_PER_ROUND;
+    // 关卡模式额外 HP 倍率
+    if (G.game.gameMode === 'level') {
+        hpScale *= getLevelHpMult();
+    }
     const bossX = (LOGICAL_W - def.width) / 2;
     G.boss = {
         x: bossX,
@@ -161,12 +187,31 @@ function spawnBoss() {
 
 // Boss 击败后推进到下一个
 function _advanceBoss() {
-    G.bossIndex++;
-    if (G.bossIndex >= BOSS.count()) {
-        G.bossIndex = 0;
-        G.bossRound++;
+    if (G.game.gameMode === 'level') {
+        // 关卡模式：多Boss关推进，单Boss关不做任何事
+        const level = getCurrentLevel();
+        if (level && Array.isArray(level.bossId)) {
+            G.levelBossIndex = (G.levelBossIndex || 0) + 1;
+            G.levelLastBossDefeatScore = G.game.score;
+
+            // 还有后续 Boss
+            if (G.levelBossIndex < level.bossId.length) {
+                G.bossIndex = getLevelBossRegistryIndex();
+                G.bossNextScore = getLevelBossTriggerScore();
+            }
+        }
+        // 单Boss关：不需要推进，checkLevelComplete 会处理通关
+    } else {
+        // 无尽模式：原有逻辑
+        G.bossIndex++;
+        if (G.bossIndex >= BOSS.count()) {
+            G.bossIndex = 0;
+            G.bossRound++;
+        }
+        G.bossDefeatCount++;
+        const interval = BOSS_RESUME_INTERVALS[G.bossDefeatCount - 1] || BOSS_RESUME_INTERVAL_MAX;
+        G.bossNextScore = G.game.score + interval;
     }
-    G.bossNextScore = G.game.score + BOSS_RESUME_INTERVAL;
 }
 
 // Boss 更新入口

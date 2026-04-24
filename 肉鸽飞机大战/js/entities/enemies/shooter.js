@@ -7,7 +7,7 @@ ENEMY.register({
     lastSpawnTime: 0,
 
     spawn(G, now, spawnMult, hpMult) {
-        if (G.game.score < 50) return;
+        if (G.game.gameMode !== 'level' && G.game.score < 50) return;
         if (now - this.lastSpawnTime < ENEMY2_SPAWN_RATE * spawnMult) return;
         G.enemies.push({
             x: Math.random() * (LOGICAL_W - ENEMY2_SIZE),

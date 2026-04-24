@@ -16,7 +16,7 @@ function _getGemImg(score) {
 const GEM_SIZE = 24;
 const GEM_ATTRACT_DIST_BASE = 120;
 const GEM_ATTRACT_SPEED = 6;
-const FLOAT_TEXT_LIFE = 45;
+const FLOAT_TEXT_LIFE = 90;
 
 // 宝石颜色映射
 function _gemColor(score) {
@@ -57,8 +57,8 @@ function spawnFloatText(x, y, score, color) {
         color: color,
         life: FLOAT_TEXT_LIFE,
         maxLife: FLOAT_TEXT_LIFE,
-        vy: -3.5,
-        vx: (Math.random() - 0.5) * 1.5,
+        vy: -2.5,
+        vx: (Math.random() - 0.5) * 1.0,
         scale: 1.8,        // 初始放大弹出
         scaleTarget: 1,
         shake: 3,           // 初始抖动幅度
@@ -180,7 +180,8 @@ function _spawnGemPickupFx(x, y, color) {
             maxLife: 20,
             color: color,
             size: Math.random() * 3 + 1,
-            gravity: 0
+            gravity: 0,
+            drawPass: PASS_CORE
         });
     }
 }

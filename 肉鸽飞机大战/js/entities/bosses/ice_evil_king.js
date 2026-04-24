@@ -35,12 +35,13 @@ BOSS.register({
             }
 
             if (now - b.lastSkillTime >= def.skillInterval) {
-                const rand = Math.random();
-                if (rand < 0.35) {
+                if (!b.skillVariant) b.skillVariant = 0;
+                const variant = b.skillVariant % 3;
+                if (variant === 0) {
                     b.skillState = 'ice_sweep';
                     b.firedCount = 0;
                     b.lastBulletTime = 0;
-                } else if (rand < 0.65) {
+                } else if (variant === 1) {
                     b.skillState = 'ice_wall';
                     _spawnIceWall(b, G, def);
                     b.shieldStartTime = now;
@@ -50,6 +51,7 @@ BOSS.register({
                     b.vortexTargetX = LOGICAL_W / 2;
                     b.vortexTargetY = LOGICAL_H / 2;
                 }
+                b.skillVariant = (b.skillVariant || 0) + 1;
                 b.skillStartTime = now;
                 BOSS.startSkillAnim(b);
             }

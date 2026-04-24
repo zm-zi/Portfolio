@@ -15,23 +15,6 @@ Game.Util = {
                a.y + a.height > b.y;
     },
 
-    // 反向遍历删除：callback 返回 true 则移除该元素
-    removeIf(arr, predicate) {
-        for (let i = arr.length - 1; i >= 0; i--) {
-            if (predicate(arr[i], i)) arr.splice(i, 1);
-        }
-    },
-
-    // 寻找距离 (cx, cy) 最近的实体
-    nearest(cx, cy, entities) {
-        let best = null, bestDist = Infinity;
-        for (const e of entities) {
-            const d = Math.hypot(e.x + e.width / 2 - cx, e.y + e.height / 2 - cy);
-            if (d < bestDist) { bestDist = d; best = e; }
-        }
-        return best;
-    },
-
     // 敌人类型 → 分数查找（查注册表）
     enemyScore(type) {
         const d = ENEMY.get(type);
@@ -42,5 +25,15 @@ Game.Util = {
     enemyColor(type) {
         const d = ENEMY.get(type);
         return d ? d.color : '#ff4444';
+    },
+
+    // 等比缩放绘制图片，适配到 bw×bh 包围盒内并居中
+    drawImageFit(ctx, img, x, y, bw, bh) {
+        const ir = (img.naturalWidth || img.width) / (img.naturalHeight || img.height);
+        const br = bw / bh;
+        let dw, dh;
+        if (ir > br) { dw = bw; dh = bw / ir; }
+        else { dh = bh; dw = bh * ir; }
+        ctx.drawImage(img, x + (bw - dw) / 2, y + (bh - dh) / 2, dw, dh);
     }
 };

@@ -42,12 +42,13 @@ BOSS.register({
             }
 
             if (now - b.lastSkillTime >= def.skillInterval) {
-                const rand = Math.random();
-                if (rand < 0.4) {
+                if (!b.skillVariant) b.skillVariant = 0;
+                const variant = b.skillVariant % 3;
+                if (variant === 0) {
                     b.skillState = 'sweep_warn';
                     b.sweepDir = Math.random() > 0.5 ? 1 : -1;
                     b.sweepWarnAlpha = 0;
-                } else if (rand < 0.7) {
+                } else if (variant === 1) {
                     b.skillState = 'shield_warn';
                     b.shieldWarnAlpha = 0;
                 } else {
@@ -55,6 +56,7 @@ BOSS.register({
                     b.summonWarnAlpha = 0;
                     b.summoned = false;
                 }
+                b.skillVariant = (b.skillVariant || 0) + 1;
                 b.skillStartTime = now;
                 BOSS.startSkillAnim(b);
             }

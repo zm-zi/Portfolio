@@ -8,17 +8,17 @@ const DEBUG_PADDING = 16;
 const DEBUG_ITEM_GAP = 6;
 
 const DEBUG_CATEGORIES = [
-    { name: '生命', type: 'life', color: '#ff2e2e' },
+    { name: '生命', type: 'life', color: SCI.red },
     { name: '分数', type: 'score', color: '#ffd700' },
     { name: '敌人', type: 'enemy', color: '#00e5ff' },
     { name: 'Boss', type: 'boss', color: '#ff00e5' },
-    { name: '词条', type: 'buff', color: '#44ff88' }
+    { name: '词条', type: 'buff', color: SCI.green }
 ];
 
 const DEBUG_ENEMY_TYPES = ['basic', 'shooter', 'rusher', 'spinner', 'minion'];
 const DEBUG_ENEMY_NAMES = { basic: '一级敌人', shooter: '二级敌人', rusher: '三级敌人', spinner: '四级敌人', minion: '小怪' };
-const DEBUG_BOSS_TYPES = ['one_eye_king', 'night_fury', 'ice_evil_king'];
-const DEBUG_BOSS_NAMES = { one_eye_king: '独眼王', night_fury: '夜煞', ice_evil_king: '冰邪王' };
+const DEBUG_BOSS_TYPES = ['one_eye_king', 'night_fury', 'ice_evil_king', 'julingshen'];
+const DEBUG_BOSS_NAMES = { one_eye_king: '独眼王', night_fury: '夜煞', ice_evil_king: '冰邪王', rulingshen: '巨灵神' };
 
 let dbg = {
     selectedCategory: 0,
@@ -55,25 +55,10 @@ function getCategoryY(dbg, index) {
 function drawDebugger() {
     const rect = getDebuggerRect();
 
-    Game.ctx.fillStyle = 'rgba(30, 30, 46, 0.95)';
-    Game.ctx.strokeStyle = 'rgba(255, 179, 0, 0.4)';
-    Game.ctx.lineWidth = 2;
-    Game.ctx.beginPath();
-    Game.ctx.roundRect(rect.x, rect.y, rect.w, rect.h, 4);
-    Game.ctx.fill();
-    Game.ctx.stroke();
-
-    Game.ctx.shadowBlur = 20;
-    Game.ctx.shadowColor = '#ffb300';
-    Game.ctx.strokeStyle = 'rgba(255, 179, 0, 0.15)';
-    Game.ctx.stroke();
-    Game.ctx.shadowBlur = 0;
-
-    // 四角像素装饰
-    drawPixelCorners(Game.ctx, rect.x, rect.y, rect.w, rect.h, 6, 'rgba(255, 179, 0, 0.5)');
+    drawSciPanel(Game.ctx, rect.x, rect.y, rect.w, rect.h, { cornerLen: 10, glow: 15 });
 
     Game.ctx.textAlign = 'center';
-    Game.ctx.fillStyle = '#ffb300';
+    Game.ctx.fillStyle = SCI.primary;
     Game.ctx.font = '12px ' + FONT_PIXEL;
     Game.ctx.fillText('DEBUGGER', rect.x + rect.w / 2, rect.y + 28);
 
@@ -98,7 +83,7 @@ function drawDebugger() {
 function drawBuffCategory(cy, rect, isSelected) {
     const itemX = rect.x + DEBUG_PADDING;
     const itemW = rect.w - DEBUG_PADDING * 2;
-    const catColor = '#44ff88';
+    const catColor = SCI.green;
 
     // 分类标签行
     const labelH = DEBUG_ITEM_H;
@@ -151,17 +136,17 @@ function drawBuffCategory(cy, rect, isSelected) {
         const hasBuff = stacks > 0;
 
         if (isBuffSelected) {
-            Game.ctx.fillStyle = 'rgba(68, 255, 136, 0.2)';
+            Game.ctx.fillStyle = 'rgba(0, 255, 136, 0.15)';
             Game.ctx.beginPath();
             Game.ctx.roundRect(itemX + 4, by, itemW - 8, DEBUG_ITEM_H, 2);
             Game.ctx.fill();
-            Game.ctx.strokeStyle = '#44ff88';
+            Game.ctx.strokeStyle = SCI.green;
             Game.ctx.lineWidth = 1;
             Game.ctx.stroke();
         }
 
         // 名称
-        const rarityColors = { common: '#e8e8f0', rare: '#44ff88', epic: '#dd44dd', legendary: '#ff3333' };
+        const rarityColors = { common: '#e8e8f0', rare: '#00ff88', epic: '#bb66ff', legendary: '#ff3355' };
         const nameColor = hasBuff ? (rarityColors[def.rarity] || '#fff') : 'rgba(255,255,255,0.4)';
         Game.ctx.textAlign = 'left';
         Game.ctx.fillStyle = nameColor;
@@ -204,11 +189,11 @@ function drawDebuggerRow(cat, cy, rect, isSelected, dbg) {
     const itemH = DEBUG_ITEM_H;
 
     if (isSelected) {
-        Game.ctx.fillStyle = 'rgba(255, 179, 0, 0.12)';
+        Game.ctx.fillStyle = 'rgba(0, 229, 255, 0.1)';
         Game.ctx.beginPath();
         Game.ctx.roundRect(itemX, cy, itemW, itemH, 2);
         Game.ctx.fill();
-        Game.ctx.strokeStyle = 'rgba(255, 179, 0, 0.5)';
+        Game.ctx.strokeStyle = 'rgba(0, 229, 255, 0.4)';
         Game.ctx.lineWidth = 1;
         Game.ctx.stroke();
     }

@@ -62,6 +62,6 @@ const BOSS = {
         } else {
             img = baseImg;
         }
-        ctx.drawImage(img, b.x, b.y, b.width, b.height);
+        ctx.drawImage(img, Math.round(b.x), Math.round(b.y), b.width, b.height);
     }
 };

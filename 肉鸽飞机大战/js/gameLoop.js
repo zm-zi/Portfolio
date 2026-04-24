@@ -1,7 +1,4 @@
 // 游戏主循环
-function initGameLoop() {
-}
-
 let _lastFrameTime = 0;
 const BASE_INTERVAL = 1000 / BASE_FPS; // 5ms
 
@@ -33,7 +30,7 @@ function gameLoop(timestamp) {
         return;
     }
 
-    if (!gm.isPaused && !gm.isGameOver && !gm.buffChooseMode) {
+    if (!gm.isPaused && !gm.isGameOver && !gm.buffChooseMode && !gm.levelCompleted) {
         // 每帧校正按键状态（防止 keyup 事件丢失导致的卡键）
         if (typeof _syncKeys === 'function') _syncKeys();
         updatePlayer();
@@ -60,8 +57,18 @@ function gameLoop(timestamp) {
         updateGems();
         checkBuffTrigger();
 
+        // 关卡通关检测
+        if (G.game.gameMode === 'level') {
+            checkLevelComplete();
+        }
+
         if (gm.life < 1) {
             gm.isGameOver = true;
+            // 更新最高分
+            if (G.game.score > (G.game.highScore || 0)) {
+                G.game.highScore = G.game.score;
+            }
+            Save.save();
             stopBGM();
             createExplosion(
                 G.player.x + G.player.width / 2,
@@ -104,6 +111,7 @@ function gameLoop(timestamp) {
     drawLightningChains(Game.ctx);
     drawWingman();
     drawPlayer();
+    drawLaser();
     drawPauseBtn();
 
     // 屏幕闪白（最上层）
@@ -112,9 +120,9 @@ function gameLoop(timestamp) {
         Game.ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
     }
 
-    // 超频琥珀色光晕
+    // 超频金色光晕
     if (G.player.isOverclock) {
-        Game.ctx.fillStyle = 'rgba(255, 179, 0, 0.05)';
+        Game.ctx.fillStyle = 'rgba(255, 215, 0, 0.05)';
         Game.ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
     }
 
@@ -141,6 +149,11 @@ function gameLoop(timestamp) {
 
     if (gm.buffChooseMode) drawBuffChoose(Game.ctx);
 
+    // 关卡通关画面
+    if (gm.levelCompleted) {
+        drawLevelComplete();
+    }
+
     if (gm.isGameOver) {
         drawGameOver();
     }
@@ -150,8 +163,8 @@ function gameLoop(timestamp) {
         drawNoiseOverlay(Game.ctx, 10);
     }
 
-    // 更新 HTML UI
-    updateHUD();
+    // 更新 HTML UI（关卡通关画面覆盖时跳过，避免覆盖下状态的 HUD）
+    if (!gm.levelCompleted) updateHUD();
 
     requestAnimationFrame(gameLoop);
 }
@@ -169,20 +182,49 @@ function drawNoiseOverlay(ctx, intensity) {
 // Boss警戒检测
 function checkBossWarning() {
     if (G.bossSpawned) return;
-    // 惰性初始化 bossNextScore
-    if (G.bossNextScore === 0) {
-        const def = BOSS.getByIndex(G.bossIndex);
-        if (def) G.bossNextScore = def.spawnScore;
-    }
-    const now = Date.now();
-    if (!G.bossWarning) {
-        if (G.game.score >= G.bossNextScore) {
-            G.bossWarning = true;
-            G.bossWarningStart = now;
+
+    if (G.game.gameMode === 'level') {
+        // 关卡模式：使用关卡配置的触发逻辑
+        const level = getCurrentLevel();
+        if (!level || !level.bossId) return;
+
+        const triggerScore = getLevelBossTriggerScore();
+        if (triggerScore === Infinity || triggerScore === null) return;
+
+        // 对于多Boss关，检查是否所有Boss都已击败
+        if (Array.isArray(level.bossId)) {
+            if ((G.levelBossIndex || 0) >= level.bossId.length) return;
+        }
+
+        const now = Date.now();
+        if (!G.bossWarning) {
+            if (G.game.score >= triggerScore) {
+                G.bossWarning = true;
+                G.bossWarningStart = now;
+                // 设置对应的 Boss 注册表索引
+                G.bossIndex = getLevelBossRegistryIndex();
+            }
+        } else {
+            if (now - G.bossWarningStart >= BOSS_WARNING_TIME) {
+                spawnBoss();
+            }
         }
     } else {
-        if (now - G.bossWarningStart >= BOSS_WARNING_TIME) {
-            spawnBoss();
+        // 无尽模式：原有逻辑
+        if (G.bossNextScore === 0) {
+            const def = BOSS.getByIndex(G.bossIndex);
+            if (def) G.bossNextScore = def.spawnScore;
+        }
+        const now = Date.now();
+        if (!G.bossWarning) {
+            if (G.game.score >= G.bossNextScore) {
+                G.bossWarning = true;
+                G.bossWarningStart = now;
+            }
+        } else {
+            if (now - G.bossWarningStart >= BOSS_WARNING_TIME) {
+                spawnBoss();
+            }
         }
     }
 }
@@ -193,21 +235,21 @@ function drawBossWarning() {
     const elapsed = now - G.bossWarningStart;
     const blink = Math.sin(elapsed / 100 * Math.PI) > 0;
     if (blink) {
-        Game.ctx.fillStyle = 'rgba(255, 46, 46, 0.2)';
+        Game.ctx.fillStyle = 'rgba(255, 51, 85, 0.15)';
         Game.ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
 
         // 扫描线效果
-        Game.ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+        Game.ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
         for (let sy = 0; sy < LOGICAL_H; sy += 4) {
             Game.ctx.fillRect(0, sy, LOGICAL_W, 1);
         }
 
         // 四边红色边框闪烁
-        Game.ctx.fillStyle = 'rgba(255, 46, 46, 0.35)';
-        Game.ctx.fillRect(0, 0, LOGICAL_W, 4);
-        Game.ctx.fillRect(0, LOGICAL_H - 4, LOGICAL_W, 4);
-        Game.ctx.fillRect(0, 0, 4, LOGICAL_H);
-        Game.ctx.fillRect(LOGICAL_W - 4, 0, 4, LOGICAL_H);
+        Game.ctx.fillStyle = 'rgba(255, 51, 85, 0.3)';
+        Game.ctx.fillRect(0, 0, LOGICAL_W, 3);
+        Game.ctx.fillRect(0, LOGICAL_H - 3, LOGICAL_W, 3);
+        Game.ctx.fillRect(0, 0, 3, LOGICAL_H);
+        Game.ctx.fillRect(LOGICAL_W - 3, 0, 3, LOGICAL_H);
     }
 
     const cx = LOGICAL_W / 2;
@@ -218,9 +260,9 @@ function drawBossWarning() {
     const shakeY = (Math.random() - 0.5) * 2;
 
     Game.ctx.textAlign = 'center';
-    drawNeonText(Game.ctx, 'WARNING', cx + shakeX, cy - 15 + shakeY, '28px ' + FONT_PIXEL, '#ff2e2e', 25);
+    drawSciTitle(Game.ctx, 'WARNING', cx + shakeX, cy - 15 + shakeY, '28px ' + FONT_PIXEL, SCI.red, 25);
 
-    Game.ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+    Game.ctx.fillStyle = 'rgba(0, 229, 255, 0.6)';
     Game.ctx.font = '14px ' + FONT_PIXEL;
     Game.ctx.fillText('BOSS INCOMING', cx, cy + 22);
 }

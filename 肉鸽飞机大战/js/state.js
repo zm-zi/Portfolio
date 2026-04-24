@@ -12,12 +12,18 @@ const G = {
         lastBuffScore: 0,
         buffIsFreePick: false,
         difficultyLevel: 0,
-        bgmVolume: 0.4,
+        bgmVolume: 0,
         sfxVolume: 0.5,
         settingsOpen: false,
         _settingsDrag: null,
         targetFPS: 0,
-        dt: 1
+        dt: 1,
+        highScore: 0,
+        levelHighScores: [0, 0, 0, 0, 0, 0, 0],
+        // 关卡模式
+        gameMode: 'endless',     // 'endless' | 'level'
+        currentLevel: 0,         // 关卡索引 0-4
+        levelCompleted: false
     },
     debuggerOpen: false,
     // ── Player ──
@@ -31,6 +37,7 @@ const G = {
         invincibleTime: 0,
         hitEffect: 0,
         currentFireRate: FIRE_RATE,
+        baseFireRate: FIRE_RATE,
         lastFireTime: 0,
         wingmanLastFireTime: 0,
         buffList: [],
@@ -47,7 +54,10 @@ const G = {
         homingMissileLevel: 0,
         homingMissileCount: 1,
         lastHomingMissileTime: 0,
-        trailPoints: []      // 线性拖尾历史坐标
+        trailPoints: [],     // 线性拖尾历史坐标
+        aircraftType: 'default', // 'default' | 'skysovereign' | 'mozi'
+        moziTargetX: -1,     // 墨子号：鼠标点击目标X（-1表示未指定）
+        moziTargetY: -1      // 墨子号：鼠标点击目标Y
     },
     // ── Entity Arrays ──
     bullets: [],
@@ -67,6 +77,7 @@ const G = {
     bossDefeatTime: 0,
     bossIndex: 0,           // 当前应出场的 Boss 在 BOSS 注册表中的索引
     bossRound: 0,           // 当前循环轮次（0=首次，1=第2轮增强...）
+    bossDefeatCount: 0,     // 已击败 Boss 总数（用于递增刷新间隔）
     bossNextScore: 0, // 下一个 Boss 的触发分数（在 main.js 中由 BOSS 注册表初始化）
     // ── Screen Effects ──
     screenShake: 0,
@@ -76,7 +87,10 @@ const G = {
     // ── Ice Vortex (冰邪王) ──
     iceVortexes: [],
     // ── 闪电连锁视觉效果 ──
-    lightningChains: []
+    lightningChains: [],
+    // ── 关卡模式 ──
+    levelBossIndex: 0,           // 当前关卡中已击败的Boss数（多Boss关用）
+    levelLastBossDefeatScore: 0  // 上一个关卡Boss击败时的分数
 };
 
 function _clearArrays(...arrays) {
@@ -84,6 +98,10 @@ function _clearArrays(...arrays) {
 }
 
 function resetState() {
+    // 保存关卡模式状态（关卡间切换时不重置）
+    const savedGameMode = G.game.gameMode;
+    const savedCurrentLevel = G.game.currentLevel;
+
     const p = G.player;
     p.x = LOGICAL_W / 2 - PLAYER_WIDTH / 2;
     p.y = LOGICAL_H - 120;
@@ -91,7 +109,8 @@ function resetState() {
     p.isInvincible = false;
     p.invincibleTime = 0;
     p.hitEffect = 0;
-    p.currentFireRate = FIRE_RATE;
+    p.baseFireRate = (CRAFT.get(p.aircraftType) || {}).fireRate || FIRE_RATE;
+    p.currentFireRate = p.baseFireRate;
     p.lastFireTime = 0;
     p.wingmanLastFireTime = 0;
     p.buffList = [];
@@ -109,6 +128,9 @@ function resetState() {
     p.homingMissileCount = 1;
     p.lastHomingMissileTime = 0;
     p.trailPoints = [];
+    p.aircraftType = p.aircraftType || 'default';
+    p.moziTargetX = -1;
+    p.moziTargetY = -1;
 
     // 由各词条 onInit 注册的属性在这里重置为默认值
     if (typeof BUFF !== 'undefined') {
@@ -128,6 +150,9 @@ function resetState() {
     gm.lastBuffScore = 0;
     gm.buffIsFreePick = false;
     gm.difficultyLevel = 0;
+    gm.gameMode = savedGameMode;
+    gm.currentLevel = savedCurrentLevel;
+    gm.levelCompleted = false;
 
     _clearArrays(
         G.bullets, G.homingMissiles, G.enemies, G.enemyBullets,
@@ -152,5 +177,11 @@ function resetState() {
     G.bossDefeatTime = 0;
     G.bossIndex = 0;
     G.bossRound = 0;
+    G.bossDefeatCount = 0;
     G.bossNextScore = 0;
+
+    // 关卡模式状态
+    G.levelBossIndex = 0;
+    G.levelLastBossDefeatScore = 0;
+
 }

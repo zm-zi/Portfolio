@@ -9,10 +9,27 @@ canvas.height = LOGICAL_H * dpr;
 canvas.style.width = LOGICAL_W + 'px';
 canvas.style.height = LOGICAL_H + 'px';
 ctx.scale(dpr, dpr);
+ctx.imageSmoothingEnabled = false;
 
-// ── 玩家/子弹/宝石/导弹/冰霜 等非注册表图片 ──
-const planeImg = new Image();
-planeImg.src = 'image/飞机素材.png';
+// ── 图片加载注册表：所有 Image 统一注册，startGame 等待全部完成 ──
+const _pendingImages = [];
+function _loadImg(src) {
+    const img = new Image();
+    _pendingImages.push(new Promise((resolve) => {
+        img.onload = resolve;
+        img.onerror = () => { console.warn('图片加载失败:', src); resolve(); };
+    }));
+    img.src = src;
+    return img;
+}
+
+// ── 战机图片：从 CRAFT 注册表批量加载 ──
+CRAFT.all().forEach(c => {
+    if (c.imgSrc) {
+        const img = _loadImg(c.imgSrc);
+        CRAFT.bindImg(c.id, img);
+    }
+});
 
 const bulletImg = new Image();
 bulletImg.src = 'data:image/svg+xml;base64,' + btoa(`
@@ -22,21 +39,13 @@ bulletImg.src = 'data:image/svg+xml;base64,' + btoa(`
     </svg>
 `);
 
-const gem5Img = new Image();
-gem5Img.src = 'image/宝石5分.png';
-const gem10Img = new Image();
-gem10Img.src = 'image/宝石10分.png';
-const gem20Img = new Image();
-gem20Img.src = 'image/宝石20分·.png';
+const gem5Img = _loadImg('image/宝石5分.png');
+const gem10Img = _loadImg('image/宝石10分.png');
+const gem20Img = _loadImg('image/宝石20分·.png');
 
-const iceConeImg = new Image();
-iceConeImg.src = 'image/冰锥子弹.png';
-
-const iceWallImg = new Image();
-iceWallImg.src = 'image/冰墙素材.png';
-
-const iceVortexImg = new Image();
-iceVortexImg.src = 'image/冰霜漩涡.png';
+const iceConeImg = _loadImg('image/冰锥子弹.png');
+const iceWallImg = _loadImg('image/冰墙素材.png');
+const iceVortexImg = _loadImg('image/冰霜漩涡.png');
 
 const enemy2BulletImg = new Image();
 enemy2BulletImg.src = 'data:image/svg+xml;base64,' + btoa(`
@@ -49,15 +58,14 @@ enemy2BulletImg.src = 'data:image/svg+xml;base64,' + btoa(`
 // 初始化
 initUI();
 initBuffUI();
-initPlayer(planeImg);
+initLevelMap();
 initBullets(bulletImg, enemy2BulletImg);
 initGems(gem5Img, gem10Img, gem20Img);
 
 // ── 从注册表批量加载敌人/Boss 图片 ──
 ENEMY.all().forEach(def => {
     if (def.imgSrc) {
-        const img = new Image();
-        img.src = def.imgSrc;
+        const img = _loadImg(def.imgSrc);
         ENEMY.bindImg(def.type, img);
     }
 });
@@ -66,13 +74,11 @@ BOSS._order.forEach(id => {
     const def = BOSS.get(id);
     if (!def) return;
     if (def.imgSrc) {
-        const img = new Image();
-        img.src = def.imgSrc;
+        const img = _loadImg(def.imgSrc);
         BOSS.bindImg(id, img);
     }
     if (def.actionImgSrc) {
-        const img = new Image();
-        img.src = def.actionImgSrc;
+        const img = _loadImg(def.actionImgSrc);
         BOSS.bindActionImg(id, img);
     }
 });
@@ -90,26 +96,24 @@ G.bossNextScore = firstBoss ? firstBoss.spawnScore : Infinity;
 initBgPlanes(ENEMY.get('basic')._img, ENEMY.get('shooter')._img, ENEMY.get('rusher')._img);
 
 // 陨石 + 破损战舰背景素材
-const meteorite1Img = new Image(); meteorite1Img.src = 'image/陨石素材1.png';
-const meteorite2Img = new Image(); meteorite2Img.src = 'image/陨石素材2.png';
-const meteorite3Img = new Image(); meteorite3Img.src = 'image/陨石素材3.png';
-const meteorite4Img = new Image(); meteorite4Img.src = 'image/陨石素材4.png';
-const meteorite5Img = new Image(); meteorite5Img.src = 'image/陨石素材5.png';
-const wreck1Img = new Image(); wreck1Img.src = 'image/破损战舰1.png';
-const wreck2Img = new Image(); wreck2Img.src = 'image/破损战舰2.png';
-const wreck3Img = new Image(); wreck3Img.src = 'image/破损战舰3.png';
-const wreck4Img = new Image(); wreck4Img.src = 'image/破损战舰4.png';
+const meteorite1Img = _loadImg('image/陨石素材1.png');
+const meteorite2Img = _loadImg('image/陨石素材2.png');
+const meteorite3Img = _loadImg('image/陨石素材3.png');
+const meteorite4Img = _loadImg('image/陨石素材4.png');
+const meteorite5Img = _loadImg('image/陨石素材5.png');
+const wreck1Img = _loadImg('image/破损战舰1.png');
+const wreck2Img = _loadImg('image/破损战舰2.png');
+const wreck3Img = _loadImg('image/破损战舰3.png');
+const wreck4Img = _loadImg('image/破损战舰4.png');
 initMeteorites(meteorite1Img, meteorite2Img, meteorite3Img, meteorite4Img, meteorite5Img, wreck1Img, wreck2Img, wreck3Img, wreck4Img);
-initGameLoop();
 initInput(canvas);
 
-// 等待字体加载完毕再启动游戏循环
+// 等待所有图片和字体加载完毕再启动游戏循环
 function startGame() {
-    if (planeImg.complete) {
+    Promise.all(_pendingImages).then(() => {
+        Save.load();
         gameLoop();
-    } else {
-        planeImg.onload = () => gameLoop();
-    }
+    });
 }
 
 if (document.fonts && document.fonts.ready) {

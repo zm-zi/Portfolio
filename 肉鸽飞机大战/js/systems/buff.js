@@ -51,6 +51,43 @@ const BUFF = {
             }
         }
         return picked;
+    },
+
+    // 只抽取攻击类词条
+    randomPickAttack(count) {
+        const pool = this.all().filter(d => d.category === 'attack' && (!d.condition || d.condition(G)));
+        if (pool.length === 0) return [];
+        const n = Math.min(count, pool.length);
+
+        const weightOf = { common: 5, rare: 3, epic: 1, legendary: 0.65 };
+        const weights = pool.map(d => weightOf[d.rarity] || 3);
+
+        const picked = [];
+        const used = new Set();
+        for (let i = 0; i < n; i++) {
+            let remainingWeight = 0;
+            for (let j = 0; j < pool.length; j++) {
+                if (!used.has(j)) remainingWeight += weights[j];
+            }
+            if (remainingWeight <= 0) break;
+
+            let r = Math.random() * remainingWeight;
+            for (let j = 0; j < pool.length; j++) {
+                if (used.has(j)) continue;
+                r -= weights[j];
+                if (r <= 0) {
+                    picked.push(pool[j]);
+                    used.add(j);
+                    break;
+                }
+            }
+            if (picked.length <= i) {
+                for (let j = 0; j < pool.length; j++) {
+                    if (!used.has(j)) { picked.push(pool[j]); used.add(j); break; }
+                }
+            }
+        }
+        return picked;
     }
 };
 
@@ -63,8 +100,14 @@ function initBuffUI() {
 }
 
 function startBuffChoice(freePick) {
-    const choices = BUFF.randomPick(BUFF_CHOICE_COUNT);
-    if (choices.length === 0) return; // 没有注册任何词条时不触发
+    let choices;
+    if (G.game.gameMode === 'level') {
+        // 关卡模式：只从攻击类词条中选1个
+        choices = BUFF.randomPickAttack(1);
+    } else {
+        choices = BUFF.randomPick(BUFF_CHOICE_COUNT);
+    }
+    if (choices.length === 0) return;
     G.game.buffChooseMode = true;
     G.game.buffChoices = choices.map(d => d.id);
     G.game.lastBuffScore = G.game.score;
@@ -77,16 +120,16 @@ function drawBuffChoose(ctx) {
     if (count === 0) return;
 
     // 遮罩
-    ctx.fillStyle = 'rgba(13, 13, 18, 0.88)';
+    ctx.fillStyle = 'rgba(5, 8, 15, 0.9)';
     ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
 
-    // 标题（中文用 VT323）
+    // 标题
     const cx = LOGICAL_W / 2;
     ctx.textAlign = 'center';
-    drawNeonText(ctx, '选择词条', cx, LOGICAL_H / 2 - _cardH / 2 - 40, 'bold 28px HYPixel, sans-serif', '#ffd700', 16);
+    drawSciTitle(ctx, '选择词条', cx, LOGICAL_H / 2 - _cardH / 2 - 40, 'bold 28px HYPixel, sans-serif', SCI.gold, 16);
 
     // 副标题
-    ctx.fillStyle = 'rgba(255, 179, 0, 0.5)';
+    ctx.fillStyle = 'rgba(0, 229, 255, 0.45)';
     ctx.font = '20px HYPixel, sans-serif';
     ctx.fillText('按 1 / 2 / 3 选择', cx, LOGICAL_H / 2 - _cardH / 2 - 14);
 
@@ -94,7 +137,7 @@ function drawBuffChoose(ctx) {
     const startX = (LOGICAL_W - totalW) / 2;
     const cardY = LOGICAL_H / 2 - _cardH / 2;
 
-    const rarityColors = { common: '#e8e8f0', rare: '#44ff88', epic: '#dd44dd', legendary: '#ff3333' };
+    const rarityColors = { common: '#e8e8f0', rare: '#00ff88', epic: '#bb66ff', legendary: '#ff3355' };
     const rarityLabels = { common: 'COMMON', rare: 'RARE', epic: 'EPIC', legendary: 'LEGENDARY' };
 
     for (let i = 0; i < count; i++) {
@@ -103,24 +146,26 @@ function drawBuffChoose(ctx) {
         const cardX = startX + i * (_cardW + _cardGap);
         const color = def.color || rarityColors[def.rarity] || '#555';
 
-        // 卡片外发光
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = color;
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.roundRect(cardX, cardY, _cardW, _cardH, 2);
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-
         // 卡片背景
-        ctx.fillStyle = 'rgba(30, 30, 46, 0.92)';
+        ctx.fillStyle = SCI.cardBg;
         ctx.beginPath();
         ctx.roundRect(cardX, cardY, _cardW, _cardH, 2);
         ctx.fill();
 
-        // 四角像素装饰
-        drawPixelCorners(ctx, cardX, cardY, _cardW, _cardH, 4, color);
+        // 卡片外发光
+        ctx.save();
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = color;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1;
+        ctx.globalAlpha = 0.7;
+        ctx.beginPath();
+        ctx.roundRect(cardX, cardY, _cardW, _cardH, 2);
+        ctx.stroke();
+        ctx.restore();
+
+        // 科幻角括号装饰
+        drawSciCorners(ctx, cardX, cardY, _cardW, _cardH, 8, color + '88');
 
         // 顶部色带
         ctx.save();
@@ -128,7 +173,7 @@ function drawBuffChoose(ctx) {
         ctx.roundRect(cardX, cardY, _cardW, 40, [2, 2, 0, 0]);
         ctx.clip();
         ctx.fillStyle = color;
-        ctx.globalAlpha = 0.15;
+        ctx.globalAlpha = 0.08;
         ctx.fillRect(cardX, cardY, _cardW, 40);
         ctx.globalAlpha = 1;
         ctx.restore();
@@ -161,7 +206,7 @@ function drawBuffChoose(ctx) {
         }
 
         // 描述
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.fillStyle = 'rgba(0, 229, 255, 0.5)';
         ctx.font = '14px HYPixel, sans-serif';
         const desc = typeof def.desc === 'function' ? def.desc(G) : def.desc;
         const descFontSize = 14;
@@ -176,7 +221,7 @@ function drawBuffChoose(ctx) {
         ctx.restore();
 
         // 序号提示
-        ctx.fillStyle = 'rgba(255, 179, 0, 0.4)';
+        ctx.fillStyle = 'rgba(0, 229, 255, 0.35)';
         ctx.font = '10px Press Start 2P, monospace';
         ctx.fillText('[' + (i + 1) + ']', cardX + _cardW / 2, cardY + _cardH - 14);
     }
@@ -219,7 +264,7 @@ function drawPlayerBuffs(ctx) {
     const counts = {};
     list.forEach(id => { counts[id] = (counts[id] || 0) + 1; });
 
-    const rarityColors = { common: '#e8e8f0', rare: '#44ff88', epic: '#dd44dd', legendary: '#ff3333' };
+    const rarityColors = { common: '#e8e8f0', rare: '#00ff88', epic: '#bb66ff', legendary: '#ff3355' };
     ctx.font = '16px HYPixel, sans-serif';
     ctx.textAlign = 'left';
     let y = 68;
@@ -248,6 +293,8 @@ function drawPlayerBuffs(ctx) {
 // ========= 词条触发检测 =========
 function checkBuffTrigger() {
     if (G.game.buffChooseMode) return;
+    // 关卡模式：不自动弹出词条选择（每关只在开局选一次）
+    if (G.game.gameMode === 'level') return;
     const p = G.player;
     if (G.game.score >= p.levelUpScore) {
         startBuffChoice();
@@ -257,36 +304,41 @@ function checkBuffTrigger() {
 // ========= 初始词条注册 =========
 
 // 词条1：速射 — 射速 x1.25（间隔缩短为 0.8 倍），最多叠加3次
+// 激光战机：每层激光伤害 +25%
 BUFF.register({
     id: 'rapid_fire',
     name: '速射',
     desc: '射速提升25%',
     rarity: 'common',
+    category: 'attack',
     condition: (G) => (G.player._rapidFireCount || 0) < 3,
-    onInit(G) { G.player.currentFireRate = FIRE_RATE; G.player._rapidFireCount = 0; },
+    onInit(G) { G.player.currentFireRate = G.player.baseFireRate || FIRE_RATE; G.player._rapidFireCount = 0; },
     apply(G) {
         G.player._rapidFireCount = (G.player._rapidFireCount || 0) + 1;
-        // 重算射速：基于基础射速，每层速射 -20%，每层双发 -25%，最低限 50ms
-        G.player.currentFireRate = Math.max(50, Math.round(FIRE_RATE * Math.pow(0.8, G.player._rapidFireCount) / Math.pow(0.75, G.player.doubleShotCount || 0)));
+        const def = CRAFT.get(G.player.aircraftType);
+        if (def && def.isLaser) {
+            G.player.laserDamageMult = 1 + G.player._rapidFireCount * 0.25;
+        } else {
+            const base = G.player.baseFireRate || FIRE_RATE;
+            G.player.currentFireRate = Math.max(50, Math.round(base * Math.pow(0.8, G.player._rapidFireCount) / Math.pow(0.75, G.player.doubleShotCount || 0)));
+        }
     }
 });
 
-// 词条2：双发 — 并排两发，但射速 x0.75，仅可选择一次
+// 词条2：双发 — 主弹两侧各增一颗子弹，无副作用，仅可选择一次
+// 激光战机：双束激光左右各偏移10px
 BUFF.register({
     id: 'double_shot',
     name: '双发',
-    desc: '并排发射两发子弹，射速降低25%',
-    rarity: 'rare',
+    desc: '左右各增加一颗子弹',
+    rarity: 'legendary',
+    category: 'attack',
     condition: (G) => !G.player.doubleShot,
     onInit(G) {
         G.player.doubleShot = false;
-        G.player.doubleShotCount = 0;
     },
     apply(G) {
         G.player.doubleShot = true;
-        G.player.doubleShotCount = (G.player.doubleShotCount || 0) + 1;
-        // 重算射速：基于基础射速，每层双发 -25%，最低限 50ms
-        G.player.currentFireRate = Math.max(50, Math.round(FIRE_RATE * Math.pow(0.8, G.player._rapidFireCount || 0) / Math.pow(0.75, G.player.doubleShotCount)));
     }
 });
 
@@ -296,6 +348,7 @@ BUFF.register({
     name: '僚机',
     desc: '召唤僚机协同作战，射速和伤害为主机一半',
     rarity: 'rare',
+    category: 'attack',
     condition: (G) => (G.player.wingmanLevel || 0) < 2,
     onInit(G) { G.player.wingmanLevel = 0; },
     apply(G) { G.player.wingmanLevel = Math.min((G.player.wingmanLevel || 0) + 1, 2); }
@@ -307,6 +360,7 @@ BUFF.register({
     name: '僚机伤',
     desc: '僚机伤害翻倍',
     rarity: 'rare',
+    category: 'attack',
     condition: (G) => G.player.wingmanLevel >= 1 && !G.player.wingmanDamageBoosted,
     onInit(G) { G.player.wingmanDamageBoosted = false; },
     apply(G) {
@@ -321,6 +375,7 @@ BUFF.register({
     name: '僚机疾',
     desc: '僚机射速翻倍',
     rarity: 'rare',
+    category: 'attack',
     condition: (G) => G.player.wingmanLevel >= 1 && !G.player.wingmanSwiftActivated,
     onInit(G) { G.player.wingmanSwiftActivated = false; },
     apply(G) {
@@ -335,6 +390,7 @@ BUFF.register({
     name: '追踪导弹',
     desc: '每3秒发射一枚追踪导弹，自动锁敌',
     rarity: 'epic',
+    category: 'attack',
     condition: (G) => !G.player.homingMissileLevel,
     onInit(G) { G.player.homingMissileLevel = 0; },
     apply(G) { G.player.homingMissileLevel = (G.player.homingMissileLevel || 0) + 1; G.player.lastHomingMissileTime = 0; }
@@ -346,6 +402,7 @@ BUFF.register({
     name: '追踪导弹·疾',
     desc: '发射间隔缩短1秒',
     rarity: 'epic',
+    category: 'attack',
     condition: (G) => G.player.homingMissileLevel >= 1 && (G.player._swiftCount || 0) < 2,
     onInit(G) {},
     apply(G) {
@@ -360,6 +417,7 @@ BUFF.register({
     name: '追踪导弹·量',
     desc: '同时发射+1枚追踪导弹',
     rarity: 'epic',
+    category: 'attack',
     condition: (G) => G.player.homingMissileLevel >= 1 && (G.player._missileCountStacks || 0) < 2,
     onInit(G) {},
     apply(G) { G.player.homingMissileCount = (G.player.homingMissileCount || 1) + 1; G.player._missileCountStacks = (G.player._missileCountStacks || 0) + 1; }
@@ -371,6 +429,7 @@ BUFF.register({
     name: '超频时间延长',
     desc: '超频持续时间+1秒',
     rarity: 'epic',
+    category: 'attack',
     condition: (G) => (G.player.overclockDurationStacks || 0) < 3,
     onInit(G) { G.player.overclockDurationStacks = 0; },
     apply(G) { G.player.overclockDurationStacks = (G.player.overclockDurationStacks || 0) + 1; }
@@ -382,6 +441,7 @@ BUFF.register({
     name: '超频充能',
     desc: '击杀怪物获得能量+1',
     rarity: 'rare',
+    category: 'attack',
     condition: (G) => (G.player.overclockEnergyStacks || 0) < 4,
     onInit(G) { G.player.overclockEnergyStacks = 0; G.player.overclockEnergyBonus = 0; },
     apply(G) {
@@ -436,10 +496,17 @@ BUFF.register({
 // 第1次：穿透1个敌人，伤害减半
 // 第2次：穿透1个敌人，伤害不变
 // 第3次：穿透2个敌人，伤害不变
+// 激光战机：每级激光宽度+4px，覆盖范围更广
 BUFF.register({
     id: 'penetrating_bullet',
     name: '穿透弹',
+    category: 'attack',
     desc: (G) => {
+        const def = CRAFT.get(G.player.aircraftType);
+        if (def && def.isLaser) {
+            const lv = (G.player.pierceLevel || 0) + 1;
+            return '激光宽度+' + (lv * 4) + 'px';
+        }
         const lv = (G.player.pierceLevel || 0) + 1;
         if (lv === 1) return '穿透1个敌人，伤害减半';
         if (lv === 2) return '穿透1个敌人，伤害不变';
@@ -485,12 +552,18 @@ BUFF.register({
 BUFF.register({
     id: 'lightning_chain',
     name: '闪电连锁',
+    category: 'attack',
     desc: (G) => {
         const lv = (G.player.lightningChainLevel || 0) + 1;
         return '击杀时连锁' + lv + '个敌人，闪电伤害2';
     },
     rarity: 'legendary',
-    condition: (G) => G.player.pierceLevel >= 3 && (G.player.lightningChainLevel || 0) < 5,
+    condition: (G) => {
+        const def = CRAFT.get(G.player.aircraftType);
+        // 激光战机：不需要穿透弹前置，直接可选
+        if (def && def.isLaser) return (G.player.lightningChainLevel || 0) < 5;
+        return G.player.pierceLevel >= 3 && (G.player.lightningChainLevel || 0) < 5;
+    },
     onInit(G) { G.player.lightningChainLevel = 0; },
     apply(G) {
         G.player.lightningChainLevel = (G.player.lightningChainLevel || 0) + 1;

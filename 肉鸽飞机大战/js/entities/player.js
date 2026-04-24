@@ -1,9 +1,4 @@
 // 玩家 + 僚机
-let _planeImg = null;
-
-function initPlayer(img) {
-    _planeImg = img;
-}
 
 function updatePlayer() {
     const p = G.player;
@@ -79,23 +74,7 @@ function _makeBullet(x, y, damage) {
     return b;
 }
 
-function fireBullets() {
-    const p = G.player;
-    const now = Date.now();
-    const damage = p.bulletDamage || 1;
-
-    const effectiveFireRate = p.isOverclock ? Math.round(p.currentFireRate / OVERCLOCK_FIRE_RATE_DIV) : p.currentFireRate;
-    if (now - p.lastFireTime >= effectiveFireRate) {
-        if (p.doubleShot) {
-            G.bullets.push(_makeBullet(p.x + p.width / 2 - 12, p.y, damage));
-            G.bullets.push(_makeBullet(p.x + p.width / 2 + 6, p.y, damage));
-        } else {
-            G.bullets.push(_makeBullet(p.x + p.width / 2 - 3, p.y, damage));
-        }
-        p.lastFireTime = now;
-        playAttackSound();
-    }
-
+function _fireWingmanAndMissiles(p, now) {
     // 僚机：独立射速，不与主机耦合
     const wl = p.wingmanLevel || 0;
     const wingmanFireRate = Math.round(FIRE_RATE * 2 / (p.wingmanFireRateMultiplier || 1));
@@ -158,6 +137,28 @@ function fireBullets() {
     }
 }
 
+function fireBullets() {
+    const p = G.player;
+    const now = Date.now();
+    const damage = p.bulletDamage || 1;
+
+    // 赤红号激光不走子弹系统，跳过 fire 逻辑
+    const craft = CRAFT.get(p.aircraftType);
+    if (!craft || craft.isLaser) {
+        _fireWingmanAndMissiles(p, now);
+        return;
+    }
+
+    const effectiveFireRate = p.isOverclock ? Math.round(p.currentFireRate / OVERCLOCK_FIRE_RATE_DIV) : p.currentFireRate;
+    if (now - p.lastFireTime >= effectiveFireRate) {
+        craft.fire(p, damage);
+        p.lastFireTime = now;
+        playAttackSound();
+    }
+
+    _fireWingmanAndMissiles(p, now);
+}
+
 function drawPlayerTrail() {
     const p = G.player;
     const pts = p.trailPoints;
@@ -170,6 +171,8 @@ function drawPlayerTrail() {
     ctx.lineJoin = 'round';
 
     const isOC = p.isOverclock;
+    const craft = CRAFT.get(p.aircraftType);
+    const tc = craft ? craft.trailColors : null;
     const now = Date.now();
 
     const engineX = p.x + p.width / 2;
@@ -200,11 +203,11 @@ function drawPlayerTrail() {
         const alpha = t * 0.25;
         const width = t * 16 + 2;
         ctx.globalAlpha = alpha;
-        ctx.strokeStyle = isOC ? '#ffaa00' : '#0088ff';
+        ctx.strokeStyle = isOC ? (tc ? tc.outerOC : '#ffaa00') : (tc ? tc.outer : '#0088ff');
         ctx.lineWidth = width;
         if (si >= blurThreshold) {
             ctx.shadowBlur = 14;
-            ctx.shadowColor = isOC ? '#ff8800' : '#0066ff';
+            ctx.shadowColor = isOC ? (tc ? tc.glowOC : '#ff8800') : (tc ? tc.glow : '#0066ff');
         } else {
             ctx.shadowBlur = 0;
         }
@@ -220,7 +223,7 @@ function drawPlayerTrail() {
         const alpha = t * 0.4;
         const width = t * 5 + 1;
         ctx.globalAlpha = alpha;
-        ctx.strokeStyle = isOC ? '#ffdd44' : '#66ddff';
+        ctx.strokeStyle = isOC ? (tc ? tc.innerOC : '#ffdd44') : (tc ? tc.inner : '#66ddff');
         ctx.lineWidth = width;
         ctx.beginPath();
         ctx.moveTo(x1, y1);
@@ -236,8 +239,9 @@ function drawPlayer() {
     drawPlayerTrail();
     const p = G.player;
     if (!p.isInvincible || Math.floor(Date.now() / 80) % 2 === 0) {
-        Game.ctx.imageSmoothingEnabled = false;
-        Game.ctx.drawImage(_planeImg, p.x, p.y, p.width, p.height);
+        const def = CRAFT.get(p.aircraftType);
+        const img = def && def._img;
+        if (img) Game.Util.drawImageFit(Game.ctx, img, Math.round(p.x), Math.round(p.y), p.width, p.height);
     }
     // 超频时画光环特效
     if (p.isOverclock) {
@@ -286,6 +290,78 @@ function drawPlayer() {
         Game.ctx.stroke();
         Game.ctx.restore();
     }
+}
+
+// ─── 赤红号持续激光绘制 ───
+function _drawSingleLaser(ctx, cx, botY, widthMult, pulse, isOC) {
+    const topY = 0;
+    if (botY <= topY) return;
+
+    // 外层红色辉光
+    ctx.globalAlpha = 0.15 * pulse;
+    ctx.strokeStyle = isOC ? '#ff6600' : '#cc1111';
+    ctx.lineWidth = 24 * widthMult;
+    ctx.shadowBlur = 30;
+    ctx.shadowColor = isOC ? '#ff4400' : '#ff0000';
+    ctx.beginPath();
+    ctx.moveTo(cx, botY);
+    ctx.lineTo(cx, topY);
+    ctx.stroke();
+
+    // 中层光束
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = isOC ? '#ff8800' : '#ff2222';
+    ctx.globalAlpha = 0.5 * pulse;
+    ctx.strokeStyle = isOC ? '#ff8833' : '#ff3333';
+    ctx.lineWidth = 8 * widthMult;
+    ctx.beginPath();
+    ctx.moveTo(cx, botY);
+    ctx.lineTo(cx, topY);
+    ctx.stroke();
+
+    // 核心白线
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 0.9 * pulse;
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2 * widthMult;
+    ctx.beginPath();
+    ctx.moveTo(cx, botY);
+    ctx.lineTo(cx, topY);
+    ctx.stroke();
+
+    // 命中区底部火花
+    ctx.globalAlpha = 0.6 * pulse;
+    ctx.fillStyle = isOC ? '#ffcc44' : '#ff6644';
+    ctx.beginPath();
+    ctx.arc(cx, botY, 4 + Math.random() * 2, 0, 6.2832);
+    ctx.fill();
+}
+
+function drawLaser() {
+    const p = G.player;
+    const def = CRAFT.get(p.aircraftType);
+    if (!def || !def.isLaser) return;
+
+    const ctx = Game.ctx;
+    const now = Date.now();
+    const pulse = 0.75 + Math.sin(now * 0.01) * 0.25;
+    const isOC = p.isOverclock;
+    // 穿透词条：每级激光宽度 +60%
+    const widthMult = 1 + (p.pierceLevel || 0) * 0.6;
+
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+
+    if (p.doubleShot) {
+        // 双束激光：左右各偏移 10px
+        const offset = 10;
+        _drawSingleLaser(ctx, Math.round(p.x + p.width / 2 - offset), p.y, widthMult, pulse, isOC);
+        _drawSingleLaser(ctx, Math.round(p.x + p.width / 2 + offset), p.y, widthMult, pulse, isOC);
+    } else {
+        _drawSingleLaser(ctx, Math.round(p.x + p.width / 2), p.y, widthMult, pulse, isOC);
+    }
+
+    ctx.restore();
 }
 
 function drawWingman() {
