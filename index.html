@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>张子墨 | Sunmiss — 游戏设计师作品集</title>
+  <meta name="description" content="张子墨（Sunmiss）的游戏设计师作品集。展示 Roguelike 飞机大战《超时空激战》、AI 动漫角色聊天应用 AnimeChatWeb 等独立项目，涵盖系统设计、数值设计、体验设计等核心能力。">
+  <link rel="icon" href="assets/头像.png" type="image/png">
+  <meta property="og:title" content="张子墨 | Sunmiss — 游戏设计师作品集">
+  <meta property="og:description" content="展示 Roguelike 飞机大战、AI 动漫角色聊天等独立项目的游戏设计师作品集。">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a href="#featured" class="skip-link">跳转到主要内容</a>
+  <!-- ===== Navigation ===== -->
+  <nav class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="#hero" class="nav__logo">张子墨</a>
+      <div class="nav__links">
+        <a href="#featured" class="nav__link">精选作品</a>
+        <a href="#skills" class="nav__link">技能</a>
+        <a href="#experience" class="nav__link">经历</a>
+        <a href="#project" class="nav__link">作品</a>
+        <a href="#gaming-history" class="nav__link">游戏史</a>
+        <a href="#art" class="nav__link">美术</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== Section 1: Hero ===== -->
+  <section class="hero" id="hero">
+    <div class="hero__glow hero__glow--1" aria-hidden="true"></div>
+    <div class="hero__glow hero__glow--2" aria-hidden="true"></div>
+    <div class="hero__glow hero__glow--3" aria-hidden="true"></div>
+    <!-- 翻牌大字背景 -->
+    <div class="hero__flip" aria-hidden="true">
+      <div class="hero__flip-char" style="--i:0"><span>游</span></div>
+      <div class="hero__flip-char" style="--i:1"><span>戏</span></div>
+      <div class="hero__flip-char" style="--i:2"><span>策</span></div>
+      <div class="hero__flip-char" style="--i:3"><span>划</span></div>
+    </div>
+    <div class="hero__content">
+      <img class="hero__avatar" src="assets/头像.png" alt="张子墨的头像">
+      <h1 class="hero__name">张子墨</h1>
+      <p class="hero__alias">Sunmiss</p>
+      <div class="hero__divider"></div>
+      <div class="hero__statements">
+        <p class="hero__statement hero__statement--listen">
+          <span>倾听团队的声音</span>
+          <span>倾听受众的声音</span>
+          <span>倾听游戏的声音</span>
+          <span>倾听客户的声音</span>
+          <span>倾听自己的声音</span>
+        </p>
+        <p class="hero__statement hero__statement--feel">
+          <span>选择感</span><span class="hero__dot">·</span>
+          <span>自由感</span><span class="hero__dot">·</span>
+          <span>责任感</span><span class="hero__dot">·</span>
+          <span>成就感</span>
+        </p>
+        <p class="hero__statement hero__statement--core">通过游戏创造从其他途径都无法获得的体验。</p>
+        <p class="hero__statement hero__statement--question">如何创造完美的游戏？</p>
+        <p class="hero__statement hero__statement--disciplines">
+          <span>心理学</span><span class="hero__dot">·</span>
+          <span>人类学</span><span class="hero__dot">·</span>
+          <span>设计学</span>
+        </p>
+      </div>
+    </div>
+    <a href="#project" class="hero__scroll" aria-label="向下滚动">
+      <svg class="hero__scroll-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </a>
+  </section>
+
+  <!-- ===== Section 2: Featured ===== -->
+  <section class="featured" id="featured">
+    <div class="featured__inner">
+      <div class="featured__header reveal">
+        <span class="featured__label">精选作品</span>
+        <h2 class="featured__title">Selected Work</h2>
+      </div>
+      <div class="featured__grid">
+        <a href="#project" class="featured__card reveal">
+          <div class="featured__card-visual" style="background-image: url('assets/超时空激战预览图.png'); background-size: cover; background-position: center;">
+          </div>
+          <div class="featured__card-info">
+            <h3>超时空激战</h3>
+            <p>Roguelike 飞机大战 · JavaScript · Canvas</p>
+          </div>
+        </a>
+        <a href="#project-2" class="featured__card reveal">
+          <div class="featured__card-visual" style="background-image: url('assets/Animechat宣传图.png'); background-size: cover; background-position: center;">
+          </div>
+          <div class="featured__card-info">
+            <h3>AnimeChatWeb</h3>
+            <p>AI 动漫角色聊天 · Next.js · DeepSeek</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Section: Skills & Tools ===== -->
+  <section class="skills" id="skills">
+    <div class="skills__inner">
+      <div class="skills__header reveal">
+        <span class="skills__label">能力体系</span>
+        <h2 class="skills__title">Skills & Tools</h2>
+      </div>
+      <div class="skills__grid">
+        <!-- 技能 -->
+        <div class="skills__card reveal">
+          <div class="skills__card-head">
+            <div class="skills__card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20l9-5-9-5-9 5 9 5z"/><path d="M12 12l9-5-9-5-9 5 9 5z"/></svg>
+            </div>
+            <h3>技能</h3>
+          </div>
+          <div class="skills__card-body">
+            <div class="skills__list">
+              <div class="skills__item">
+                <h4>系统设计</h4>
+                <p>数据驱动架构、注册表模式、声明式扩展</p>
+              </div>
+              <div class="skills__item">
+                <h4>数值设计</h4>
+                <p>经济平衡、难度曲线、概率与成长公式</p>
+              </div>
+              <div class="skills__item">
+                <h4>体验设计</h4>
+                <p>情绪节奏、手感打磨、反馈设计</p>
+              </div>
+              <div class="skills__item">
+                <h4>角色与叙事</h4>
+                <p>人格建模、关系系统、程序化叙事</p>
+              </div>
+              <div class="skills__item">
+                <h4>关卡设计</h4>
+                <p>敌人配置、Boss 机制、节奏编排</p>
+              </div>
+              <div class="skills__item">
+                <h4>原型验证</h4>
+                <p>快速从 0 到 1 做出可玩产品</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 方法论 -->
+        <div class="skills__card reveal">
+          <div class="skills__card-head">
+            <div class="skills__card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <h3>方法论</h3>
+          </div>
+          <div class="skills__card-body">
+            <div class="skills__list">
+              <div class="skills__item">
+                <h4>心理学视角</h4>
+                <p>用情绪系数、关系阶段等心理模型驱动系统设计</p>
+              </div>
+              <div class="skills__item">
+                <h4>数据驱动思维</h4>
+                <p>数值不写死在逻辑里，用公式和常量表控制</p>
+              </div>
+              <div class="skills__item">
+                <h4>玩家体验优先</h4>
+                <p>先定义感受，再反推机制</p>
+              </div>
+              <div class="skills__item">
+                <h4>原型驱动开发</h4>
+                <p>快速验证大于完美设计</p>
+              </div>
+              <div class="skills__item">
+                <h4>跨领域迁移</h4>
+                <p>游戏系统思维应用到 AI 产品、Unity 架构映射到 Web</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 工具 -->
+        <div class="skills__card skills__card--wide reveal">
+          <div class="skills__card-head">
+            <div class="skills__card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+            </div>
+            <h3>工具</h3>
+          </div>
+          <div class="skills__card-body">
+            <div class="skills__groups">
+              <div class="skills__group">
+                <h4>游戏引擎</h4>
+                <div class="skills__tags">
+                  <span>Unity</span>
+                  <span>Godot</span>
+                  <span>Cocos Creator</span>
+                  <span>Unreal Engine</span>
+                  <span>自研轻量引擎</span>
+                </div>
+              </div>
+              <div class="skills__group">
+                <h4>编程语言</h4>
+                <div class="skills__tags">
+                  <span>JavaScript</span>
+                  <span>C#</span>
+                  <span>Python</span>
+                  <span>Lua</span>
+                </div>
+              </div>
+              <div class="skills__group">
+                <h4>前端框架</h4>
+                <div class="skills__tags">
+                  <span>Next.js</span>
+                  <span>React</span>
+                  <span>HTML5 Canvas</span>
+                </div>
+              </div>
+              <div class="skills__group">
+                <h4>AI 技术</h4>
+                <div class="skills__tags">
+                  <span>DeepSeek API</span>
+                  <span>Function Calling</span>
+                  <span>RAG</span>
+                  <span>SSE 流式</span>
+                </div>
+              </div>
+              <div class="skills__group">
+                <h4>美术制作</h4>
+                <div class="skills__tags">
+                  <span>Photoshop</span>
+                  <span>Illustrator</span>
+                  <span>AIGC 2D/3D 素材</span>
+                  <span>帧动画绘制</span>
+                  <span>AI 矢量图</span>
+                </div>
+              </div>
+              <div class="skills__group">
+                <h4>AI 工具</h4>
+                <div class="skills__tags">
+                  <span>Claude Code</span>
+                  <span>OpenClaw</span>
+                  <span>Codex</span>
+                  <span>Cursor</span>
+                </div>
+              </div>
+              <div class="skills__group">
+                <h4>生产流程</h4>
+                <div class="skills__tags">
+                  <span>快速原型开发</span>
+                  <span>Git</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Section: Experience ===== -->
+  <section class="experience" id="experience">
+    <div class="experience__inner">
+      <div class="experience__header reveal">
+        <span class="experience__label">工作经历</span>
+        <h2 class="experience__title">Experience</h2>
+      </div>
+
+      <div class="experience__card reveal">
+        <div class="experience__top">
+          <div class="experience__meta">
+            <h3 class="experience__company">合肥晶驿科技公司</h3>
+            <span class="experience__role">游戏策划</span>
+          </div>
+          <span class="experience__period">2024.10 — 2025.02</span>
+        </div>
+
+        <div class="experience__project">
+          <h4 class="experience__project-name">《烈火英雄》</h4>
+          <div class="experience__tags">
+            <span>肉鸽</span>
+            <span>打怪</span>
+            <span>刷宝</span>
+            <span>暗黑</span>
+            <span>动作 RPG</span>
+          </div>
+          <p class="experience__project-desc">一款融合 Roguelike 与暗黑刷宝玩法的动作 RPG。负责核心系统策划与数值设计，主导职业体系、装备经济、PVP/PVE 双模式框架的方案制定与落地推进。</p>
+        </div>
+
+        <div class="experience__details">
+          <div class="experience__detail">
+            <div class="experience__detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+              <h4>职业体系设计</h4>
+              <p>设计战士、法师、道士三大职业，每职业规划三条差异化天赋分支（共 9 条路线），定义各分支的技能树结构、核心机制与定位差异，输出职业技能配置文档与数值表。</p>
+            </div>
+          </div>
+          <div class="experience__detail">
+            <div class="experience__detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+            </div>
+            <div>
+              <h4>装备与词条系统</h4>
+              <p>设计装备等级成长体系与词条随机生成规则，规划稀有度分层、词条权重池、套装效果联动，确保刷宝正反馈循环与 Build 构筑深度。</p>
+            </div>
+          </div>
+          <div class="experience__detail">
+            <div class="experience__detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div>
+              <h4>PVE 关卡与怪物设计</h4>
+              <p>设计 Roguelike 副本关卡结构、怪物行为模式与 Boss 机制，规划难度曲线与掉落节奏，确保刷宝体验的持续驱动力。</p>
+            </div>
+          </div>
+          <div class="experience__detail">
+            <div class="experience__detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            </div>
+            <div>
+              <h4>PVP 平衡性设计</h4>
+              <p>建立 PVP 独立数值框架，设计职业克制关系与技能平衡规则，输出 PVP 数值对照表，协调程序与 QA 推进平衡性调优。</p>
+            </div>
+          </div>
+          <div class="experience__detail">
+            <div class="experience__detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+            </div>
+            <div>
+              <h4>策划文档与跨部门协作</h4>
+              <p>输出系统设计文档（GDD）、数值配置表、原型流程图，与程序、美术、QA 多部门协作推进方案落地与迭代验证。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Section 3: Project ===== -->
+  <section class="project" id="project">
+    <div class="project__inner">
+
+      <!-- Project Header -->
+      <div class="project__header reveal">
+        <span class="project__label">独立项目</span>
+        <h2 class="project__title">超时空激战</h2>
+        <p class="project__subtitle">无尽冒险 · 关卡战役 · 词条搭配 — 竖版 Roguelike 飞机大战</p>
+      </div>
+
+      <!-- Overview -->
+      <div class="project__overview reveal">
+        <div class="project__overview-text">
+          <h3>项目介绍</h3>
+          <p>基于纯 JavaScript + HTML5 Canvas 构建的竖版 Roguelike 飞机大战游戏。零外部依赖，完整实现了词条构筑、动态难度、四 Boss 轮回、宝石经济、7 关战役星图、4 种可选战机、存档系统等核心系统，辅以未来科幻风格 UI 和像素字体美学。</p>
+          <div class="project__tags">
+            <span>JavaScript</span>
+            <span>HTML5 Canvas</span>
+            <span>Roguelike</span>
+            <span>STG</span>
+            <span>零依赖</span>
+            <span>关卡战役</span>
+            <span>存档系统</span>
+          </div>
+        </div>
+        <div class="project__stats">
+          <div class="project__stat">
+            <span class="project__stat-num">33+</span>
+            <span class="project__stat-label">JS 模块</span>
+          </div>
+          <div class="project__stat">
+            <span class="project__stat-num">17</span>
+            <span class="project__stat-label">词条系统</span>
+          </div>
+          <div class="project__stat">
+            <span class="project__stat-num">4</span>
+            <span class="project__stat-label">Boss 战</span>
+          </div>
+          <div class="project__stat">
+            <span class="project__stat-num">200</span>
+            <span class="project__stat-label">fps 基准</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Design Goals -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">设计目标</h3>
+        <div class="project__goals">
+          <div class="project__goal">
+            <span class="project__goal-num">01</span>
+            <div>
+              <h4>Roguelike 词条构筑</h4>
+              <p>4种稀有度 × 17种词条 × 权重随机 × 前置条件链，每局游戏产生差异化的 Build 体验，让玩家在有限选择中寻找最优策略。</p>
+            </div>
+          </div>
+          <div class="project__goal">
+            <span class="project__goal-num">02</span>
+            <div>
+              <h4>双模式游戏体验</h4>
+              <p>无尽冒险模式搭配渐进式难度曲线（25l² + 75l + 50），7 关战役星图模式提供从新手教学到三 Boss 连战的完整关卡流程。</p>
+            </div>
+          </div>
+          <div class="project__goal">
+            <span class="project__goal-num">03</span>
+            <div>
+              <h4>未来科幻美学</h4>
+              <p>青色主题 CSS 变量驱动、发光边框、角括号装饰、脉冲动画、科幻面板 UI，搭配像素字体（Press Start 2P + HYPixel11pxU-2），营造沉浸式科幻氛围。</p>
+            </div>
+          </div>
+          <div class="project__goal">
+            <span class="project__goal-num">04</span>
+            <div>
+              <h4>高性能渲染</h4>
+              <p>基准 200fps，原地数组压缩、6 通道粒子批渲染、离屏缓存、lighter 合成替代 shadowBlur，确保复杂场景下流畅运行。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Design -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">系统设计</h3>
+        <div class="project__systems">
+          <div class="project__system">
+            <div class="project__system-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <h4>四套注册表模式</h4>
+            <p>ENEMY / BOSS / BUFF / CRAFT 四套注册表，统一接口、声明式扩展，新增敌人、词条或战机无需修改核心循环。</p>
+          </div>
+          <div class="project__system">
+            <div class="project__system-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <h4>超频系统</h4>
+            <p>击杀累积能量 → 满值激活 → 射速翻倍 + 无敌 + 3 秒爆发窗口。高风险高回报的节奏控制核心。</p>
+          </div>
+          <div class="project__system">
+            <div class="project__system-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM21 16c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z"/></svg>
+            </div>
+            <h4>7 关战役星图</h4>
+            <p>S 形蛇行星图节点系统，从新兵试炼到三 Boss 终极决战，关卡进度通过 localStorage 持久化存储。</p>
+          </div>
+          <div class="project__system">
+            <div class="project__system-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+            </div>
+            <h4>宝石经济</h4>
+            <p>三档宝石（5/10/20 分）→ 爆发 → 下落 → 磁吸三阶段物理，配合增值、磁力、贪婪词条形成经济策略层。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Numerical Design -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">数值设计</h3>
+        <div class="project__num-tables">
+          <div class="project__num-card">
+            <h4>等级阈值</h4>
+            <p class="project__num-formula">Threshold(l) = 25l² + 75l + 50</p>
+            <div class="project__num-bar-chart">
+              <div class="project__num-bar" style="--h: 10%"><span>50</span><i>Lv 1</i></div>
+              <div class="project__num-bar" style="--h: 20%"><span>150</span><i>Lv 2</i></div>
+              <div class="project__num-bar" style="--h: 35%"><span>300</span><i>Lv 3</i></div>
+              <div class="project__num-bar" style="--h: 55%"><span>500</span><i>Lv 4</i></div>
+              <div class="project__num-bar" style="--h: 80%"><span>750</span><i>Lv 5</i></div>
+              <div class="project__num-bar" style="--h: 100%"><span>1050</span><i>Lv 6</i></div>
+            </div>
+          </div>
+          <div class="project__num-card">
+            <h4>词条稀有度分布</h4>
+            <div class="project__rarity-list">
+              <div class="project__rarity">
+                <span class="project__rarity-dot" style="--c: #8b8b8b"></span>
+                <span>普通</span>
+                <span class="project__rarity-weight">权重 5</span>
+              </div>
+              <div class="project__rarity">
+                <span class="project__rarity-dot" style="--c: #3b82f6"></span>
+                <span>稀有</span>
+                <span class="project__rarity-weight">权重 3</span>
+              </div>
+              <div class="project__rarity">
+                <span class="project__rarity-dot" style="--c: #a855f7"></span>
+                <span>史诗</span>
+                <span class="project__rarity-weight">权重 1</span>
+              </div>
+              <div class="project__rarity">
+                <span class="project__rarity-dot" style="--c: #f59e0b"></span>
+                <span>传说</span>
+                <span class="project__rarity-weight">权重 0.65</span>
+              </div>
+            </div>
+            <div class="project__rarity-bar">
+              <div style="--w: 50%; --c: #8b8b8b"></div>
+              <div style="--w: 30%; --c: #3b82f6"></div>
+              <div style="--w: 12%; --c: #a855f7"></div>
+              <div style="--w: 8%; --c: #f59e0b"></div>
+            </div>
+          </div>
+          <div class="project__num-card">
+            <h4>敌人 & Boss 数值</h4>
+            <table class="project__table">
+              <thead><tr><th>单位</th><th>血量</th><th>分值</th><th>特性</th></tr></thead>
+              <tbody>
+                <tr><td>基础机</td><td>1</td><td>5</td><td>直线下落</td></tr>
+                <tr><td>射手</td><td>2</td><td>10</td><td>悬停射击</td></tr>
+                <tr><td>突击</td><td>2</td><td>20</td><td>悬停冲刺</td></tr>
+                <tr><td>旋刃</td><td>3</td><td>30</td><td>扇形弹幕</td></tr>
+                <tr><td>幻影</td><td>3</td><td>40</td><td>瞄准射击+瞬移</td></tr>
+                <tr><td>独眼王</td><td>200</td><td>—</td><td>扫射/护盾/召唤</td></tr>
+                <tr><td>夜煞</td><td>240</td><td>—</td><td>激光/反弹护盾</td></tr>
+                <tr><td>冰邪王</td><td>200</td><td>—</td><td>冰锥/冰墙/漩涡</td></tr>
+                <tr><td>巨灵神</td><td>250</td><td>—</td><td>天降神雨/横扫/天罚</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data & Results -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">数据与结果</h3>
+        <div class="project__results">
+          <div class="project__result">
+            <span class="project__result-num">33+</span>
+            <span>JS 模块文件</span>
+          </div>
+          <div class="project__result">
+            <span class="project__result-num">36+</span>
+            <span>游戏素材</span>
+          </div>
+          <div class="project__result">
+            <span class="project__result-num">0</span>
+            <span>外部依赖</span>
+          </div>
+          <div class="project__result">
+            <span class="project__result-num">6</span>
+            <span>帧率档位</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Retrospective -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">复盘</h3>
+        <div class="project__retro">
+          <div class="project__retro-item">
+            <span class="project__retro-icon project__retro-icon--good"></span>
+            <div>
+              <h4>注册表模式</h4>
+              <p>四套注册表（ENEMY/BOSS/BUFF/CRAFT）实现了声明式扩展，新增敌人/Boss/词条/战机无需修改核心循环，证明了数据驱动架构在小型游戏中的可行性。</p>
+            </div>
+          </div>
+          <div class="project__retro-item">
+            <span class="project__retro-icon project__retro-icon--good"></span>
+            <div>
+              <h4>性能优化策略</h4>
+              <p>原地数组压缩替代 splice、lighter 合成模拟辉光、6 通道粒子批渲染——这些在 800 粒子上限下仍保持 200fps 稳定。</p>
+            </div>
+          </div>
+          <div class="project__retro-item">
+            <span class="project__retro-icon project__retro-icon--grow"></span>
+            <div>
+              <h4>可改进的方向</h4>
+              <p>当前为单文件加载（33+ 脚本），可引入模块打包器优化加载性能；美术素材由 AI 生成，可建立标准化素材生成流水线。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Demo & Assets -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">在线体验</h3>
+        <div class="project__demo">
+          <a href="肉鸽飞机大战/index.html" class="project__demo-btn" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            开始游戏
+          </a>
+          <button class="project__demo-btn project__demo-btn--outline" id="openAssets">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            素材展示
+          </button>
+          <p class="project__demo-hint">新窗口打开 · 键盘操控 · 按 Esc 暂停</p>
+        </div>
+      </div>
+
+      <!-- Documents -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">文档与原型</h3>
+        <div class="project__docs">
+          <div class="project__doc">
+            <div class="project__doc-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+            </div>
+            <h4>ARCHITECTURE.md</h4>
+            <p>完整的架构文档：文件结构树、加载顺序、注册表模式说明、系统一览、性能优化清单、拓展指南。</p>
+            <a class="project__doc-preview" href="assets/ARCHITECTURE.md" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              预览
+            </a>
+          </div>
+          <div class="project__doc">
+            <div class="project__doc-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+            </div>
+            <h4>GDD.md</h4>
+            <p>游戏设计文档：核心系统、战机/敌人/Boss 数值、关卡设计、UI 规划、视觉风格、平衡性设计、拓展指南。</p>
+            <a class="project__doc-preview" href="assets/GDD.md" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              预览
+            </a>
+          </div>
+          <div class="project__doc">
+            <div class="project__doc-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h4>调试器系统</h4>
+            <p>暂停时按 D 打开调试面板：调整生命/分数、召唤任意敌人/Boss、强制获得任意词条，大幅缩短开发调试周期。</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== Section 4: Project 2 — AnimeChatWeb ===== -->
+  <section class="project" id="project-2">
+    <div class="project__inner">
+
+      <!-- Project Header -->
+      <div class="project__header reveal">
+        <span class="project__label">独立项目</span>
+        <h2 class="project__title">AnimeChatWeb</h2>
+        <p class="project__subtitle">AI 动漫角色聊天 · 沉浸式 Galgame 风格交互体验</p>
+      </div>
+
+      <!-- Overview -->
+      <div class="project__overview reveal">
+        <div class="project__overview-text">
+          <h3>项目介绍</h3>
+          <p>从 Unity 桌面应用移植到 Web 的 AI 动漫角色聊天应用。用户选择动漫风格虚拟角色，通过 AI 驱动的流式对话进行沉浸式互动。完整实现了亲密度、情绪、向量记忆、动态场景生成等六大核心系统。</p>
+          <div class="project__tags">
+            <span>Next.js</span>
+            <span>React</span>
+            <span>DeepSeek API</span>
+            <span>SSE 流式</span>
+            <span>LanceDB</span>
+            <span>MiniMax</span>
+          </div>
+        </div>
+        <div class="project__stats">
+          <div class="project__stat">
+            <span class="project__stat-num">73</span>
+            <span class="project__stat-label">源文件</span>
+          </div>
+          <div class="project__stat">
+            <span class="project__stat-num">6</span>
+            <span class="project__stat-label">核心系统</span>
+          </div>
+          <div class="project__stat">
+            <span class="project__stat-num">4</span>
+            <span class="project__stat-label">AI 角色</span>
+          </div>
+          <div class="project__stat">
+            <span class="project__stat-num">3</span>
+            <span class="project__stat-label">AI Provider</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Design Goals -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">设计目标</h3>
+        <div class="project__goals">
+          <div class="project__goal">
+            <span class="project__goal-num">01</span>
+            <div>
+              <h4>沉浸式角色互动</h4>
+              <p>轮播式角色选择 + 全屏动态天空背景引擎（11 层叠加：天空渐变、星星、云海、神光、微尘、樱花飘落、暗角），每个角色独立主题色、立绘、语录，营造 Galgame 般的沉浸氛围。</p>
+            </div>
+          </div>
+          <div class="project__goal">
+            <span class="project__goal-num">02</span>
+            <div>
+              <h4>有温度的 AI 对话</h4>
+              <p>基于 DeepSeek 流式输出的逐字符打字机效果（标点符号差异化延迟：逗号 120ms，句号 240ms，普通字 40ms），三套独立对话模式（陌生 / 成长 / 陪伴），让 AI 角色有真实的情感变化。</p>
+            </div>
+          </div>
+          <div class="project__goal">
+            <span class="project__goal-num">03</span>
+            <div>
+              <h4>关系成长系统</h4>
+              <p>亲密度（-100 到 +100，10 个阶段）+ 情绪系统（4 种情绪 × 情绪系数影响亲密度），AI 通过结构化标签实时输出情感状态，让对话关系有可感知的深度变化。</p>
+            </div>
+          </div>
+          <div class="project__goal">
+            <span class="project__goal-num">04</span>
+            <div>
+              <h4>向量记忆 + 动态场景</h4>
+              <p>LanceDB 本地向量库 + DashScope Embedding 实现 RAG 记忆检索；MiniMax API 根据亲密度阶段动态生成剧情场景，从冷淡试探到亲密互动，每次对话都能延续上下文。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Design -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">系统设计</h3>
+        <div class="project__systems">
+          <div class="project__system">
+            <div class="project__system-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            </div>
+            <h4>流式对话引擎</h4>
+            <p>DeepSeek SSE 流式透传 + 行级标签缓冲拦截，实时解析亲密度和情绪标签，避免 TCP 分片导致的 JSON 解析失败。</p>
+          </div>
+          <div class="project__system">
+            <div class="project__system-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            </div>
+            <h4>亲密度 & 情绪系统</h4>
+            <p>10 级关系阶段（敌视→依恋），情绪系数实时影响亲密度变化幅度，负面低强度强制降关系，实现有深度的角色情感模拟。</p>
+          </div>
+          <div class="project__system">
+            <div class="project__system-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <h4>向量记忆 (RAG)</h4>
+            <p>LanceDB 本地向量库 + DashScope 1024 维 Embedding，DeepSeek Function Calling 自动触发记忆检索，对话有长期记忆。</p>
+          </div>
+          <div class="project__system">
+            <div class="project__system-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+            </div>
+            <h4>动态场景生成</h4>
+            <p>MiniMax API 根据亲密度阶段生成 3 个剧情场景，服务端校验防篡改，支持用户自定义场景描述。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technical Architecture -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">技术架构</h3>
+        <div class="project__num-tables">
+          <div class="project__num-card">
+            <h4>双 AI Provider 架构</h4>
+            <table class="project__table">
+              <thead><tr><th>Provider</th><th>用途</th><th>模式</th></tr></thead>
+              <tbody>
+                <tr><td>DeepSeek API</td><td>对话生成</td><td>SSE 流式</td></tr>
+                <tr><td>MiniMax API</td><td>剧情场景生成</td><td>非流式</td></tr>
+                <tr><td>DashScope API</td><td>向量 Embedding</td><td>1024 维</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="project__num-card">
+            <h4>亲密度阶段</h4>
+            <div class="project__rarity-list">
+              <div class="project__rarity">
+                <span class="project__rarity-dot" style="--c: #ef4444"></span>
+                <span>敌视 / 反感 / 冷漠</span>
+                <span class="project__rarity-weight">-100 ~ -40</span>
+              </div>
+              <div class="project__rarity">
+                <span class="project__rarity-dot" style="--c: #f59e0b"></span>
+                <span>疏远 / 陌生</span>
+                <span class="project__rarity-weight">-40 ~ -10</span>
+              </div>
+              <div class="project__rarity">
+                <span class="project__rarity-dot" style="--c: #3b82f6"></span>
+                <span>熟悉 / 好感</span>
+                <span class="project__rarity-weight">-10 ~ 30</span>
+              </div>
+              <div class="project__rarity">
+                <span class="project__rarity-dot" style="--c: #22c55e"></span>
+                <span>亲近 / 喜欢 / 依恋</span>
+                <span class="project__rarity-weight">30 ~ 100</span>
+              </div>
+            </div>
+            <div class="project__rarity-bar">
+              <div style="--w: 30%; --c: #ef4444"></div>
+              <div style="--w: 20%; --c: #f59e0b"></div>
+              <div style="--w: 20%; --c: #3b82f6"></div>
+              <div style="--w: 30%; --c: #22c55e"></div>
+            </div>
+          </div>
+          <div class="project__num-card">
+            <h4>情绪系数</h4>
+            <table class="project__table">
+              <thead><tr><th>情绪</th><th>亲密度系数</th><th>触发示例</th></tr></thead>
+              <tbody>
+                <tr><td>positive（开心）</td><td>×1.3</td><td>"谢谢"、"喜欢"</td></tr>
+                <tr><td>excited（兴奋）</td><td>×1.4</td><td>"太棒了"、"厉害"</td></tr>
+                <tr><td>calm（平静）</td><td>×1.0</td><td>默认状态</td></tr>
+                <tr><td>negative（难过）</td><td>×0.5</td><td>"滚"、"讨厌"</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data & Results -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">数据与结果</h3>
+        <div class="project__results">
+          <div class="project__result">
+            <span class="project__result-num">73</span>
+            <span>源文件</span>
+          </div>
+          <div class="project__result">
+            <span class="project__result-num">65</span>
+            <span>角色图片</span>
+          </div>
+          <div class="project__result">
+            <span class="project__result-num">8</span>
+            <span>API 路由</span>
+          </div>
+          <div class="project__result">
+            <span class="project__result-num">11</span>
+            <span>背景层级</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Retrospective -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">复盘</h3>
+        <div class="project__retro">
+          <div class="project__retro-item">
+            <span class="project__retro-icon project__retro-icon--good"></span>
+            <div>
+              <h4>Unity → Web 架构映射</h4>
+              <p>系统性地将 Unity C# 类 1:1 映射到 React 组件 / JS 模块（ChatManager.cs → useChatManager.js 等），证明了跨技术栈迁移的可行性。</p>
+            </div>
+          </div>
+          <div class="project__retro-item">
+            <span class="project__retro-icon project__retro-icon--good"></span>
+            <div>
+              <h4>Function Calling 记忆检索</h4>
+              <p>用 DeepSeek Function Calling 替代传统 RAG 流程，服务端预检查是否需要调用 search_memory 工具，再做流式请求，大幅简化了记忆系统架构。</p>
+            </div>
+          </div>
+          <div class="project__retro-item">
+            <span class="project__retro-icon project__retro-icon--grow"></span>
+            <div>
+              <h4>可改进的方向</h4>
+              <p>对话历史目前仅存内存，刷新丢失，可引入持久化方案；角色图片 65 张全部本地加载，可考虑 CDN 分发和懒加载优化首屏性能。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Documents -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">文档与工具</h3>
+        <div class="project__docs">
+          <div class="project__doc">
+            <div class="project__doc-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+            </div>
+            <h4>Admin 角色编辑器</h4>
+            <p>内置 /admin 管理页面：可视化编辑角色配置（名称、立绘、语录、标签），支持图片上传，无需手动修改 JSON 文件。</p>
+          </div>
+          <div class="project__doc">
+            <div class="project__doc-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <h4>Debug 调试面板</h4>
+            <p>完整的调试系统：实时查看 API 日志、亲密度变量、对话历史、记忆条目、场景生成记录，大幅缩短开发调试周期。</p>
+          </div>
+          <div class="project__doc">
+            <div class="project__doc-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+            </div>
+            <h4>GDD.md</h4>
+            <p>完整游戏设计文档：核心机制（亲密度 / 情绪 / 记忆 / 场景）、4 角色设定、UI 布局、技术架构、Prompt 工程规范、未来路线图。</p>
+            <a class="project__doc-preview" href="assets/AnimeChatWeb-GDD.md" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              预览
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screenshots -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">应用截图</h3>
+        <div class="project__screenshots">
+          <div class="project__screenshot" data-src="assets/屏幕截图 2026-04-22 002108.png">
+            <img src="assets/屏幕截图 2026-04-22 002108.png" alt="角色选择界面" loading="lazy">
+            <span>角色选择界面</span>
+          </div>
+          <div class="project__screenshot" data-src="assets/屏幕截图 2026-04-22 003432.png">
+            <img src="assets/屏幕截图 2026-04-22 003432.png" alt="动态剧情生成" loading="lazy">
+            <span>动态剧情生成</span>
+          </div>
+          <div class="project__screenshot" data-src="assets/屏幕截图 2026-04-22 004004.png">
+            <img src="assets/屏幕截图 2026-04-22 004004.png" alt="聊天界面 · 明星日鞠" loading="lazy">
+            <span>聊天界面 · 明星日鞠</span>
+          </div>
+          <div class="project__screenshot" data-src="assets/屏幕截图 2026-04-22 004200.png">
+            <img src="assets/屏幕截图 2026-04-22 004200.png" alt="聊天界面 · 早濑优香" loading="lazy">
+            <span>聊天界面 · 早濑优香</span>
+          </div>
+          <div class="project__screenshot" data-src="assets/屏幕截图 2026-04-22 004410.png">
+            <img src="assets/屏幕截图 2026-04-22 004410.png" alt="终端日志输出" loading="lazy">
+            <span>终端日志输出</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Asset Gallery Modal -->
+  <div class="asset-gallery" id="assetGallery">
+    <div class="asset-gallery__panel">
+      <div class="asset-gallery__header">
+        <h2>游戏素材展示</h2>
+        <button class="asset-gallery__close" id="closeAssets" aria-label="关闭">&times;</button>
+      </div>
+      <div class="asset-gallery__body">
+        <!-- 战机 -->
+        <div class="asset-gallery__group">
+          <h3 class="asset-gallery__group-title">战机</h3>
+          <div class="asset-gallery__grid">
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/紫色更有韵味.png">
+              <img src="肉鸽飞机大战/image/紫色更有韵味.png" alt="紫色更有韵味" loading="lazy">
+              <span>紫色更有韵味</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/苍穹号.png">
+              <img src="肉鸽飞机大战/image/苍穹号.png" alt="苍穹号" loading="lazy">
+              <span>苍穹号</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/墨子号.png">
+              <img src="肉鸽飞机大战/image/墨子号.png" alt="墨子号" loading="lazy">
+              <span>墨子号</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/赤红号.png">
+              <img src="肉鸽飞机大战/image/赤红号.png" alt="赤红号" loading="lazy">
+              <span>赤红号</span>
+            </div>
+          </div>
+        </div>
+        <!-- Boss -->
+        <div class="asset-gallery__group">
+          <h3 class="asset-gallery__group-title">Boss</h3>
+          <div class="asset-gallery__grid">
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss1-独眼王.png">
+              <img src="肉鸽飞机大战/image/Boss1-独眼王.png" alt="独眼王" loading="lazy">
+              <span>独眼王</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss1-独眼王动作帧.png">
+              <img src="肉鸽飞机大战/image/Boss1-独眼王动作帧.png" alt="独眼王·动作帧" loading="lazy">
+              <span>独眼王·动作帧</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss2-夜煞.png">
+              <img src="肉鸽飞机大战/image/Boss2-夜煞.png" alt="夜煞" loading="lazy">
+              <span>夜煞</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss2-夜煞动作帧.png">
+              <img src="肉鸽飞机大战/image/Boss2-夜煞动作帧.png" alt="夜煞·动作帧" loading="lazy">
+              <span>夜煞·动作帧</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss3-冰邪王.png">
+              <img src="肉鸽飞机大战/image/Boss3-冰邪王.png" alt="冰邪王" loading="lazy">
+              <span>冰邪王</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss3-冰邪王动作帧率.png">
+              <img src="肉鸽飞机大战/image/Boss3-冰邪王动作帧率.png" alt="冰邪王·动作帧" loading="lazy">
+              <span>冰邪王·动作帧</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss4-巨灵神.png">
+              <img src="肉鸽飞机大战/image/Boss4-巨灵神.png" alt="巨灵神" loading="lazy">
+              <span>巨灵神</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss4-巨灵神动作帧.png">
+              <img src="肉鸽飞机大战/image/Boss4-巨灵神动作帧.png" alt="巨灵神·动作帧" loading="lazy">
+              <span>巨灵神·动作帧</span>
+            </div>
+          </div>
+        </div>
+        <!-- 敌人 -->
+        <div class="asset-gallery__group">
+          <h3 class="asset-gallery__group-title">敌人</h3>
+          <div class="asset-gallery__grid">
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/一级敌人.png">
+              <img src="肉鸽飞机大战/image/一级敌人.png" alt="一级敌人" loading="lazy">
+              <span>基础机</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/二级敌人.png">
+              <img src="肉鸽飞机大战/image/二级敌人.png" alt="二级敌人" loading="lazy">
+              <span>射手</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/三级敌人.png">
+              <img src="肉鸽飞机大战/image/三级敌人.png" alt="三级敌人" loading="lazy">
+              <span>突击</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/四级敌人.png">
+              <img src="肉鸽飞机大战/image/四级敌人.png" alt="四级敌人" loading="lazy">
+              <span>旋刃</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/四级敌人2.png">
+              <img src="肉鸽飞机大战/image/四级敌人2.png" alt="四级敌人2" loading="lazy">
+              <span>幻影</span>
+            </div>
+          </div>
+        </div>
+        <!-- 宝石 & 道具 -->
+        <div class="asset-gallery__group">
+          <h3 class="asset-gallery__group-title">宝石 & 道具</h3>
+          <div class="asset-gallery__grid">
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/宝石5分.png">
+              <img src="肉鸽飞机大战/image/宝石5分.png" alt="宝石5分" loading="lazy">
+              <span>宝石 · 5 分</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/宝石10分.png">
+              <img src="肉鸽飞机大战/image/宝石10分.png" alt="宝石10分" loading="lazy">
+              <span>宝石 · 10 分</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/宝石20分·.png">
+              <img src="肉鸽飞机大战/image/宝石20分·.png" alt="宝石20分" loading="lazy">
+              <span>宝石 · 20 分</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/爱心.png">
+              <img src="肉鸽飞机大战/image/爱心.png" alt="爱心" loading="lazy">
+              <span>生命回复</span>
+            </div>
+          </div>
+        </div>
+        <!-- 陨石 -->
+        <div class="asset-gallery__group">
+          <h3 class="asset-gallery__group-title">陨石</h3>
+          <div class="asset-gallery__grid">
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/陨石素材1.png">
+              <img src="肉鸽飞机大战/image/陨石素材1.png" alt="陨石1" loading="lazy">
+              <span>陨石 1</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/陨石素材2.png">
+              <img src="肉鸽飞机大战/image/陨石素材2.png" alt="陨石2" loading="lazy">
+              <span>陨石 2</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/陨石素材3.png">
+              <img src="肉鸽飞机大战/image/陨石素材3.png" alt="陨石3" loading="lazy">
+              <span>陨石 3</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/陨石素材4.png">
+              <img src="肉鸽飞机大战/image/陨石素材4.png" alt="陨石4" loading="lazy">
+              <span>陨石 4</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/陨石素材5.png">
+              <img src="肉鸽飞机大战/image/陨石素材5.png" alt="陨石5" loading="lazy">
+              <span>陨石 5</span>
+            </div>
+          </div>
+        </div>
+        <!-- 特效 & 环境 -->
+        <div class="asset-gallery__group">
+          <h3 class="asset-gallery__group-title">特效 & 环境</h3>
+          <div class="asset-gallery__grid">
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/冰墙素材.png">
+              <img src="肉鸽飞机大战/image/冰墙素材.png" alt="冰墙" loading="lazy">
+              <span>冰墙</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/冰锥子弹.png">
+              <img src="肉鸽飞机大战/image/冰锥子弹.png" alt="冰锥子弹" loading="lazy">
+              <span>冰锥子弹</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/冰霜漩涡.png">
+              <img src="肉鸽飞机大战/image/冰霜漩涡.png" alt="冰霜漩涡" loading="lazy">
+              <span>冰霜漩涡</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/破损战舰1.png">
+              <img src="肉鸽飞机大战/image/破损战舰1.png" alt="破损战舰1" loading="lazy">
+              <span>破损战舰 1</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/破损战舰2.png">
+              <img src="肉鸽飞机大战/image/破损战舰2.png" alt="破损战舰2" loading="lazy">
+              <span>破损战舰 2</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/破损战舰3.png">
+              <img src="肉鸽飞机大战/image/破损战舰3.png" alt="破损战舰3" loading="lazy">
+              <span>破损战舰 3</span>
+            </div>
+            <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/破损战舰4.png">
+              <img src="肉鸽飞机大战/image/破损战舰4.png" alt="破损战舰4" loading="lazy">
+              <span>破损战舰 4</span>
+            </div>
+          </div>
+        </div>
+        <!-- 背景 -->
+        <div class="asset-gallery__group">
+          <h3 class="asset-gallery__group-title">背景</h3>
+          <div class="asset-gallery__grid">
+            <div class="asset-gallery__item asset-gallery__item--wide" data-src="肉鸽飞机大战/image/背景图.jpg">
+              <img src="肉鸽飞机大战/image/背景图.jpg" alt="背景图" loading="lazy">
+              <span>星空背景</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Section: Gaming History ===== -->
+  <section class="timeline" id="gaming-history">
+    <div class="timeline__inner">
+      <div class="timeline__header reveal">
+        <span class="timeline__label">游戏史</span>
+        <h2 class="timeline__title">Gaming History</h2>
+      </div>
+      <div class="timeline__body">
+        <div class="timeline__legend">
+          <span class="timeline__legend-item"><span class="timeline__legend-dot timeline__legend-dot--sp"></span>单机游戏</span>
+          <span class="timeline__legend-item"><span class="timeline__legend-dot timeline__legend-dot--mp"></span>网络游戏</span>
+        </div>
+        <p class="timeline__note">* 游戏所在年份为第一次接触的时间，可能存在误差。很多游戏玩过但想不起来了。</p>
+        <div class="timeline__scroll">
+          <div class="timeline__grid">
+            <!-- 单机游戏（时间线上方） -->
+            <div class="timeline__row timeline__row--sp">
+              <div class="timeline__year-cell" style="--col: 1">
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">愤怒的小鸟</span>
+                <span class="game-tag" style="background:#e8f5e9;color:#2e7d32">水果忍者</span>
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">神庙逃亡</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 2">
+                <span class="game-tag" style="background:#e8f5e9;color:#2e7d32">植物大战僵尸</span>
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">地铁酷跑</span>
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">无尽之战</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">漆黑的魅影</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 3">
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">登山赛车</span>
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">滑雪大冒险</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">保卫萝卜</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 4">
+                <span class="game-tag" style="background:#e8f5e9;color:#2e7d32">我的世界 500h</span>
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">纪念碑谷</span>
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">爱洗澡的鳄鱼</span>
+                <span class="game-tag" style="background:#fce4ec;color:#c62828">燃烧的蔬菜</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 16">
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">杀戮尖塔2</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 5">
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">饥荒 200h</span>
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">宫爆老奶奶</span>
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">找你妹</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">疯狂喷气机</span>
+                <span class="game-tag" style="background:#e8f5e9;color:#2e7d32">捕鱼达人</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 6">
+                <span class="game-tag" style="background:#fce4ec;color:#c62828">我叫MT</span>
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">割绳子</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 7">
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">泰拉瑞亚 2000h</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">元气骑士</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 9">
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">方舟 200h</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 10">
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">战双帕弥什</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 11">
+                <span class="game-tag" style="background:#e8f5e9;color:#2e7d32">GTA系列</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 12">
+                <span class="game-tag" style="background:#e8f5e9;color:#2e7d32">星露谷 1000h</span>
+                <span class="game-tag" style="background:#fce4ec;color:#c62828">求神之路 200h</span>
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">古墓丽影 500h</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">森林</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 13">
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">城市天际线 1000h</span>
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">暗黑破坏神 300h</span>
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">杀戮尖塔</span>
+                <span class="game-tag" style="background:#fce4ec;color:#c62828">死亡细胞</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">捣蛋猪</span>
+                <span class="game-tag" style="background:#e8f5e9;color:#2e7d32">地平线</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">双人成行</span>
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">潜水员戴夫</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 14">
+                <span class="game-tag" style="background:#e8f5e9;color:#2e7d32">僵尸毁灭工程 200h</span>
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">缺氧 100h</span>
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">宝可梦系列</span>
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">空洞骑士</span>
+                <span class="game-tag" style="background:#fce4ec;color:#c62828">奥日</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">星之海</span>
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">恐怖黎明</span>
+                <span class="game-tag" style="background:#fce4ec;color:#c62828">黑神话悟空</span>
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">迈瑞达</span>
+                <span class="game-tag" style="background:#e8f5e9;color:#2e7d32">战地</span>
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">城市天际线2</span>
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">无限暖暖</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">植物大战僵尸杂交版</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 15">
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">蔚蓝</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">Peak</span>
+              </div>
+            </div>
+            <!-- 时间线轨道：线 + 圆点 + 年份 -->
+            <div class="timeline__track">
+              <div class="timeline__line"></div>
+              <div class="timeline__dots">
+                <span class="timeline__dot" style="--col: 1"></span>
+                <span class="timeline__dot" style="--col: 2"></span>
+                <span class="timeline__dot" style="--col: 3"></span>
+                <span class="timeline__dot" style="--col: 4"></span>
+                <span class="timeline__dot" style="--col: 5"></span>
+                <span class="timeline__dot" style="--col: 6"></span>
+                <span class="timeline__dot" style="--col: 7"></span>
+                <span class="timeline__dot" style="--col: 8"></span>
+                <span class="timeline__dot" style="--col: 9"></span>
+                <span class="timeline__dot" style="--col: 10"></span>
+                <span class="timeline__dot" style="--col: 11"></span>
+                <span class="timeline__dot" style="--col: 12"></span>
+                <span class="timeline__dot" style="--col: 13"></span>
+                <span class="timeline__dot" style="--col: 14"></span>
+                <span class="timeline__dot" style="--col: 15"></span>
+                <span class="timeline__dot" style="--col: 16"></span>
+              </div>
+              <div class="timeline__years">
+                <span class="timeline__year" style="--col: 1">2011</span>
+                <span class="timeline__year" style="--col: 2">2012</span>
+                <span class="timeline__year" style="--col: 3">2013</span>
+                <span class="timeline__year" style="--col: 4">2014</span>
+                <span class="timeline__year" style="--col: 5">2015</span>
+                <span class="timeline__year" style="--col: 6">2016</span>
+                <span class="timeline__year" style="--col: 7">2017</span>
+                <span class="timeline__year" style="--col: 8">2018</span>
+                <span class="timeline__year" style="--col: 9">2019</span>
+                <span class="timeline__year" style="--col: 10">2020</span>
+                <span class="timeline__year" style="--col: 11">2021</span>
+                <span class="timeline__year" style="--col: 12">2022</span>
+                <span class="timeline__year" style="--col: 13">2023</span>
+                <span class="timeline__year" style="--col: 14">2024</span>
+                <span class="timeline__year" style="--col: 15">2025</span>
+                <span class="timeline__year" style="--col: 16">2026</span>
+              </div>
+            </div>
+            <!-- 网络游戏（时间线下方） -->
+            <div class="timeline__row timeline__row--mp">
+              <div class="timeline__year-cell" style="--col: 2">
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">赛尔号</span>
+                <span class="game-tag" style="background:#e8f5e9;color:#2e7d32">洛克王国</span>
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">天天酷跑</span>
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">造梦西游1234</span>
+                <span class="game-tag" style="background:#fce4ec;color:#c62828">雷霆战机</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">爆枪英雄</span>
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">生死狙击</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 4">
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">刀塔传奇 2年</span>
+                <span class="game-tag" style="background:#e8f5e9;color:#2e7d32">造梦西游OL 4年</span>
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">三国杀 10年+</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">开心消消乐</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 6">
+                <span class="game-tag" style="background:#fce4ec;color:#c62828">王者荣耀 10年+</span>
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">火影忍者 10年+</span>
+                <span class="game-tag" style="background:#e8f5e9;color:#2e7d32">穿越火线 10年+</span>
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">球球大作战 5年</span>
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">迷你世界</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">去吧皮卡丘</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 7">
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">少年三国志</span>
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">奶块</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">荒野行动</span>
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">第五人格</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 8">
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">和平精英</span>
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">剑与远征</span>
+                <span class="game-tag" style="background:#e8f5e9;color:#2e7d32">一起来抓妖</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 9">
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">王牌战士</span>
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">月圆之夜</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 10">
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">传奇类 50+款 2000h</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">金铲铲</span>
+                <span class="game-tag" style="background:#fce4ec;color:#c62828">使命召唤</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 12">
+                <span class="game-tag" style="background:#fce4ec;color:#c62828">永劫无间</span>
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">英雄联盟</span>
+                <span class="game-tag" style="background:#e8f5e9;color:#2e7d32">原神</span>
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">星铁</span>
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">火炬之光</span>
+                <span class="game-tag" style="background:#e0f2f1;color:#00695c">CSGO</span>
+                <span class="game-tag" style="background:#fce4ec;color:#c62828">PUBG</span>
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">宝可梦GO</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 13">
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">守望先锋</span>
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">Apex</span>
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">The Finals</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 14">
+                <span class="game-tag" style="background:#fce4ec;color:#c62828">三角洲</span>
+                <span class="game-tag" style="background:#e8f4fd;color:#1a73e8">蔚蓝档案</span>
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">无限暖暖</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 15">
+                <span class="game-tag" style="background:#e8f5e9;color:#2e7d32">鸣潮</span>
+              </div>
+              <div class="timeline__year-cell" style="--col: 16">
+                <span class="game-tag" style="background:#fff3e0;color:#e65100">洛克王国世界</span>
+                <span class="game-tag" style="background:#f3e5f5;color:#7b1fa2">异环</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Section: Art ===== -->
+  <section class="art" id="art">
+    <div class="art__inner">
+      <div class="art__header reveal">
+        <span class="art__label">美术作品</span>
+        <h2 class="art__title">Art & Visual</h2>
+      </div>
+      <div class="art__grid">
+        <div class="art__item reveal" data-src="assets/美术作品/1716887252410.jpg">
+          <img src="assets/美术作品/thumbs/1716887252410.jpg" alt="人物插画" loading="lazy">
+        </div>
+        <div class="art__item reveal" data-src="assets/美术作品/波导.jpg">
+          <img src="assets/美术作品/thumbs/波导.jpg" alt="波导" loading="lazy">
+        </div>
+        <div class="art__item reveal" data-src="assets/美术作品/甲贺忍蛙.jpg">
+          <img src="assets/美术作品/thumbs/甲贺忍蛙.jpg" alt="甲贺忍蛙" loading="lazy">
+        </div>
+        <div class="art__item reveal" data-src="assets/美术作品/红龙.jpg">
+          <img src="assets/美术作品/thumbs/红龙.jpg" alt="红龙" loading="lazy">
+        </div>
+        <div class="art__item reveal" data-src="assets/美术作品/耿鬼.png">
+          <img src="assets/美术作品/thumbs/耿鬼.jpg" alt="耿鬼" loading="lazy">
+        </div>
+        <div class="art__item reveal" data-src="assets/美术作品/蓝龙.jpg">
+          <img src="assets/美术作品/thumbs/蓝龙.jpg" alt="蓝龙" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer" id="footer">
+    <div class="footer__inner">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <span class="footer__name">张子墨</span>
+          <span class="footer__alias">Sunmiss</span>
+        </div>
+        <nav class="footer__links">
+          <a href="#featured">精选作品</a>
+          <a href="#skills">技能</a>
+          <a href="#experience">经历</a>
+          <a href="#project">作品</a>
+          <a href="#gaming-history">游戏史</a>
+          <a href="#art">美术</a>
+        </nav>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copy">&copy; 2026 张子墨. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox__close" aria-label="关闭">&times;</button>
+    <img class="lightbox__img" src="" alt="">
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

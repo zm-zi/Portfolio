@@ -1,0 +1,216 @@
+// 输入处理
+const keys = { left: false, right: false, up: false, down: false };
+const _heldKeys = new Set();
+
+function beginGame() {
+    G.game.isStarted = true;
+    startBuffChoice(true);
+    playBGM();
+}
+
+function initInput(canvas) {
+    document.addEventListener('keydown', (e) => {
+        // 调试器打开时，拦截调试器控制键
+        if (G.debuggerOpen) {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter', 'd', 'D', 'p', 'P', 'Escape'].includes(e.key)) {
+                handleDebuggerKey(e);
+            }
+            return;
+        }
+
+        // 忽略操作系统层面的按键重复（按住键时浏览器会反复触发 keydown）
+        // 但保留首次按下
+        if (e.repeat) return;
+
+        _heldKeys.add(e.code);
+        switch (e.code) {
+            case 'ArrowLeft': case 'KeyA': keys.left = true; break;
+            case 'ArrowRight': case 'KeyD': keys.right = true; break;
+            case 'ArrowUp': case 'KeyW': keys.up = true; break;
+            case 'ArrowDown': case 'KeyS': keys.down = true; break;
+        }
+
+        if (e.key === ' ') e.preventDefault();
+        if (e.key === 'Enter' || e.key === ' ') {
+            if (!G.game.isStarted) {
+                beginGame();
+                return;
+            }
+            // 超频：100能量时空格激活
+            if (e.key === ' ' && G.game.isStarted && !G.game.isPaused && !G.game.isGameOver && !G.game.buffChooseMode) {
+                activateOverclock();
+            }
+        }
+        if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
+            if (G.game.settingsOpen) {
+                G.game.settingsOpen = false;
+            } else if (!G.game.isGameOver && G.game.isStarted && !G.game.buffChooseMode) {
+                G.game.isPaused = !G.game.isPaused;
+            }
+        }
+        if (e.key === 'd' || e.key === 'D') {
+            if (G.game.isPaused && !G.game.isGameOver && !G.game.buffChooseMode) {
+                G.debuggerOpen = !G.debuggerOpen;
+            }
+        }
+        if (e.key === 'r' || e.key === 'R') {
+            if (G.game.isGameOver) { resetState(); playBGM(); }
+        }
+
+        // 词条选择：数字键 1/2/3
+        if (G.game.buffChooseMode) {
+            if (e.key === '1') chooseBuff(0);
+            else if (e.key === '2') chooseBuff(1);
+            else if (e.key === '3') chooseBuff(2);
+        }
+    });
+
+    document.addEventListener('keyup', (e) => {
+        _heldKeys.delete(e.code);
+        switch (e.code) {
+            case 'ArrowLeft': case 'KeyA': keys.left = false; break;
+            case 'ArrowRight': case 'KeyD': keys.right = false; break;
+            case 'ArrowUp': case 'KeyW': keys.up = false; break;
+            case 'ArrowDown': case 'KeyS': keys.down = false; break;
+        }
+    });
+
+    // 每帧同步：用 _heldKeys 校正 keys 状态，防止 keyup 丢失导致的按键卡住
+    // 如果 _heldKeys 是空的但 keys 有残留 true，说明 keyup 事件丢失了
+    window._syncKeys = function() {
+        keys.left = _heldKeys.has('ArrowLeft') || _heldKeys.has('KeyA');
+        keys.right = _heldKeys.has('ArrowRight') || _heldKeys.has('KeyD');
+        keys.up = _heldKeys.has('ArrowUp') || _heldKeys.has('KeyW');
+        keys.down = _heldKeys.has('ArrowDown') || _heldKeys.has('KeyS');
+    };
+
+    canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = LOGICAL_W / rect.width;
+        const scaleY = LOGICAL_H / rect.height;
+        const mx = (e.clientX - rect.left) * scaleX;
+        const my = (e.clientY - rect.top) * scaleY;
+
+        // 未开始时点击开始按钮
+        if (!G.game.isStarted) {
+            if (mx >= startBtn.x && mx <= startBtn.x + startBtn.width &&
+                my >= startBtn.y && my <= startBtn.y + startBtn.height) {
+                beginGame();
+            }
+            return;
+        }
+
+        // 设置面板打开时：关闭按钮 / 帧率按钮
+        if (G.game.settingsOpen) {
+            const cb = _sliderCloseBtn;
+            if (mx >= cb.x && mx <= cb.x + cb.w && my >= cb.y && my <= cb.y + cb.h) {
+                G.game.settingsOpen = false;
+            }
+            // 帧率按钮点击
+            for (const btn of _fpsButtons) {
+                if (mx >= btn.x && mx <= btn.x + btn.w && my >= btn.y && my <= btn.y + btn.h) {
+                    G.game.targetFPS = btn.fps;
+                    _lastFrameTime = 0;
+                    break;
+                }
+            }
+            return;
+        }
+
+        // 词条选择卡片点击
+        if (G.game.buffChooseMode) {
+            const choices = G.game.buffChoices;
+            const count = choices.length;
+            const totalW = count * _cardW + (count - 1) * _cardGap;
+            const startX = (LOGICAL_W - totalW) / 2;
+            const cardY = LOGICAL_H / 2 - _cardH / 2;
+            for (let i = 0; i < count; i++) {
+                const cx = startX + i * (_cardW + _cardGap);
+                if (mx >= cx && mx <= cx + _cardW && my >= cardY && my <= cardY + _cardH) {
+                    chooseBuff(i);
+                    return;
+                }
+            }
+            return;
+        }
+
+        // 暂停时：设置按钮
+        if (G.game.isPaused) {
+            const sb = settingsBtn;
+            if (mx >= sb.x && mx <= sb.x + sb.width &&
+                my >= sb.y && my <= sb.y + sb.height) {
+                G.game.settingsOpen = true;
+                return;
+            }
+        }
+
+        if (mx >= pauseBtn.x && mx <= pauseBtn.x + pauseBtn.width &&
+            my >= pauseBtn.y && my <= pauseBtn.y + pauseBtn.height) {
+            G.game.isPaused = !G.game.isPaused;
+        }
+    });
+
+    // ─── 滑条拖拽 ───
+    function _canvasXY(e) {
+        const rect = canvas.getBoundingClientRect();
+        return {
+            x: (e.clientX - rect.left) * (LOGICAL_W / rect.width),
+            y: (e.clientY - rect.top) * (LOGICAL_H / rect.height)
+        };
+    }
+
+    function _hitSlider(mx, my, slider) {
+        const { trackX, trackY, trackW, trackH } = _getSliderRect(slider.y);
+        // 扩大点击区域上下各 15px
+        return mx >= trackX - 15 && mx <= trackX + trackW + 15 &&
+               my >= trackY - 15 && my <= trackY + trackH + 15;
+    }
+
+    function _applySlider(mx, slider, setter) {
+        const { trackX, trackW } = _getSliderRect(slider.y);
+        const v = Math.max(0, Math.min(1, (mx - trackX) / trackW));
+        setter(v);
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+        if (!G.game.settingsOpen) return;
+        const { x: mx, y: my } = _canvasXY(e);
+        if (_hitSlider(mx, my, _sliderBGM)) {
+            G.game._settingsDrag = 'bgm';
+            _applySlider(mx, _sliderBGM, setBGMVolume);
+        } else if (_hitSlider(mx, my, _sliderSFX)) {
+            G.game._settingsDrag = 'sfx';
+            _applySlider(mx, _sliderSFX, setSFXVolume);
+        }
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (!G.game._settingsDrag) return;
+        const { x: mx } = _canvasXY(e);
+        if (G.game._settingsDrag === 'bgm') {
+            _applySlider(mx, _sliderBGM, setBGMVolume);
+        } else if (G.game._settingsDrag === 'sfx') {
+            _applySlider(mx, _sliderSFX, setSFXVolume);
+        }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        G.game._settingsDrag = null;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+        G.game._settingsDrag = null;
+    });
+
+    // 窗口失焦时重置所有按键状态（浏览器不会触发 keyup）
+    window.addEventListener('blur', () => {
+        keys.left = false; keys.right = false; keys.up = false; keys.down = false;
+        _heldKeys.clear();
+    });
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            keys.left = false; keys.right = false; keys.up = false; keys.down = false;
+            _heldKeys.clear();
+        }
+    });
+}
