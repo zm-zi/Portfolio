@@ -2,20 +2,6 @@
 
 // IS_MOBILE is already declared in an inline <script> in index.html before this loads
 
-// ─── Viewport Scaling ───
-function applyViewportScale() {
-    if (!IS_MOBILE) return;
-    var wrap = document.getElementById('game-wrap');
-    var vw = window.innerWidth;
-    var vh = window.innerHeight;
-    // game-wrap natural size: ~660px wide (canvas 600 + level-bar 56 + gaps)
-    var naturalW = 660;
-    var naturalH = 790;
-    var scale = Math.min(vw / naturalW, vh / naturalH, 1);
-    wrap.style.transform = 'scale(' + scale + ')';
-    wrap.style.transformOrigin = 'top center';
-}
-
 // ─── Coordinate Conversion ───
 function screenToLogical(clientX, clientY) {
     var c = document.getElementById('gameCanvas');
@@ -36,16 +22,16 @@ function _createJoystick(wrap) {
     var ring = document.createElement('div');
     ring.id = 'mobile-joystick';
     ring.style.cssText =
-        'position:absolute;width:80px;height:80px;border-radius:50%;' +
+        'position:relative;width:120px;height:120px;border-radius:50%;' +
         'background:rgba(0,229,255,0.06);border:2px solid rgba(0,229,255,0.25);' +
-        'bottom:20px;left:70px;pointer-events:auto;touch-action:none;z-index:10;';
+        'flex-shrink:0;pointer-events:auto;touch-action:none;';
 
     var thumb = document.createElement('div');
     thumb.id = 'mobile-joystick-thumb';
     thumb.style.cssText =
-        'position:absolute;width:36px;height:36px;border-radius:50%;' +
+        'position:absolute;width:48px;height:48px;border-radius:50%;' +
         'background:rgba(0,229,255,0.35);border:1px solid rgba(0,229,255,0.5);' +
-        'top:22px;left:22px;pointer-events:none;transition:none;';
+        'top:36px;left:36px;pointer-events:none;transition:none;';
 
     ring.appendChild(thumb);
     wrap.appendChild(ring);
@@ -57,12 +43,11 @@ function _createOCButton(wrap) {
     btn.id = 'mobile-oc-btn';
     btn.textContent = 'OC';
     btn.style.cssText =
-        'position:absolute;width:64px;height:64px;border-radius:50%;' +
+        'position:relative;width:72px;height:72px;border-radius:50%;' +
         'background:rgba(255,215,0,0.1);border:2px solid rgba(255,215,0,0.35);' +
-        'bottom:28px;right:56px;' +
         'display:flex;align-items:center;justify-content:center;' +
-        'color:rgba(255,215,0,0.8);font-family:"Press Start 2P",monospace;font-size:10px;' +
-        'pointer-events:auto;touch-action:none;z-index:10;' +
+        'color:rgba(255,215,0,0.8);font-family:"Press Start 2P",monospace;font-size:11px;' +
+        'pointer-events:auto;touch-action:none;flex-shrink:0;' +
         '-webkit-tap-highlight-color:transparent;user-select:none;';
     wrap.appendChild(btn);
     return btn;
@@ -73,10 +58,10 @@ function _createMobilePauseBtn(wrap) {
     btn.id = 'mobile-pause-btn';
     btn.innerHTML = '<span style="display:block;width:5px;height:16px;background:rgba(0,229,255,0.6);border-radius:1px"></span><span style="display:block;width:5px;height:16px;background:rgba(0,229,255,0.6);border-radius:1px"></span>';
     btn.style.cssText =
-        'position:absolute;width:44px;height:44px;top:10px;right:8px;' +
+        'position:relative;width:48px;height:48px;' +
         'background:rgba(8,14,28,0.82);border:1px solid rgba(0,229,255,0.25);border-radius:2px;' +
         'display:flex;align-items:center;justify-content:center;gap:4px;' +
-        'pointer-events:auto;touch-action:none;z-index:10;' +
+        'pointer-events:auto;touch-action:none;flex-shrink:0;' +
         '-webkit-tap-highlight-color:transparent;cursor:pointer;';
     wrap.appendChild(btn);
     return btn;
@@ -89,7 +74,7 @@ function _updateJoystick(e, ring, thumb) {
     var cy = rect.top + rect.height / 2;
     _joyDirX = e.clientX - cx;
     _joyDirY = e.clientY - cy;
-    var maxDist = rect.width / 2 - 18;
+    var maxDist = rect.width / 2 - 24;
     var dist = Math.sqrt(_joyDirX * _joyDirX + _joyDirY * _joyDirY);
     var clamped = Math.min(dist, maxDist);
     if (dist > 0) {
@@ -120,18 +105,12 @@ function _resetJoystick(thumb) {
 function initMobileControls() {
     if (!IS_MOBILE) return;
 
-    applyViewportScale();
-    window.addEventListener('resize', applyViewportScale);
-    window.addEventListener('orientationchange', function () {
-        setTimeout(applyViewportScale, 120);
-    });
+    var controlsWrap = document.getElementById('mobile-controls');
+    if (!controlsWrap) return;
 
-    var wrap = document.getElementById('canvas-wrap');
-    if (!wrap) return;
-
-    var joystick = _createJoystick(wrap);
-    var ocBtn = _createOCButton(wrap);
-    var pauseBtn = _createMobilePauseBtn(wrap);
+    var joystick = _createJoystick(controlsWrap);
+    var ocBtn = _createOCButton(controlsWrap);
+    var pauseBtn = _createMobilePauseBtn(controlsWrap);
 
     // ─── Joystick pointer events ───
     joystick.ring.addEventListener('pointerdown', function (e) {
@@ -180,6 +159,11 @@ function initMobileControls() {
         // First user gesture unlocks HTMLAudioElement.play() for all subsequent calls
         document.removeEventListener('pointerdown', unlockAudio);
     }, { once: true });
+
+    // Trigger canvas resize after controls are created (controls height may have changed)
+    if (typeof _resizeMobileCanvas === 'function') {
+        _resizeMobileCanvas();
+    }
 }
 
 // Defer init until after DOMContentLoaded so all scripts have run

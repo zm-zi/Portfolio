@@ -16,7 +16,20 @@ function initUI() {
         levelFill: document.getElementById('level-fill'),
         levelNext: document.getElementById('level-next'),
         buffList: document.getElementById('buff-list'),
-        stageInfo: document.getElementById('stage-info')
+        stageInfo: document.getElementById('stage-info'),
+        // Mobile HUD overlay
+        mScoreVal: document.getElementById('mhud-score-val'),
+        mLifeVal: document.getElementById('mhud-life-val'),
+        mLevelNum: document.getElementById('mhud-level-num'),
+        mEnergyFill: document.getElementById('mhud-energy-fill'),
+        mEnergyHint: document.getElementById('mhud-energy-hint'),
+        mBossRow: document.getElementById('mhud-boss-row'),
+        mBossName: document.getElementById('mhud-boss-name'),
+        mBossFill: document.getElementById('mhud-boss-fill'),
+        mBuffOverlay: document.getElementById('mobile-buff-overlay'),
+        mLevelNumSmall: document.getElementById('mlevel-num'),
+        mLevelFill: document.getElementById('mlevel-fill'),
+        mLevelNext: document.getElementById('mlevel-next')
     };
 }
 
@@ -62,6 +75,46 @@ function updateHUD() {
     updateLevelBar();
     // 词条列表
     updateBuffList();
+
+    // Mobile HUD overlay updates
+    if (IS_MOBILE) {
+        if (_hud.mScoreVal) _hud.mScoreVal.textContent = G.game.score;
+        if (_hud.mLifeVal) _hud.mLifeVal.textContent = G.game.life;
+        if (_hud.mLevelNum) _hud.mLevelNum.textContent = G.player.playerLevel;
+
+        var mEnergyPct = Math.min(100, Math.max(0, G.player.energy / OVERCLOCK_MAX_ENERGY * 100));
+        if (_hud.mEnergyFill) {
+            _hud.mEnergyFill.style.width = mEnergyPct + '%';
+            _hud.mEnergyFill.classList.toggle('full', G.player.isOverclock || mEnergyPct >= 100);
+        }
+        if (_hud.mEnergyHint) {
+            if (G.player.isOverclock) _hud.mEnergyHint.textContent = 'ACTIVE!';
+            else if (mEnergyPct >= 100) _hud.mEnergyHint.textContent = 'TAP!';
+            else _hud.mEnergyHint.textContent = 'OC(100)';
+        }
+
+        if (G.boss) {
+            if (_hud.mBossRow) _hud.mBossRow.classList.add('active');
+            if (_hud.mBossFill) _hud.mBossFill.style.width = (Math.max(0, G.boss.hp / G.boss.maxHp) * 100) + '%';
+            if (_hud.mBossName && G.boss.def) {
+                _hud.mBossName.textContent = G.boss.def.name + (G.bossRound > 0 ? ' (+' + G.bossRound + ')' : '');
+            }
+        } else {
+            if (_hud.mBossRow) _hud.mBossRow.classList.remove('active');
+        }
+
+        // Level overlay
+        var mp = G.player;
+        if (_hud.mLevelNumSmall) _hud.mLevelNumSmall.textContent = mp.playerLevel;
+        var mPrevScore = mp.playerLevel > 0 ? getLevelThreshold(mp.playerLevel - 1) : 0;
+        var mNeed = mp.levelUpScore - mPrevScore;
+        var mProgress = mNeed > 0 ? Math.min(1, Math.max(0, (G.game.score - mPrevScore) / mNeed)) : 0;
+        if (_hud.mLevelFill) _hud.mLevelFill.style.width = (mProgress * 100) + '%';
+        if (_hud.mLevelNext) {
+            var mRemaining = Math.max(0, mp.levelUpScore - G.game.score);
+            _hud.mLevelNext.textContent = (mRemaining === 0 && !G.game.buffChooseMode) ? 'UP!' : mRemaining + 'pts';
+        }
+    }
 }
 
 // 更新等级条 UI
@@ -99,4 +152,17 @@ function updateBuffList() {
         html += '<div class="buff-tag" style="color:' + color + ';border-left-color:' + color + '">' + label + '</div>';
     }
     _hud.buffList.innerHTML = html;
+
+    // Mobile buff overlay
+    if (IS_MOBILE && _hud.mBuffOverlay) {
+        var mhtml = '';
+        for (var mid in counts) {
+            var mdef = BUFF.get(mid);
+            if (!mdef) continue;
+            var mcolor = mdef.color || rarityColors[mdef.rarity] || '#fff';
+            var mlabel = counts[mid] > 1 ? mdef.name + '×' + counts[mid] : mdef.name;
+            mhtml += '<span class="mbuff-tag" style="color:' + mcolor + ';border-left-color:' + mcolor + '">' + mlabel + '</span>';
+        }
+        _hud.mBuffOverlay.innerHTML = mhtml;
+    }
 }

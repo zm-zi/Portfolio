@@ -2,6 +2,17 @@
 let _lastFrameTime = 0;
 const BASE_INTERVAL = 1000 / BASE_FPS; // 5ms
 
+// Mobile HUD overlay visibility helper
+function _setMobileHudVisible(visible) {
+    if (!IS_MOBILE) return;
+    var el = document.getElementById('mobile-hud-overlay');
+    var bf = document.getElementById('mobile-buff-overlay');
+    var lv = document.getElementById('mobile-level-overlay');
+    if (el) el.style.display = visible ? '' : 'none';
+    if (bf) bf.style.display = visible ? '' : 'none';
+    if (lv) lv.style.display = visible ? '' : 'none';
+}
+
 function gameLoop(timestamp) {
     // 帧率节流
     const fps = G.game.targetFPS;
@@ -26,6 +37,7 @@ function gameLoop(timestamp) {
     // 未开始：显示开始界面
     if (!gm.isStarted) {
         drawStartScreen();
+        _setMobileHudVisible(false);
         requestAnimationFrame(gameLoop);
         return;
     }
@@ -183,6 +195,9 @@ function gameLoop(timestamp) {
 
     // 更新 HTML UI（关卡通关画面覆盖时跳过，避免覆盖下状态的 HUD）
     if (!gm.levelCompleted) updateHUD();
+
+    // Mobile HUD visibility: hide during game over and level complete screens
+    _setMobileHudVisible(gm.isStarted && !gm.isGameOver && !gm.levelCompleted);
 
     requestAnimationFrame(gameLoop);
 }

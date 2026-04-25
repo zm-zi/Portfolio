@@ -11,6 +11,31 @@ canvas.style.height = LOGICAL_H + 'px';
 ctx.scale(dpr, dpr);
 ctx.imageSmoothingEnabled = false;
 
+// Mobile: responsive canvas sizing
+var _resizeMobileCanvas = null;
+if (IS_MOBILE) {
+    _resizeMobileCanvas = function () {
+        var wrap = document.getElementById('canvas-wrap');
+        var wrapW = wrap.clientWidth;
+        var wrapH = wrap.clientHeight;
+        // Calculate canvas size maintaining 3:4 aspect ratio
+        var ratio = LOGICAL_W / LOGICAL_H; // 0.75
+        var w = wrapW;
+        var h = w / ratio;
+        if (h > wrapH) {
+            h = wrapH;
+            w = h * ratio;
+        }
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+    };
+    _resizeMobileCanvas();
+    window.addEventListener('resize', _resizeMobileCanvas);
+    window.addEventListener('orientationchange', function () {
+        setTimeout(_resizeMobileCanvas, 150);
+    });
+}
+
 // ── 图片加载注册表：所有 Image 统一注册，startGame 等待全部完成 ──
 const _pendingImages = [];
 function _loadImg(src) {

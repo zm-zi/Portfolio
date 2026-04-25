@@ -281,6 +281,11 @@
             display: inline-block;
         }
 
+        #canvas-inner {
+            position: relative;
+            display: inline-block;
+        }
+
         canvas {
             border: 1px solid var(--sci-border-bright);
             border-radius: 2px;
@@ -420,16 +425,261 @@
             text-align: center;
         }
 
-        /* ── 移动端缩放 ── */
-        @media (max-width: 700px) {
-            body {
-                overflow-x: hidden;
-                overflow-y: auto;
-                align-items: flex-start;
-            }
+        /* ── Mobile Layout Overrides ── */
+        .is-mobile body {
+            justify-content: flex-start;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            height: 100dvh;
         }
 
-        /* ── 移动端操控按钮 ── */
+        .is-mobile #game-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            gap: 0;
+            transform: none !important;
+            transform-origin: initial;
+        }
+
+        .is-mobile #top-bar,
+        .is-mobile #energy-bar-wrap {
+            display: none !important;
+        }
+
+        .is-mobile #game-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-height: 0;
+            gap: 0;
+            width: 100%;
+        }
+
+        .is-mobile #game-row > div:first-child {
+            display: none;
+        }
+
+        .is-mobile #level-bar {
+            display: none !important;
+        }
+
+        .is-mobile #canvas-wrap {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .is-mobile #canvas-inner {
+            position: relative;
+            display: inline-block;
+            line-height: 0;
+        }
+
+        .is-mobile #canvas-wrap::before,
+        .is-mobile #canvas-wrap::after {
+            display: none;
+        }
+
+        .is-mobile canvas {
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* ── Mobile HUD Overlay ── */
+        #mobile-hud-overlay { display: none; }
+        .is-mobile #mobile-hud-overlay {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            padding: 6px 10px;
+            padding-top: calc(6px + env(safe-area-inset-top, 0px));
+            background: linear-gradient(180deg, rgba(5,8,15,0.75) 0%, rgba(5,8,15,0.3) 70%, transparent 100%);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .mhud-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .mhud-life {
+            color: #00ff88;
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            text-shadow: 0 0 8px rgba(0,255,136,0.5);
+        }
+        .mhud-level {
+            color: #ffd700;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            text-shadow: 0 0 8px rgba(255,215,0,0.5);
+        }
+        .mhud-score {
+            color: #ffd700;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            text-shadow: 0 0 8px rgba(255,215,0,0.5);
+        }
+        .mhud-energy-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .mhud-energy-bg {
+            flex: 1;
+            height: 8px;
+            background: rgba(0,229,255,0.08);
+            border: 1px solid rgba(0,229,255,0.2);
+            border-radius: 1px;
+            overflow: hidden;
+        }
+        .mhud-energy-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #003366, #00e5ff, #00ffcc);
+            width: 0%;
+            transition: width 0.15s ease-out;
+            border-radius: 1px;
+        }
+        .mhud-energy-fill.full {
+            background: linear-gradient(90deg, #ff8800, #ffd700, #fff3b0);
+            animation: energyPulse 0.4s ease-in-out infinite alternate;
+        }
+        .mhud-energy-hint {
+            color: rgba(0,229,255,0.5);
+            font-family: 'VT323', monospace;
+            font-size: 13px;
+            white-space: nowrap;
+            min-width: 55px;
+        }
+        .mhud-boss-row {
+            display: none;
+            align-items: center;
+            gap: 6px;
+        }
+        .mhud-boss-row.active { display: flex; }
+        .mhud-boss-name {
+            color: #ff3355;
+            font-family: 'VT323', monospace;
+            font-size: 12px;
+            letter-spacing: 2px;
+            white-space: nowrap;
+        }
+        .mhud-boss-bg {
+            flex: 1;
+            height: 10px;
+            background: rgba(255,51,85,0.08);
+            border: 1px solid rgba(255,51,85,0.25);
+            border-radius: 1px;
+            overflow: hidden;
+        }
+        .mhud-boss-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff3355, #ff6644, #ff3355);
+            width: 100%;
+            transition: width 0.15s ease-out;
+            border-radius: 1px;
+        }
+
+        /* ── Mobile Buff Overlay ── */
+        #mobile-buff-overlay { display: none; }
+        .is-mobile #mobile-buff-overlay {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            max-width: 50%;
+            z-index: 5;
+            pointer-events: none;
+        }
+        .is-mobile #mobile-buff-overlay:empty { display: none; }
+        .mbuff-tag {
+            font-family: 'HYPixel', monospace;
+            font-size: 11px;
+            padding: 1px 4px;
+            background: rgba(5,8,15,0.7);
+            border-left: 2px solid #e8e8f0;
+            white-space: nowrap;
+        }
+
+        /* ── Mobile Level Overlay ── */
+        #mobile-level-overlay { display: none; }
+        .is-mobile #mobile-level-overlay {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            padding: 2px 6px;
+            background: rgba(5,8,15,0.6);
+            border: 1px solid rgba(0,229,255,0.15);
+            border-radius: 2px;
+            z-index: 5;
+            pointer-events: none;
+        }
+        #mlevel-num {
+            color: #ffd700;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+        }
+        .mlevel-bar-bg {
+            width: 40px;
+            height: 6px;
+            background: rgba(0,229,255,0.08);
+            border: 1px solid rgba(0,229,255,0.15);
+            border-radius: 1px;
+            overflow: hidden;
+        }
+        .mlevel-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffcc, #00e5ff);
+            width: 0%;
+            transition: width 0.3s ease-out;
+            border-radius: 1px;
+        }
+        #mlevel-next {
+            color: rgba(255,255,255,0.3);
+            font-family: 'VT323', monospace;
+            font-size: 11px;
+        }
+
+        /* ── Mobile Controls Area ── */
+        #mobile-controls { display: none; }
+        .is-mobile #mobile-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 8px 20px;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+            background: rgba(5,8,15,0.95);
+            border-top: 1px solid rgba(0,229,255,0.15);
+            min-height: 140px;
+            flex-shrink: 0;
+            touch-action: manipulation;
+        }
+
+        /* ── Mobile Controls Elements ── */
         #mobile-joystick,
         #mobile-oc-btn,
         #mobile-pause-btn {
@@ -439,6 +689,14 @@
         .is-mobile #mobile-joystick { display: block; }
         .is-mobile #mobile-oc-btn { display: flex; }
         .is-mobile #mobile-pause-btn { display: flex; }
+
+        /* ── Mobile Landscape ── */
+        @media (orientation: landscape) {
+            .is-mobile #mobile-controls {
+                min-height: 100px;
+                padding: 6px 16px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -466,9 +724,38 @@
                 <div id="buff-list"></div>
             </div>
             <div id="canvas-wrap">
-                <canvas id="gameCanvas"></canvas>
-                <div id="crt-overlay"></div>
+                <div id="canvas-inner">
+                    <canvas id="gameCanvas"></canvas>
+                    <div id="crt-overlay"></div>
+                    <!-- Mobile HUD overlays (hidden on desktop via CSS) -->
+                    <div id="mobile-hud-overlay">
+                        <div class="mhud-row">
+                            <span class="mhud-life">&#9829; <span id="mhud-life-val">5</span></span>
+                            <span class="mhud-level">Lv.<span id="mhud-level-num">0</span></span>
+                            <span class="mhud-score">SCORE <span id="mhud-score-val">0</span></span>
+                        </div>
+                        <div class="mhud-energy-row">
+                            <div class="mhud-energy-bg">
+                                <div class="mhud-energy-fill" id="mhud-energy-fill"></div>
+                            </div>
+                            <span class="mhud-energy-hint" id="mhud-energy-hint">OC(100)</span>
+                        </div>
+                        <div class="mhud-boss-row" id="mhud-boss-row">
+                            <span class="mhud-boss-name" id="mhud-boss-name">BOSS</span>
+                            <div class="mhud-boss-bg">
+                                <div class="mhud-boss-fill" id="mhud-boss-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="mobile-buff-overlay"></div>
+                    <div id="mobile-level-overlay">
+                        <span id="mlevel-num">0</span>
+                        <div class="mlevel-bar-bg"><div class="mlevel-bar-fill" id="mlevel-fill"></div></div>
+                        <span id="mlevel-next"></span>
+                    </div>
+                </div>
             </div>
+            <div id="mobile-controls"></div>
             <div id="level-bar">
                 <div id="level-label">LV</div>
                 <div id="level-num">0</div>
