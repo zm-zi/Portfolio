@@ -1,5 +1,6 @@
 // 输入处理
 const keys = { left: false, right: false, up: false, down: false };
+const _joyKeys = { left: false, right: false, up: false, down: false };
 const _heldKeys = new Set();
 
 function beginGame() {
@@ -168,12 +169,12 @@ function initInput(canvas) {
         }
     });
 
-    // 每帧同步：用 _heldKeys 校正 keys 状态，防止 keyup 事件丢失导致的按键卡住
+    // 每帧同步：合并键盘和摇杆两个来源
     window._syncKeys = function() {
-        keys.left = _heldKeys.has('ArrowLeft') || _heldKeys.has('KeyA');
-        keys.right = _heldKeys.has('ArrowRight') || _heldKeys.has('KeyD');
-        keys.up = _heldKeys.has('ArrowUp') || _heldKeys.has('KeyW');
-        keys.down = _heldKeys.has('ArrowDown') || _heldKeys.has('KeyS');
+        keys.left = _heldKeys.has('ArrowLeft') || _heldKeys.has('KeyA') || _joyKeys.left;
+        keys.right = _heldKeys.has('ArrowRight') || _heldKeys.has('KeyD') || _joyKeys.right;
+        keys.up = _heldKeys.has('ArrowUp') || _heldKeys.has('KeyW') || _joyKeys.up;
+        keys.down = _heldKeys.has('ArrowDown') || _heldKeys.has('KeyS') || _joyKeys.down;
     };
 
     canvas.addEventListener('pointerdown', (e) => {
@@ -414,11 +415,13 @@ function initInput(canvas) {
     // 窗口失焦时重置所有按键状态（浏览器不会触发 keyup）
     window.addEventListener('blur', () => {
         keys.left = false; keys.right = false; keys.up = false; keys.down = false;
+        _joyKeys.left = false; _joyKeys.right = false; _joyKeys.up = false; _joyKeys.down = false;
         _heldKeys.clear();
     });
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
             keys.left = false; keys.right = false; keys.up = false; keys.down = false;
+            _joyKeys.left = false; _joyKeys.right = false; _joyKeys.up = false; _joyKeys.down = false;
             _heldKeys.clear();
         }
     });

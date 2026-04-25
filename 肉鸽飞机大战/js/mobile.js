@@ -85,18 +85,18 @@ function _updateJoystick(e, ring, thumb) {
 
     var deadZone = 10;
     if (clamped > deadZone) {
-        keys.left = _joyDirX < -deadZone;
-        keys.right = _joyDirX > deadZone;
-        keys.up = _joyDirY < -deadZone;
-        keys.down = _joyDirY > deadZone;
+        _joyKeys.left = _joyDirX < -deadZone;
+        _joyKeys.right = _joyDirX > deadZone;
+        _joyKeys.up = _joyDirY < -deadZone;
+        _joyKeys.down = _joyDirY > deadZone;
     } else {
-        keys.left = false; keys.right = false; keys.up = false; keys.down = false;
+        _joyKeys.left = false; _joyKeys.right = false; _joyKeys.up = false; _joyKeys.down = false;
     }
 }
 
 function _resetJoystick(thumb) {
     thumb.style.transform = 'translate(0, 0)';
-    keys.left = false; keys.right = false; keys.up = false; keys.down = false;
+    _joyKeys.left = false; _joyKeys.right = false; _joyKeys.up = false; _joyKeys.down = false;
     _joyDirX = 0; _joyDirY = 0;
     _joyTouchId = null;
 }
