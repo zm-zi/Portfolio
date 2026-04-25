@@ -287,6 +287,12 @@ function _killBoss() {
     G.screenFlash = 0.4;
     G.player.energy = Math.min(OVERCLOCK_MAX_ENERGY, G.player.energy + 30);
     _spawnBossGemRain(bx, by, 200);
+    // 无尽模式：击杀 Boss 触发背景切换
+    if (G.game.gameMode === 'endless') {
+        triggerBgTransition();
+    }
+    // 清理冰邪王遗留的冰盾（Boss 死亡后不再需要）
+    G.iceShields.length = 0;
     G.boss = null;
     G.bossSpawned = false;
     G.bossDefeatTime = Date.now();

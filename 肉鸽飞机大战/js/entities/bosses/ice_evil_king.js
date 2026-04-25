@@ -101,8 +101,10 @@ BOSS.register({
             }
         }
 
-        // 每帧重置减速标志（由漩涡 update 负责设置）
-        G.player._vortexSlowdown = false;
+        // 非漩涡活跃状态时重置减速标志；漩涡活跃时由 _updateIceVortexes 设置
+        if (b.skillState !== 'ice_vortex_active') {
+            G.player._vortexSlowdown = false;
+        }
     },
 
     draw(b, ctx) {

@@ -198,3 +198,126 @@ function drawMeteorites(ctx) {
     }
     ctx.globalAlpha = 1;
 }
+
+// ─── 无尽模式背景：上下拼接无限滚动（支持多图轮换 + 切换动画）───
+let _endlessBgImg = null;
+let _endlessBgOffset = 0;
+
+// 多背景切换系统
+let _endlessBgImgs = [];
+let _bgCurrentIdx = 0;
+let _bgTransition = -1; // -1 = 空闲, 0~1 = 过渡进度
+const _BG_TRANSITION_FRAMES = 160; // 约 800ms（200fps 基准）
+
+function _drawBgTile(ctx, img, offset) {
+    if (!img || !img.complete || img.width === 0) return;
+    const imgW = img.naturalWidth || img.width;
+    const imgH = img.naturalHeight || img.height;
+    const scale = LOGICAL_W / imgW;
+    const tileH = imgH * scale;
+    const o = offset % tileH;
+    const startY = -tileH + o;
+    for (let y = startY; y < LOGICAL_H; y += tileH) {
+        ctx.drawImage(img, 0, y, LOGICAL_W, tileH);
+    }
+}
+
+// 初始化：支持传单图或数组
+function initEndlessBg(img) {
+    if (Array.isArray(img)) {
+        _endlessBgImgs = img.filter(i => i);
+        _bgCurrentIdx = 0;
+        _bgTransition = -1;
+        _endlessBgImg = _endlessBgImgs[0] || null;
+    } else {
+        _endlessBgImgs = [img];
+        _bgCurrentIdx = 0;
+        _bgTransition = -1;
+        _endlessBgImg = img;
+    }
+    _endlessBgOffset = 0;
+}
+
+// 触发背景切换（由 Boss 击杀时调用）
+function triggerBgTransition() {
+    if (_endlessBgImgs.length < 2 || _bgTransition >= 0) return;
+    _bgTransition = 0;
+}
+
+// 重置到第一张背景（游戏重启时）
+function resetBgTransition() {
+    _bgCurrentIdx = 0;
+    _bgTransition = -1;
+    _endlessBgImg = _endlessBgImgs[0] || null;
+    _endlessBgOffset = 0;
+}
+
+function updateEndlessBg(scrollSpeed) {
+    _endlessBgOffset += scrollSpeed * G.game.dt;
+    // 更新过渡进度
+    if (_bgTransition >= 0) {
+        _bgTransition += G.game.dt / _BG_TRANSITION_FRAMES;
+        if (_bgTransition >= 1) {
+            _bgTransition = -1;
+            _bgCurrentIdx = (_bgCurrentIdx + 1) % _endlessBgImgs.length;
+            _endlessBgImg = _endlessBgImgs[_bgCurrentIdx];
+        }
+    }
+}
+
+function drawEndlessBg(ctx) {
+    if (_bgTransition < 0) {
+        // 正常绘制当前背景
+        _drawBgTile(ctx, _endlessBgImg, _endlessBgOffset);
+        return;
+    }
+
+    const p = _bgTransition;
+    if (p < 0.5) {
+        // 阶段1：当前背景逐渐变暗
+        _drawBgTile(ctx, _endlessBgImg, _endlessBgOffset);
+        const darkAlpha = p * 2; // 0 → 1
+        ctx.fillStyle = `rgba(0, 0, 0, ${darkAlpha})`;
+        ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+    } else {
+        // 阶段2：新背景从黑暗中浮现
+        const nextIdx = (_bgCurrentIdx + 1) % _endlessBgImgs.length;
+        _drawBgTile(ctx, _endlessBgImgs[nextIdx], _endlessBgOffset);
+        const darkAlpha = 1 - (p - 0.5) * 2; // 1 → 0
+        ctx.fillStyle = `rgba(0, 0, 0, ${darkAlpha})`;
+        ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+    }
+}
+
+// ─── 星球探索背景：上下拼接无限滚动 ───
+let _exploreBgImg = null;
+let _exploreBgOffset = 0;
+
+function initExploreBg(img) {
+    _exploreBgImg = img;
+    _exploreBgOffset = 0;
+}
+
+function updateExploreBg(scrollSpeed) {
+    _exploreBgOffset += scrollSpeed * G.game.dt;
+}
+
+function drawExploreBg(ctx) {
+    if (!_exploreBgImg || !_exploreBgImg.complete || _exploreBgImg.width === 0) {
+        ctx.fillStyle = '#0a0e1a';
+        ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+        return;
+    }
+    const imgW = _exploreBgImg.naturalWidth || _exploreBgImg.width;
+    const imgH = _exploreBgImg.naturalHeight || _exploreBgImg.height;
+    // 缩放到画布宽度，保持比例
+    const scale = LOGICAL_W / imgW;
+    const tileH = imgH * scale;
+    // 取模实现无限循环
+    _exploreBgOffset = _exploreBgOffset % tileH;
+    // 绘制足够多的贴图覆盖屏幕
+    const startY = -tileH + _exploreBgOffset;
+    for (let y = startY; y < LOGICAL_H; y += tileH) {
+        ctx.drawImage(_exploreBgImg, 0, y, LOGICAL_W, tileH);
+    }
+}

@@ -1,5 +1,25 @@
 // ─── Game Over 画面 + 受伤特效 ───
 
+// Mobile restart button (canvas-drawn)
+var _mobileRestartBtn = { x: 0, y: 0, w: 200, h: 56 };
+var _mobileLevelContinueBtn = { x: 0, y: 0, w: 200, h: 56 };
+
+function _drawMobileBtn(ctx, btn, label, color) {
+    ctx.fillStyle = 'rgba(0, 229, 255, 0.06)';
+    ctx.beginPath();
+    ctx.roundRect(btn.x, btn.y, btn.w, btn.h, 2);
+    ctx.fill();
+    ctx.strokeStyle = color || 'rgba(0, 229, 255, 0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(btn.x, btn.y, btn.w, btn.h, 2);
+    ctx.stroke();
+    ctx.fillStyle = color || 'rgba(0, 229, 255, 0.7)';
+    ctx.font = '18px ' + FONT_UI;
+    ctx.textAlign = 'center';
+    ctx.fillText(label, btn.x + btn.w / 2, btn.y + btn.h / 2 + 6);
+}
+
 function drawGameOver() {
     const ctx = Game.ctx;
 
@@ -41,9 +61,15 @@ function drawGameOver() {
     ctx.font = '20px ' + FONT_UI;
     ctx.fillText('Lv.' + G.player.playerLevel, cx, LOGICAL_H / 2 + 50);
 
-    ctx.fillStyle = 'rgba(0, 229, 255, 0.35)';
-    ctx.font = '22px ' + FONT_UI;
-    ctx.fillText('按 R 重新开始', cx, LOGICAL_H / 2 + 82);
+    if (IS_MOBILE) {
+        _mobileRestartBtn.x = cx - 100;
+        _mobileRestartBtn.y = LOGICAL_H / 2 + 80;
+        _drawMobileBtn(ctx, _mobileRestartBtn, '重新开始', SCI.red);
+    } else {
+        ctx.fillStyle = 'rgba(0, 229, 255, 0.35)';
+        ctx.font = '22px ' + FONT_UI;
+        ctx.fillText('按 R 重新开始', cx, LOGICAL_H / 2 + 82);
+    }
 }
 
 // ─── 受伤效果 ───
@@ -104,12 +130,18 @@ function drawLevelComplete() {
 
     // 提示
     const isLastLevel = G.game.currentLevel >= LEVEL_DATA.length - 1;
-    ctx.fillStyle = 'rgba(0, 229, 255, 0.4)';
-    ctx.font = '20px ' + FONT_UI;
-    if (isLastLevel) {
-        ctx.fillText('恭喜通关！按 Enter 返回菜单', cx, LOGICAL_H / 2 + 65);
+    if (IS_MOBILE) {
+        _mobileLevelContinueBtn.x = cx - 100;
+        _mobileLevelContinueBtn.y = LOGICAL_H / 2 + 55;
+        _drawMobileBtn(ctx, _mobileLevelContinueBtn, isLastLevel ? '返回菜单' : '进入下一关', SCI.gold);
     } else {
-        ctx.fillText('按 Enter 进入下一关', cx, LOGICAL_H / 2 + 65);
+        ctx.fillStyle = 'rgba(0, 229, 255, 0.4)';
+        ctx.font = '20px ' + FONT_UI;
+        if (isLastLevel) {
+            ctx.fillText('恭喜通关！按 Enter 返回菜单', cx, LOGICAL_H / 2 + 65);
+        } else {
+            ctx.fillText('按 Enter 进入下一关', cx, LOGICAL_H / 2 + 65);
+        }
     }
 
     ctx.textAlign = 'left';

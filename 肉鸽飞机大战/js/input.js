@@ -17,6 +17,16 @@ function beginLevel(levelIndex) {
     playBGM();
 }
 
+function beginExplore() {
+    G.game.gameMode = 'explore';
+    G.game.isStarted = true;
+    G.game.isPaused = false;
+    G.game.isGameOver = false;
+    G.game.buffChooseMode = false;
+    _exploreBgOffset = 0;
+    playBGM();
+}
+
 function initInput(canvas) {
     document.addEventListener('keydown', (e) => {
         // 调试器打开时，拦截调试器控制键
@@ -77,6 +87,7 @@ function initInput(canvas) {
             if (e.key === '2') { _selectedAircraftIndex = 1; return; }
             if (e.key === '3') { _selectedAircraftIndex = 2; return; }
             if (e.key === '4') { _selectedAircraftIndex = 3; return; }
+            if (e.key === '5') { _pendingGameMode = 'explore'; startGameWithAircraft(getSelectedAircraftId()); return; }
             if (e.key === 'ArrowLeft') {
                 _selectedAircraftIndex = (_selectedAircraftIndex + _getCraftCards().length - 1) % _getCraftCards().length;
                 return;
@@ -165,7 +176,7 @@ function initInput(canvas) {
         keys.down = _heldKeys.has('ArrowDown') || _heldKeys.has('KeyS');
     };
 
-    canvas.addEventListener('click', (e) => {
+    canvas.addEventListener('pointerdown', (e) => {
         const rect = canvas.getBoundingClientRect();
         const scaleX = LOGICAL_W / rect.width;
         const scaleY = LOGICAL_H / rect.height;
@@ -186,6 +197,13 @@ function initInput(canvas) {
                 if (mx >= levelBtn.x && mx <= levelBtn.x + levelBtn.width &&
                     my >= levelBtn.y && my <= levelBtn.y + levelBtn.height) {
                     startScreenMode = 'levelSelect';
+                    return;
+                }
+                // 星球探索按钮
+                if (mx >= exploreBtn.x && mx <= exploreBtn.x + exploreBtn.width &&
+                    my >= exploreBtn.y && my <= exploreBtn.y + exploreBtn.height) {
+                    _pendingGameMode = 'explore';
+                    startGameWithAircraft(getSelectedAircraftId());
                     return;
                 }
                 // 战机选择器箭头
@@ -290,6 +308,31 @@ function initInput(canvas) {
             my >= pauseBtn.y && my <= pauseBtn.y + pauseBtn.height) {
             G.game.isPaused = !G.game.isPaused;
         }
+
+        // 移动端：Game Over 重新开始按钮
+        if (IS_MOBILE && G.game.isGameOver) {
+            const rb = _mobileRestartBtn;
+            if (mx >= rb.x && mx <= rb.x + rb.w && my >= rb.y && my <= rb.y + rb.h) {
+                G.game.gameMode = 'endless';
+                G.game.currentLevel = 0;
+                G.player.aircraftType = 'default';
+                startScreenMode = 'main';
+                _levelProgress = -1;
+                Save.clearProgress();
+                resetState();
+                playBGM();
+                return;
+            }
+        }
+
+        // 移动端：关卡通关继续按钮
+        if (IS_MOBILE && G.game.levelCompleted) {
+            const cb = _mobileLevelContinueBtn;
+            if (mx >= cb.x && mx <= cb.x + cb.w && my >= cb.y && my <= cb.y + cb.h) {
+                proceedToNextLevel();
+                return;
+            }
+        }
     });
 
     // ─── 滑条拖拽 ───
@@ -314,22 +357,27 @@ function initInput(canvas) {
         setter(v);
     }
 
-    canvas.addEventListener('mousedown', (e) => {
+    canvas.addEventListener('pointerdown', (e) => {
         if (!G.game.settingsOpen) return;
         const { x: mx, y: my } = _canvasXY(e);
         if (_hitSlider(mx, my, _sliderBGM)) {
             G.game._settingsDrag = 'bgm';
+            G.game._settingsPointerId = e.pointerId;
             _applySlider(mx, _sliderBGM, setBGMVolume);
         } else if (_hitSlider(mx, my, _sliderSFX)) {
             G.game._settingsDrag = 'sfx';
+            G.game._settingsPointerId = e.pointerId;
             _applySlider(mx, _sliderSFX, setSFXVolume);
         }
     });
 
-    canvas.addEventListener('mousemove', (e) => {
+    canvas.addEventListener('pointermove', (e) => {
+        // 多点触控：仅处理拖拽中或墨子号瞄准的 pointer
+        if (G.game._settingsDrag && e.pointerId !== G.game._settingsPointerId) return;
+
         const { x: mx, y: my } = _canvasXY(e);
 
-        // 墨子号：实时追踪鼠标位置作为炸弹目标
+        // 墨子号：实时追踪鼠标/手指位置作为炸弹目标
         if (G.player.aircraftType === 'mozi' && G.game.isStarted && !G.game.isPaused && !G.game.isGameOver) {
             G.player.moziTargetX = mx;
             G.player.moziTargetY = my;
@@ -343,13 +391,24 @@ function initInput(canvas) {
         }
     });
 
-    canvas.addEventListener('mouseup', () => {
-        if (G.game._settingsDrag) Save.save();
-        G.game._settingsDrag = null;
+    canvas.addEventListener('pointerup', (e) => {
+        if (G.game._settingsDrag && e.pointerId === G.game._settingsPointerId) {
+            Save.save();
+            G.game._settingsDrag = null;
+            G.game._settingsPointerId = null;
+        }
     });
 
-    canvas.addEventListener('mouseleave', () => {
+    canvas.addEventListener('pointercancel', (e) => {
+        if (G.game._settingsDrag && e.pointerId === G.game._settingsPointerId) {
+            G.game._settingsDrag = null;
+            G.game._settingsPointerId = null;
+        }
+    });
+
+    canvas.addEventListener('pointerleave', () => {
         G.game._settingsDrag = null;
+        G.game._settingsPointerId = null;
     });
 
     // 窗口失焦时重置所有按键状态（浏览器不会触发 keyup）

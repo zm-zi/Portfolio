@@ -164,6 +164,10 @@ BOSS.register({
                         }
                         if (ok) positions.push(y);
                     }
+                    // 兜底：确保始终有 3 条激光
+                    while (positions.length < def.tripleLaserCount) {
+                        positions.push(positions.length * minGap + 60);
+                    }
                     b.tripleLaserYs = positions;
                 } else {
                     b.skillState = 'shield_warn';

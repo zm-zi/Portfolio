@@ -53,10 +53,10 @@ function updateHUD() {
         _hud.energyHint.textContent = 'ACTIVE!';
     } else if (energyPct >= 100) {
         _hud.energyFill.classList.add('full');
-        _hud.energyHint.textContent = 'SPACE!';
+        _hud.energyHint.textContent = IS_MOBILE ? 'TAP!' : 'SPACE!';
     } else {
         _hud.energyFill.classList.remove('full');
-        _hud.energyHint.textContent = 'SPACE(100)';
+        _hud.energyHint.textContent = IS_MOBILE ? 'OC(100)' : 'SPACE(100)';
     }
     // 等级条
     updateLevelBar();

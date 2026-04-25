@@ -106,6 +106,16 @@ const wreck2Img = _loadImg('image/破损战舰2.png');
 const wreck3Img = _loadImg('image/破损战舰3.png');
 const wreck4Img = _loadImg('image/破损战舰4.png');
 initMeteorites(meteorite1Img, meteorite2Img, meteorite3Img, meteorite4Img, meteorite5Img, wreck1Img, wreck2Img, wreck3Img, wreck4Img);
+
+// 无尽模式背景图（多图轮换，击杀Boss切换）
+const endlessBgImg0 = _loadImg('image/背景图零.png');
+const endlessBgImg3 = _loadImg('image/背景图三.png');
+initEndlessBg([endlessBgImg0, endlessBgImg3]);
+
+// 星球探索背景图
+const exploreBgImg = _loadImg('image/背景图一.png');
+initExploreBg(exploreBgImg);
+
 initInput(canvas);
 
 // 等待所有图片和字体加载完毕再启动游戏循环

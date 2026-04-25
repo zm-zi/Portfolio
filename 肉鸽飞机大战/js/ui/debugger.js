@@ -18,7 +18,7 @@ const DEBUG_CATEGORIES = [
 const DEBUG_ENEMY_TYPES = ['basic', 'shooter', 'rusher', 'spinner', 'minion'];
 const DEBUG_ENEMY_NAMES = { basic: '一级敌人', shooter: '二级敌人', rusher: '三级敌人', spinner: '四级敌人', minion: '小怪' };
 const DEBUG_BOSS_TYPES = ['one_eye_king', 'night_fury', 'ice_evil_king', 'julingshen'];
-const DEBUG_BOSS_NAMES = { one_eye_king: '独眼王', night_fury: '夜煞', ice_evil_king: '冰邪王', rulingshen: '巨灵神' };
+const DEBUG_BOSS_NAMES = { one_eye_king: '独眼王', night_fury: '夜煞', ice_evil_king: '冰邪王', julingshen: '巨灵神' };
 
 let dbg = {
     selectedCategory: 0,
@@ -379,7 +379,6 @@ function summonDebugEnemy() {
         enemy.hoverY = 100 + (Math.random() - 0.5) * 40;
     } else if (type === 'spinner') {
         enemy.lastFireTime = Date.now();
-        enemy.spiralAngle = 0;
         enemy.hoverY = 350;
         enemy.wave2Fired = false;
         enemy.wave3Fired = false;

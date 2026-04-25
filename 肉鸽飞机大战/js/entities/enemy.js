@@ -104,7 +104,7 @@ const ENEMY = {
             const def = this._pool[e.type];
             if (def && def.update) def.update(e, G, now);
             if (e.hitFlash > 0) e.hitFlash--;
-            if (e.y > LOGICAL_H) G.enemies.splice(i, 1);
+            if (e.y > LOGICAL_H + e.height || e.y < -e.height * 2 || e.x < -e.width || e.x > LOGICAL_W + e.width) G.enemies.splice(i, 1);
         }
     },
 

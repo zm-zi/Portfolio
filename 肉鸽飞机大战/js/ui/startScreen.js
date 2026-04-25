@@ -5,10 +5,11 @@ let _pendingGameMode = 'endless'; // 选完战机后启动的模式
 let _pendingLevelIndex = 0;       // 关卡模式时的关卡索引
 let _selectedAircraftIndex = 0;   // 主页选中战机索引
 
-// 主画面按钮（底部左右排列）
-const _btnW = 180, _btnH = 50, _btnGap = 30;
-const endlessBtn = { x: LOGICAL_W / 2 - _btnW - _btnGap / 2, y: LOGICAL_H - 110, width: _btnW, height: _btnH };
-const levelBtn = { x: LOGICAL_W / 2 + _btnGap / 2, y: LOGICAL_H - 110, width: _btnW, height: _btnH };
+// 主画面按钮（底部三按钮排列）
+const _btnW = 160, _btnH = 50, _btnGap = 20;
+const endlessBtn = { x: LOGICAL_W / 2 - _btnW * 1.5 - _btnGap, y: LOGICAL_H - 110, width: _btnW, height: _btnH };
+const levelBtn = { x: LOGICAL_W / 2 - _btnW / 2, y: LOGICAL_H - 110, width: _btnW, height: _btnH };
+const exploreBtn = { x: LOGICAL_W / 2 + _btnW / 2 + _btnGap, y: LOGICAL_H - 110, width: _btnW, height: _btnH };
 
 // 主页战机选择器箭头按钮（中间大预览区）
 const _selectorArrowW = 36;
@@ -58,14 +59,19 @@ function drawMainMenu() {
     // ── 中部：大号战机预览 ──
     _drawAircraftPreview(ctx, Date.now());
 
-    // ── 下部：模式按钮左右排列 ──
+    // ── 下部：模式按钮三列排列 ──
     _drawMenuButton(endlessBtn, '无尽冒险', SCI.primary);
     _drawMenuButton(levelBtn, '关卡模式', SCI.accent);
+    _drawMenuButton(exploreBtn, '星球探索', SCI.green);
 
     // 底部控制提示
     ctx.fillStyle = 'rgba(0, 229, 255, 0.25)';
     ctx.font = '16px ' + FONT_UI;
-    ctx.fillText('方向键/WASD 移动  空格 超频  P 暂停', cx, LOGICAL_H - 28);
+    if (IS_MOBILE) {
+        ctx.fillText('虚拟摇杆移动  超频  P 暂停', cx, LOGICAL_H - 28);
+    } else {
+        ctx.fillText('方向键/WASD 移动  空格 超频  P 暂停', cx, LOGICAL_H - 28);
+    }
 
     ctx.textAlign = 'left';
 }
@@ -271,7 +277,7 @@ function drawAircraftSelect() {
 
     ctx.fillStyle = 'rgba(0, 229, 255, 0.5)';
     ctx.font = '16px ' + FONT_UI;
-    ctx.fillText('选择战机  点击卡片或按 1/2/3/4', LOGICAL_W / 2, 76);
+    ctx.fillText(IS_MOBILE ? '选择战机  点击卡片' : '选择战机  点击卡片或按 1/2/3/4', LOGICAL_W / 2, 76);
 
     // 分隔线
     drawSciSeparator(ctx, LOGICAL_W / 2, 92, 300, SCI.primary);
@@ -396,6 +402,8 @@ function startGameWithAircraft(aircraftId) {
     resetState();
     if (_pendingGameMode === 'level') {
         beginLevel(_pendingLevelIndex);
+    } else if (_pendingGameMode === 'explore') {
+        beginExplore();
     } else {
         G.game.gameMode = 'endless';
         beginGame();

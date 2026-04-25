@@ -21,7 +21,7 @@ const G = {
         highScore: 0,
         levelHighScores: [0, 0, 0, 0, 0, 0, 0],
         // 关卡模式
-        gameMode: 'endless',     // 'endless' | 'level'
+        gameMode: 'endless',     // 'endless' | 'level' | 'explore'
         currentLevel: 0,         // 关卡索引 0-4
         levelCompleted: false
     },
@@ -184,4 +184,6 @@ function resetState() {
     G.levelBossIndex = 0;
     G.levelLastBossDefeatScore = 0;
 
+    // 重置背景切换系统
+    if (typeof resetBgTransition === 'function') resetBgTransition();
 }

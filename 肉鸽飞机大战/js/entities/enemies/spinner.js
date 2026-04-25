@@ -17,7 +17,6 @@ ENEMY.register({
             hp: Math.round(ENEMY4_HP * hpMult),
             type: 'spinner',
             lastFireTime: now + Math.random() * ENEMY4_FIRE_RATE,
-            spiralAngle: 0,
             hoverY: ENEMY4_HOVER_Y,
             wave2Fired: false,
             wave3Fired: false,

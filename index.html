@@ -17,12 +17,17 @@
   <nav class="nav" id="nav">
     <div class="nav__inner">
       <a href="#hero" class="nav__logo">张子墨</a>
+      <button class="nav__toggle" aria-label="打开菜单" aria-expanded="false">
+        <span class="nav__toggle-bar"></span>
+        <span class="nav__toggle-bar"></span>
+        <span class="nav__toggle-bar"></span>
+      </button>
       <div class="nav__links">
         <a href="#featured" class="nav__link">精选作品</a>
+        <a href="#project" class="nav__link">作品</a>
         <a href="#skills" class="nav__link">技能</a>
         <a href="#experience" class="nav__link">经历</a>
         <a href="#education" class="nav__link">教育</a>
-        <a href="#project" class="nav__link">作品</a>
         <a href="#gaming-history" class="nav__link">游戏史</a>
         <a href="#art" class="nav__link">美术</a>
         <a href="#contact" class="nav__link">联系</a>
@@ -45,7 +50,7 @@
     <div class="hero__content">
       <img class="hero__avatar" src="assets/头像.png" alt="张子墨的头像">
       <h1 class="hero__name">张子墨</h1>
-      <p class="hero__alias">Sunmiss</p>
+      <p class="hero__alias">Sunmiss · 2004 · 处女座</p>
       <div class="hero__divider"></div>
       <div class="hero__statements">
         <p class="hero__statement hero__statement--listen">
@@ -99,265 +104,6 @@
             <p>AI 动漫角色聊天 · Next.js · DeepSeek</p>
           </div>
         </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== Section: Skills & Tools ===== -->
-  <section class="skills" id="skills">
-    <div class="skills__inner">
-      <div class="skills__header reveal">
-        <span class="skills__label">能力体系</span>
-        <h2 class="skills__title">Skills & Tools</h2>
-      </div>
-      <div class="skills__grid">
-        <!-- 技能 -->
-        <div class="skills__card reveal">
-          <div class="skills__card-head">
-            <div class="skills__card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20l9-5-9-5-9 5 9 5z"/><path d="M12 12l9-5-9-5-9 5 9 5z"/></svg>
-            </div>
-            <h3>技能</h3>
-          </div>
-          <div class="skills__card-body">
-            <div class="skills__list">
-              <div class="skills__item">
-                <h4>系统设计</h4>
-                <p>数据驱动架构、注册表模式、声明式扩展</p>
-              </div>
-              <div class="skills__item">
-                <h4>数值设计</h4>
-                <p>经济平衡、难度曲线、概率与成长公式</p>
-              </div>
-              <div class="skills__item">
-                <h4>体验设计</h4>
-                <p>情绪节奏、手感打磨、反馈设计</p>
-              </div>
-              <div class="skills__item">
-                <h4>角色与叙事</h4>
-                <p>人格建模、关系系统、程序化叙事</p>
-              </div>
-              <div class="skills__item">
-                <h4>关卡设计</h4>
-                <p>敌人配置、Boss 机制、节奏编排</p>
-              </div>
-              <div class="skills__item">
-                <h4>原型验证</h4>
-                <p>快速从 0 到 1 做出可玩产品</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- 方法论 -->
-        <div class="skills__card reveal">
-          <div class="skills__card-head">
-            <div class="skills__card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            </div>
-            <h3>方法论</h3>
-          </div>
-          <div class="skills__card-body">
-            <div class="skills__list">
-              <div class="skills__item">
-                <h4>心理学视角</h4>
-                <p>用情绪系数、关系阶段等心理模型驱动系统设计</p>
-              </div>
-              <div class="skills__item">
-                <h4>数据驱动思维</h4>
-                <p>数值不写死在逻辑里，用公式和常量表控制</p>
-              </div>
-              <div class="skills__item">
-                <h4>玩家体验优先</h4>
-                <p>先定义感受，再反推机制</p>
-              </div>
-              <div class="skills__item">
-                <h4>原型驱动开发</h4>
-                <p>快速验证大于完美设计</p>
-              </div>
-              <div class="skills__item">
-                <h4>跨领域迁移</h4>
-                <p>游戏系统思维应用到 AI 产品、Unity 架构映射到 Web</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- 工具 -->
-        <div class="skills__card skills__card--wide reveal">
-          <div class="skills__card-head">
-            <div class="skills__card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
-            </div>
-            <h3>工具</h3>
-          </div>
-          <div class="skills__card-body">
-            <div class="skills__groups">
-              <div class="skills__group">
-                <h4>游戏引擎</h4>
-                <div class="skills__tags">
-                  <span>Unity</span>
-                  <span>Godot</span>
-                  <span>Cocos Creator</span>
-                  <span>Unreal Engine</span>
-                  <span>自研轻量引擎</span>
-                </div>
-              </div>
-              <div class="skills__group">
-                <h4>编程语言</h4>
-                <div class="skills__tags">
-                  <span>JavaScript</span>
-                  <span>C#</span>
-                  <span>Python</span>
-                  <span>Lua</span>
-                </div>
-              </div>
-              <div class="skills__group">
-                <h4>前端框架</h4>
-                <div class="skills__tags">
-                  <span>Next.js</span>
-                  <span>React</span>
-                  <span>HTML5 Canvas</span>
-                </div>
-              </div>
-              <div class="skills__group">
-                <h4>AI 技术</h4>
-                <div class="skills__tags">
-                  <span>DeepSeek API</span>
-                  <span>Function Calling</span>
-                  <span>RAG</span>
-                  <span>SSE 流式</span>
-                </div>
-              </div>
-              <div class="skills__group">
-                <h4>美术制作</h4>
-                <div class="skills__tags">
-                  <span>Photoshop</span>
-                  <span>Illustrator</span>
-                  <span>AIGC 2D/3D 素材</span>
-                  <span>帧动画绘制</span>
-                  <span>AI 矢量图</span>
-                </div>
-              </div>
-              <div class="skills__group">
-                <h4>AI 工具</h4>
-                <div class="skills__tags">
-                  <span>Claude Code</span>
-                  <span>OpenClaw</span>
-                  <span>Codex</span>
-                  <span>Cursor</span>
-                </div>
-              </div>
-              <div class="skills__group">
-                <h4>生产流程</h4>
-                <div class="skills__tags">
-                  <span>快速原型开发</span>
-                  <span>Git</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== Section: Experience ===== -->
-  <section class="experience" id="experience">
-    <div class="experience__inner">
-      <div class="experience__header reveal">
-        <span class="experience__label">工作经历</span>
-        <h2 class="experience__title">Experience</h2>
-      </div>
-
-      <div class="experience__card reveal">
-        <div class="experience__top">
-          <div class="experience__meta">
-            <h3 class="experience__company">合肥晶驿科技公司</h3>
-            <span class="experience__role">游戏策划</span>
-          </div>
-          <span class="experience__period">2024.10 — 2025.02</span>
-        </div>
-
-        <div class="experience__project">
-          <h4 class="experience__project-name">《烈火英雄》</h4>
-          <div class="experience__tags">
-            <span>肉鸽</span>
-            <span>打怪</span>
-            <span>刷宝</span>
-            <span>暗黑</span>
-            <span>动作 RPG</span>
-          </div>
-          <p class="experience__project-desc">一款融合 Roguelike 与暗黑刷宝玩法的动作 RPG。负责核心系统策划与数值设计，主导职业体系、装备经济、PVP/PVE 双模式框架的方案制定与落地推进。</p>
-        </div>
-
-        <div class="experience__details">
-          <div class="experience__detail">
-            <div class="experience__detail-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            </div>
-            <div>
-              <h4>职业体系设计</h4>
-              <p>设计战士、法师、道士三大职业，每职业规划三条差异化天赋分支（共 9 条路线），定义各分支的技能树结构、核心机制与定位差异，输出职业技能配置文档与数值表。</p>
-            </div>
-          </div>
-          <div class="experience__detail">
-            <div class="experience__detail-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
-            </div>
-            <div>
-              <h4>装备与词条系统</h4>
-              <p>设计装备等级成长体系与词条随机生成规则，规划稀有度分层、词条权重池、套装效果联动，确保刷宝正反馈循环与 Build 构筑深度。</p>
-            </div>
-          </div>
-          <div class="experience__detail">
-            <div class="experience__detail-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            </div>
-            <div>
-              <h4>PVE 关卡与怪物设计</h4>
-              <p>设计 Roguelike 副本关卡结构、怪物行为模式与 Boss 机制，规划难度曲线与掉落节奏，确保刷宝体验的持续驱动力。</p>
-            </div>
-          </div>
-          <div class="experience__detail">
-            <div class="experience__detail-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-            </div>
-            <div>
-              <h4>PVP 平衡性设计</h4>
-              <p>建立 PVP 独立数值框架，设计职业克制关系与技能平衡规则，输出 PVP 数值对照表，协调程序与 QA 推进平衡性调优。</p>
-            </div>
-          </div>
-          <div class="experience__detail">
-            <div class="experience__detail-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
-            </div>
-            <div>
-              <h4>策划文档与跨部门协作</h4>
-              <p>输出系统设计文档（GDD）、数值配置表、原型流程图，与程序、美术、QA 多部门协作推进方案落地与迭代验证。</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== Section: Education ===== -->
-  <section class="education" id="education">
-    <div class="education__inner">
-      <div class="education__header reveal">
-        <span class="education__label">教育背景</span>
-        <h2 class="education__title">Education</h2>
-      </div>
-      <div class="education__card reveal">
-        <div class="education__top">
-          <div class="education__meta">
-            <h3 class="education__school">合肥城市学院</h3>
-            <span class="education__major">大数据专业 · 全日制本科</span>
-          </div>
-          <span class="education__period">2023 — 2027</span>
-        </div>
-        <div class="education__detail">
-          <p>27 届毕业生，主修大数据技术，具备数据结构、数据库、数据分析等专业基础，在校期间独立完成多个游戏设计与开发项目，具备跨学科实践能力。</p>
-        </div>
       </div>
     </div>
   </section>
@@ -1120,8 +866,8 @@
         <div class="asset-gallery__group">
           <h3 class="asset-gallery__group-title">背景</h3>
           <div class="asset-gallery__grid">
-            <div class="asset-gallery__item asset-gallery__item--wide" data-src="肉鸽飞机大战/image/背景图.jpg">
-              <img src="肉鸽飞机大战/image/背景图.jpg" alt="背景图" loading="lazy">
+            <div class="asset-gallery__item asset-gallery__item--wide" data-src="肉鸽飞机大战/image/背景图零.png">
+              <img src="肉鸽飞机大战/image/背景图零.png" alt="背景图" loading="lazy">
               <span>星空背景</span>
             </div>
           </div>
@@ -1129,6 +875,265 @@
       </div>
     </div>
   </div>
+
+  <!-- ===== Section: Skills & Tools ===== -->
+  <section class="skills" id="skills">
+    <div class="skills__inner">
+      <div class="skills__header reveal">
+        <span class="skills__label">能力体系</span>
+        <h2 class="skills__title">Skills & Tools</h2>
+      </div>
+      <div class="skills__grid">
+        <!-- 技能 -->
+        <div class="skills__card reveal">
+          <div class="skills__card-head">
+            <div class="skills__card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20l9-5-9-5-9 5 9 5z"/><path d="M12 12l9-5-9-5-9 5 9 5z"/></svg>
+            </div>
+            <h3>技能</h3>
+          </div>
+          <div class="skills__card-body">
+            <div class="skills__list">
+              <div class="skills__item">
+                <h4>系统设计</h4>
+                <p>数据驱动架构、注册表模式、声明式扩展</p>
+              </div>
+              <div class="skills__item">
+                <h4>数值设计</h4>
+                <p>经济平衡、难度曲线、概率与成长公式</p>
+              </div>
+              <div class="skills__item">
+                <h4>体验设计</h4>
+                <p>情绪节奏、手感打磨、反馈设计</p>
+              </div>
+              <div class="skills__item">
+                <h4>角色与叙事</h4>
+                <p>人格建模、关系系统、程序化叙事</p>
+              </div>
+              <div class="skills__item">
+                <h4>关卡设计</h4>
+                <p>敌人配置、Boss 机制、节奏编排</p>
+              </div>
+              <div class="skills__item">
+                <h4>原型验证</h4>
+                <p>快速从 0 到 1 做出可玩产品</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 方法论 -->
+        <div class="skills__card reveal">
+          <div class="skills__card-head">
+            <div class="skills__card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <h3>方法论</h3>
+          </div>
+          <div class="skills__card-body">
+            <div class="skills__list">
+              <div class="skills__item">
+                <h4>心理学视角</h4>
+                <p>用情绪系数、关系阶段等心理模型驱动系统设计</p>
+              </div>
+              <div class="skills__item">
+                <h4>数据驱动思维</h4>
+                <p>数值不写死在逻辑里，用公式和常量表控制</p>
+              </div>
+              <div class="skills__item">
+                <h4>玩家体验优先</h4>
+                <p>先定义感受，再反推机制</p>
+              </div>
+              <div class="skills__item">
+                <h4>原型驱动开发</h4>
+                <p>快速验证大于完美设计</p>
+              </div>
+              <div class="skills__item">
+                <h4>跨领域迁移</h4>
+                <p>游戏系统思维应用到 AI 产品、Unity 架构映射到 Web</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 工具 -->
+        <div class="skills__card skills__card--wide reveal">
+          <div class="skills__card-head">
+            <div class="skills__card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+            </div>
+            <h3>工具</h3>
+          </div>
+          <div class="skills__card-body">
+            <div class="skills__groups">
+              <div class="skills__group">
+                <h4>游戏引擎</h4>
+                <div class="skills__tags">
+                  <span>Unity</span>
+                  <span>Godot</span>
+                  <span>Cocos Creator</span>
+                  <span>Unreal Engine</span>
+                  <span>自研轻量引擎</span>
+                </div>
+              </div>
+              <div class="skills__group">
+                <h4>编程语言</h4>
+                <div class="skills__tags">
+                  <span>JavaScript</span>
+                  <span>C#</span>
+                  <span>Python</span>
+                  <span>Lua</span>
+                </div>
+              </div>
+              <div class="skills__group">
+                <h4>前端框架</h4>
+                <div class="skills__tags">
+                  <span>Next.js</span>
+                  <span>React</span>
+                  <span>HTML5 Canvas</span>
+                </div>
+              </div>
+              <div class="skills__group">
+                <h4>AI 技术</h4>
+                <div class="skills__tags">
+                  <span>DeepSeek API</span>
+                  <span>Function Calling</span>
+                  <span>RAG</span>
+                  <span>SSE 流式</span>
+                </div>
+              </div>
+              <div class="skills__group">
+                <h4>美术制作</h4>
+                <div class="skills__tags">
+                  <span>Photoshop</span>
+                  <span>Illustrator</span>
+                  <span>AIGC 2D/3D 素材</span>
+                  <span>帧动画绘制</span>
+                  <span>AI 矢量图</span>
+                </div>
+              </div>
+              <div class="skills__group">
+                <h4>AI 工具</h4>
+                <div class="skills__tags">
+                  <span>Claude Code</span>
+                  <span>OpenClaw</span>
+                  <span>Codex</span>
+                  <span>Cursor</span>
+                </div>
+              </div>
+              <div class="skills__group">
+                <h4>生产流程</h4>
+                <div class="skills__tags">
+                  <span>快速原型开发</span>
+                  <span>Git</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Section: Experience ===== -->
+  <section class="experience" id="experience">
+    <div class="experience__inner">
+      <div class="experience__header reveal">
+        <span class="experience__label">工作经历</span>
+        <h2 class="experience__title">Experience</h2>
+      </div>
+
+      <div class="experience__card reveal">
+        <div class="experience__top">
+          <div class="experience__meta">
+            <h3 class="experience__company">合肥晶驿科技公司</h3>
+            <span class="experience__role">游戏策划</span>
+          </div>
+          <span class="experience__period">2024.10 — 2025.02</span>
+        </div>
+
+        <div class="experience__project">
+          <h4 class="experience__project-name">《烈火英雄》</h4>
+          <div class="experience__tags">
+            <span>肉鸽</span>
+            <span>打怪</span>
+            <span>刷宝</span>
+            <span>暗黑</span>
+            <span>动作 RPG</span>
+          </div>
+          <p class="experience__project-desc">一款融合 Roguelike 与暗黑刷宝玩法的动作 RPG。负责核心系统策划与数值设计，主导职业体系、装备经济、PVP/PVE 双模式框架的方案制定与落地推进。</p>
+        </div>
+
+        <div class="experience__details">
+          <div class="experience__detail">
+            <div class="experience__detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+              <h4>职业体系设计</h4>
+              <p>设计战士、法师、道士三大职业，每职业规划三条差异化天赋分支（共 9 条路线），定义各分支的技能树结构、核心机制与定位差异，输出职业技能配置文档与数值表。</p>
+            </div>
+          </div>
+          <div class="experience__detail">
+            <div class="experience__detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+            </div>
+            <div>
+              <h4>装备与词条系统</h4>
+              <p>设计装备等级成长体系与词条随机生成规则，规划稀有度分层、词条权重池、套装效果联动，确保刷宝正反馈循环与 Build 构筑深度。</p>
+            </div>
+          </div>
+          <div class="experience__detail">
+            <div class="experience__detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div>
+              <h4>PVE 关卡与怪物设计</h4>
+              <p>设计 Roguelike 副本关卡结构、怪物行为模式与 Boss 机制，规划难度曲线与掉落节奏，确保刷宝体验的持续驱动力。</p>
+            </div>
+          </div>
+          <div class="experience__detail">
+            <div class="experience__detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            </div>
+            <div>
+              <h4>PVP 平衡性设计</h4>
+              <p>建立 PVP 独立数值框架，设计职业克制关系与技能平衡规则，输出 PVP 数值对照表，协调程序与 QA 推进平衡性调优。</p>
+            </div>
+          </div>
+          <div class="experience__detail">
+            <div class="experience__detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+            </div>
+            <div>
+              <h4>策划文档与跨部门协作</h4>
+              <p>输出系统设计文档（GDD）、数值配置表、原型流程图，与程序、美术、QA 多部门协作推进方案落地与迭代验证。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Section: Education ===== -->
+  <section class="education" id="education">
+    <div class="education__inner">
+      <div class="education__header reveal">
+        <span class="education__label">教育背景</span>
+        <h2 class="education__title">Education</h2>
+      </div>
+      <div class="education__card reveal">
+        <div class="education__top">
+          <div class="education__meta">
+            <h3 class="education__school">合肥城市学院</h3>
+            <span class="education__major">大数据专业 · 全日制本科 · 自学《游戏设计艺术》</span>
+          </div>
+          <span class="education__period">2023 — 2027</span>
+        </div>
+        <div class="education__detail">
+          <p>27 届毕业生，主修大数据技术，具备数据结构、数据库、数据分析等专业基础，在校期间独立完成多个游戏设计与开发项目，具备跨学科实践能力。</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ===== Section: Gaming History ===== -->
   <section class="timeline" id="gaming-history">

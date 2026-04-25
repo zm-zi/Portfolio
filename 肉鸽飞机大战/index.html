@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>超时空激战</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
@@ -55,6 +55,7 @@
                 var(--sci-bg);
             font-family: 'VT323', monospace;
             overflow: hidden;
+            touch-action: manipulation;
         }
 
         /* 细网格背景装饰 */
@@ -293,6 +294,7 @@
                 inset 0 0 60px rgba(0, 229, 255, 0.02);
             position: relative;
             z-index: 1;
+            touch-action: none;
         }
         /* Canvas 四角光标装饰 */
         #canvas-wrap::before,
@@ -417,6 +419,26 @@
             width: 100%;
             text-align: center;
         }
+
+        /* ── 移动端缩放 ── */
+        @media (max-width: 700px) {
+            body {
+                overflow-x: hidden;
+                overflow-y: auto;
+                align-items: flex-start;
+            }
+        }
+
+        /* ── 移动端操控按钮 ── */
+        #mobile-joystick,
+        #mobile-oc-btn,
+        #mobile-pause-btn {
+            display: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .is-mobile #mobile-joystick { display: block; }
+        .is-mobile #mobile-oc-btn { display: flex; }
+        .is-mobile #mobile-pause-btn { display: flex; }
     </style>
 </head>
 <body>
@@ -457,6 +479,7 @@
             </div>
         </div>
     </div>
+    <script>var IS_MOBILE=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)||('ontouchstart' in window&&Math.min(window.innerWidth,window.innerHeight)<768);if(IS_MOBILE)document.body.classList.add('is-mobile');</script>
     <script src="js/core.js"></script>
     <script src="js/constants.js"></script>
     <script src="js/save.js"></script>
@@ -504,5 +527,6 @@
     <script src="js/input.js"></script>
     <script src="js/gameLoop.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/mobile.js"></script>
 </body>
 </html>

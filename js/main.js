@@ -92,6 +92,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
   }
 
+  // ===== Mobile menu toggle =====
+  const navToggle = document.querySelector('.nav__toggle');
+  const navLinks = document.querySelector('.nav__links');
+
+  function closeMenu() {
+    if (navToggle && navLinks) {
+      navToggle.classList.remove('nav__toggle--open');
+      navLinks.classList.remove('nav__links--open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+      const isOpen = navToggle.classList.toggle('nav__toggle--open');
+      navLinks.classList.toggle('nav__links--open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    navLinks.querySelectorAll('.nav__link').forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!nav.contains(e.target)) closeMenu();
+    });
+  }
+
   // ===== Scroll reveal for project sections =====
   const revealEls = document.querySelectorAll('.reveal');
 
@@ -163,6 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+      closeMenu();
       if (window._closeLightbox) window._closeLightbox();
       closeAssetGallery();
     }

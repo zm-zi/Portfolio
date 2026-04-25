@@ -131,7 +131,7 @@ function drawBuffChoose(ctx) {
     // 副标题
     ctx.fillStyle = 'rgba(0, 229, 255, 0.45)';
     ctx.font = '20px HYPixel, sans-serif';
-    ctx.fillText('按 1 / 2 / 3 选择', cx, LOGICAL_H / 2 - _cardH / 2 - 14);
+    ctx.fillText(IS_MOBILE ? '点击卡片选择' : '按 1 / 2 / 3 选择', cx, LOGICAL_H / 2 - _cardH / 2 - 14);
 
     const totalW = count * _cardW + (count - 1) * _cardGap;
     const startX = (LOGICAL_W - totalW) / 2;

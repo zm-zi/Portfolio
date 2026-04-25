@@ -31,10 +31,19 @@ function gameLoop(timestamp) {
     }
 
     if (!gm.isPaused && !gm.isGameOver && !gm.buffChooseMode && !gm.levelCompleted) {
+        // 星球探索模式：只更新玩家、背景滚动
+        if (gm.gameMode === 'explore') {
+            if (typeof _syncKeys === 'function') _syncKeys();
+            updatePlayer();
+            updateExploreBg(1.0);
+            updateParticles();
+            updateInvincible();
+        } else {
         // 每帧校正按键状态（防止 keyup 事件丢失导致的卡键）
         if (typeof _syncKeys === 'function') _syncKeys();
         updatePlayer();
         updateBullets();
+        updateEndlessBg(1.0);
         updateStars();
         updateMeteorites();
         // 动态难度
@@ -76,6 +85,7 @@ function gameLoop(timestamp) {
                 '#44aaff'
             );
         }
+        }
     }
 
     Game.ctx.fillStyle = '#000000';
@@ -96,6 +106,13 @@ function gameLoop(timestamp) {
         Game.ctx.translate(hx, hy);
     }
 
+    if (gm.gameMode === 'explore') {
+        drawExploreBg(Game.ctx);
+        drawParticles(Game.ctx);
+        drawPlayer();
+        drawPauseBtn();
+    } else {
+    drawEndlessBg(Game.ctx);
     drawStars(Game.ctx);
     drawMeteorites(Game.ctx);
     drawGems(Game.ctx);
@@ -113,6 +130,7 @@ function gameLoop(timestamp) {
     drawPlayer();
     drawLaser();
     drawPauseBtn();
+    }
 
     // 屏幕闪白（最上层）
     if (G.screenFlash > 0.01) {

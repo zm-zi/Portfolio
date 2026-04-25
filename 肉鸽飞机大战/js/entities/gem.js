@@ -141,7 +141,7 @@ function updateGems() {
             continue;
         }
 
-        if (g.y > LOGICAL_H + 40) {
+        if (g.y > LOGICAL_H + 40 || g.y < -GEM_SIZE * 2) {
             G.gems.splice(i, 1);
         }
     }

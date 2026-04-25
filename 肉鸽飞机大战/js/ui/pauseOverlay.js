@@ -1,13 +1,17 @@
 // ─── 暂停按钮、暂停覆盖层、设置面板 ───
 
-const pauseBtn = { x: 12, y: 14, width: 30, height: 30 };
+const pauseBtn = IS_MOBILE
+    ? { x: 12, y: 14, width: 44, height: 44 }
+    : { x: 12, y: 14, width: 30, height: 30 };
 
 // 暂停菜单按钮定义
+const _pauseBtnW = IS_MOBILE ? 200 : 160;
+const _pauseBtnH = IS_MOBILE ? 52 : 40;
 const _pauseBtns = [
-    { label: '继续', action: 'resume',   x: 0, y: 0, w: 160, h: 40 },
-    { label: '返回主页', action: 'home',     x: 0, y: 0, w: 160, h: 40 },
-    { label: '调试器', action: 'debugger', x: 0, y: 0, w: 160, h: 40 },
-    { label: '设置', action: 'settings',  x: 0, y: 0, w: 160, h: 40 }
+    { label: '继续', action: 'resume',   x: 0, y: 0, w: _pauseBtnW, h: _pauseBtnH },
+    { label: '返回主页', action: 'home',     x: 0, y: 0, w: _pauseBtnW, h: _pauseBtnH },
+    { label: '调试器', action: 'debugger', x: 0, y: 0, w: _pauseBtnW, h: _pauseBtnH },
+    { label: '设置', action: 'settings',  x: 0, y: 0, w: _pauseBtnW, h: _pauseBtnH }
 ];
 
 // ─── 暂停按钮（科幻风格）───
@@ -178,9 +182,9 @@ function drawSettingsPanel() {
     ctx.font = '20px ' + FONT_UI;
     ctx.fillText('帧率', p.x + 90, fpsY + 5);
 
-    const btnW = 40;
-    const btnH = 26;
-    const btnGap = 4;
+    const btnW = IS_MOBILE ? 52 : 40;
+    const btnH = IS_MOBILE ? 36 : 26;
+    const btnGap = IS_MOBILE ? 6 : 4;
     const fpsStartX = p.x + 100;
     _fpsButtons.length = 0;
 
