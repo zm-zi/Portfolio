@@ -4,12 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>张子墨 | Sunmiss — 游戏设计师作品集</title>
-  <meta name="description" content="张子墨（Sunmiss）的游戏设计师作品集。展示 Roguelike 飞机大战《超时空激战》、AI 动漫角色聊天应用 AnimeChatWeb 等独立项目，涵盖系统设计、数值设计、体验设计等核心能力。">
+  <meta name="description" content="张子墨（Sunmiss）的游戏设计师作品集。展示 Roguelike 飞机大战《超时空激战》、Unity 2D Roguelike 搜打撤《猎魂传奇》、AI 动漫角色聊天应用 AnimeChatWeb 等独立项目，涵盖系统设计、数值设计、体验设计等核心能力。">
   <link rel="icon" href="assets/头像.png" type="image/png">
   <meta property="og:title" content="张子墨 | Sunmiss — 游戏设计师作品集">
   <meta property="og:description" content="展示 Roguelike 飞机大战、AI 动漫角色聊天等独立项目的游戏设计师作品集。">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="preload" as="image" href="assets/头像.png">
+  <link rel="preload" as="image" href="assets/打雪仗.webp">
 </head>
 <body>
   <a href="#featured" class="skip-link">跳转到主要内容</a>
@@ -48,7 +50,7 @@
       <div class="hero__flip-char" style="--i:3"><span>划</span></div>
     </div>
     <div class="hero__content">
-      <img class="hero__avatar" src="assets/头像.png" alt="张子墨的头像">
+      <img class="hero__avatar" src="assets/头像.png" alt="张子墨的头像" fetchpriority="high" decoding="async">
       <h1 class="hero__name">张子墨</h1>
       <p class="hero__alias">Sunmiss · 2004 · 处女座</p>
       <div class="hero__divider"></div>
@@ -97,6 +99,14 @@
           </div>
         </a>
         <a href="#project-2" class="featured__card reveal">
+          <div class="featured__card-visual" style="background-image: url('assets/猎魂传奇预览图.webp'); background-size: cover; background-position: center;">
+          </div>
+          <div class="featured__card-info">
+            <h3>猎魂传奇</h3>
+            <p>Roguelike 搜打撤 · Unity 2D · C#</p>
+          </div>
+        </a>
+        <a href="#project-3" class="featured__card reveal">
           <div class="featured__card-visual" style="background-image: url('assets/Animechat宣传图.webp'); background-size: cover; background-position: center;">
           </div>
           <div class="featured__card-info">
@@ -104,8 +114,8 @@
             <p>AI 动漫角色聊天 · Next.js · DeepSeek</p>
           </div>
         </a>
-        <a href="#project-3" class="featured__card featured__card--wide reveal">
-          <div class="featured__card-visual" style="background-image: url('assets/打雪仗.png'); background-size: cover; background-position: center;">
+        <a href="#project-4" class="featured__card reveal">
+          <div class="featured__card-visual" style="background-image: url('assets/打雪仗.webp'); background-size: cover; background-position: center;">
           </div>
           <div class="featured__card-info">
             <h3>打雪仗 — 游戏设计方案</h3>
@@ -405,8 +415,244 @@
     </div>
   </section>
 
-  <!-- ===== Section 4: Project 2 — AnimeChatWeb ===== -->
+  <!-- ===== Section: Project 2 — 猎魂传奇 ===== -->
   <section class="project" id="project-2">
+    <div class="project__inner">
+
+      <!-- Project Header -->
+      <div class="project__header reveal">
+        <span class="project__label">独立项目</span>
+        <h2 class="project__title">猎魂传奇</h2>
+        <p class="project__subtitle">节点探索 · 搜打撤循环 · 装备构筑 — 2D Roguelike 搜刮撤离游戏</p>
+      </div>
+
+      <!-- Overview -->
+      <div class="project__overview reveal">
+        <div class="project__overview-text">
+          <h3>项目介绍</h3>
+          <p>基于 Unity 2D 构建的 Roguelike 搜打撤（Looter-Extractor）游戏，灵感融合《杀戮尖塔》的节点探索与《逃离塔科夫》的风险博弈。玩家进入程序化生成的节点地图，通过战斗、搜索、事件收集魂环、魂骨等装备，成功撤离保留战利品，死亡则失去一切。</p>
+          <div class="project__tags">
+            <span>Unity 2D</span>
+            <span>C#</span>
+            <span>ScriptableObject</span>
+            <span>Roguelike</span>
+            <span>搜打撤</span>
+            <span>程序化生成</span>
+          </div>
+        </div>
+        <div class="project__stats">
+          <div class="project__stat">
+            <span class="project__stat-num">31</span>
+            <span class="project__stat-label">C# 脚本</span>
+          </div>
+          <div class="project__stat">
+            <span class="project__stat-num">6</span>
+            <span class="project__stat-label">地图区域</span>
+          </div>
+          <div class="project__stat">
+            <span class="project__stat-num">9</span>
+            <span class="project__stat-label">属性维度</span>
+          </div>
+          <div class="project__stat">
+            <span class="project__stat-num">5</span>
+            <span class="project__stat-label">品质等级</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Design Goals -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">设计目标</h3>
+        <div class="project__goals">
+          <div class="project__goal">
+            <span class="project__goal-num">01</span>
+            <div>
+              <h4>风险博弈核心循环</h4>
+              <p>搜打撤（Search-Fight-Extract）循环：进入地图 → 节点探索收集装备 → 抵达撤离点保留战利品。死亡时丢失本次所有未撤离物品，高风险高回报的决策驱动每一步行动。</p>
+            </div>
+          </div>
+          <div class="project__goal">
+            <span class="project__goal-num">02</span>
+            <div>
+              <h4>数据驱动装备体系</h4>
+              <p>ScriptableObject 驱动的全物品系统：9 种属性维度（生命/魂力/攻击/防御/速度/暴击/吸血等）、5 品质等级（白/黄/紫/黑/红）、6 类物品（武魂/魂环/魂骨/草药/消耗品/垃圾），支持装备词条随机生成与 Build 构筑。</p>
+            </div>
+          </div>
+          <div class="project__goal">
+            <span class="project__goal-num">03</span>
+            <div>
+              <h4>程序化节点地图</h4>
+              <p>每局随机生成 10-18 层节点地图，战斗/容器/事件/休息/撤离五种节点类型按权重分布，6 大地图区域 × 4 难度梯度，确保每次探索都是独特体验。</p>
+            </div>
+          </div>
+          <div class="project__goal">
+            <span class="project__goal-num">04</span>
+            <div>
+              <h4>清晰的架构分层</h4>
+              <p>数据层（ScriptableObject 模板）→ 运行时层（ItemInstance / PlayerState）→ 逻辑层（Manager 系统）→ 节点解析层（Resolver）→ UI 层，各层职责单一、事件驱动解耦。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Design -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">系统设计</h3>
+        <div class="project__systems">
+          <div class="project__system">
+            <div class="project__system-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <h4>程序化节点地图</h4>
+            <p>MapGenerator 基于 MapGenConfig 权重随机生成分层节点结构，每层 2-3 个节点，节点类型按战斗/容器/事件/休息/撤离权重分配，UIGameMap 动态渲染 ScrollView 节点图。</p>
+          </div>
+          <div class="project__system">
+            <div class="project__system-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <h4>回合制战斗解析</h4>
+            <p>BattleResolver 基于攻防血公式逐回合计算伤害，胜利后通过 LootTable 加权随机生成战利品，失败触发强制撤离或死亡判定。</p>
+          </div>
+          <div class="project__system">
+            <div class="project__system-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+            </div>
+            <h4>加权掉落系统</h4>
+            <p>LootTable 定义每种敌人的掉落概率（Chance%）和数量范围（Min/Max），ItemGenerator 工厂方法创建带随机词条的 ItemInstance，品质越高权重越低。</p>
+          </div>
+          <div class="project__system">
+            <div class="project__system-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            </div>
+            <h4>随机事件系统</h4>
+            <p>EventResolver 提供 5 种随机遭遇（远古魂骨气息/毒雾陷阱/疗愈仙草/魂兽领域/先祖笔记），影响生命值与资源，增加探索的不确定性。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technical Architecture -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">技术架构</h3>
+        <div class="project__num-tables">
+          <div class="project__num-card">
+            <h4>属性维度</h4>
+            <table class="project__table">
+              <thead><tr><th>属性</th><th>类型</th><th>说明</th></tr></thead>
+              <tbody>
+                <tr><td>MaxHP</td><td>基础</td><td>最大生命值</td></tr>
+                <tr><td>MaxSoulPower</td><td>基础</td><td>最大魂力值</td></tr>
+                <tr><td>Attack</td><td>攻击</td><td>基础攻击力</td></tr>
+                <tr><td>AttackCoefficient</td><td>攻击</td><td>攻击系数加成</td></tr>
+                <tr><td>Defense</td><td>防御</td><td>基础防御力</td></tr>
+                <tr><td>Speed</td><td>速度</td><td>行动速度</td></tr>
+                <tr><td>DamageReduction</td><td>防御</td><td>伤害减免</td></tr>
+                <tr><td>CritChance</td><td>攻击</td><td>暴击概率</td></tr>
+                <tr><td>LifeSteal</td><td>生存</td><td>生命偷取</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="project__num-card">
+            <h4>装备品质分布</h4>
+            <div class="project__rarity-list">
+              <div class="project__rarity">
+                <span class="project__rarity-dot" style="--c: #8b8b8b"></span>
+                <span>白色 · 普通</span>
+                <span class="project__rarity-weight">最常见</span>
+              </div>
+              <div class="project__rarity">
+                <span class="project__rarity-dot" style="--c: #eab308"></span>
+                <span>黄色 · 优秀</span>
+                <span class="project__rarity-weight">较常见</span>
+              </div>
+              <div class="project__rarity">
+                <span class="project__rarity-dot" style="--c: #a855f7"></span>
+                <span>紫色 · 稀有</span>
+                <span class="project__rarity-weight">稀有</span>
+              </div>
+              <div class="project__rarity">
+                <span class="project__rarity-dot" style="--c: #1a1a1a"></span>
+                <span>黑色 · 史诗</span>
+                <span class="project__rarity-weight">极稀有</span>
+              </div>
+              <div class="project__rarity">
+                <span class="project__rarity-dot" style="--c: #ef4444"></span>
+                <span>红色 · 传说</span>
+                <span class="project__rarity-weight">最稀有</span>
+              </div>
+            </div>
+          </div>
+          <div class="project__num-card">
+            <h4>节点类型</h4>
+            <table class="project__table">
+              <thead><tr><th>节点</th><th>功能</th><th>风险</th></tr></thead>
+              <tbody>
+                <tr><td>战斗节点</td><td>击败敌人获取掉落</td><td>高</td></tr>
+                <tr><td>容器节点</td><td>搜索宝箱获取物品</td><td>低</td></tr>
+                <tr><td>事件节点</td><td>随机遭遇影响 HP</td><td>中</td></tr>
+                <tr><td>休息节点</td><td>恢复生命值</td><td>无</td></tr>
+                <tr><td>撤离节点</td><td>安全撤离保留战利品</td><td>无</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data & Results -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">数据与结果</h3>
+        <div class="project__results">
+          <div class="project__result">
+            <span class="project__stat-num">31</span>
+            <span>C# 脚本</span>
+          </div>
+          <div class="project__result">
+            <span class="project__stat-num">6</span>
+            <span>地图区域</span>
+          </div>
+          <div class="project__result">
+            <span class="project__stat-num">4</span>
+            <span>难度梯度</span>
+          </div>
+          <div class="project__result">
+            <span class="project__stat-num">5</span>
+            <span>节点类型</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Retrospective -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">复盘</h3>
+        <div class="project__retro">
+          <div class="project__retro-item">
+            <span class="project__retro-icon project__retro-icon--good"></span>
+            <div>
+              <h4>ScriptableObject 数据驱动</h4>
+              <p>所有物品、敌人、地图配置均通过 ScriptableObject 定义，策划可在 Inspector 中直接调整数值而无需修改代码，实现了数据与逻辑的彻底分离。</p>
+            </div>
+          </div>
+          <div class="project__retro-item">
+            <span class="project__retro-icon project__retro-icon--good"></span>
+            <div>
+              <h4>Manager 分层架构</h4>
+              <p>DataManager / PlayerManager / InventoryManager / RaidManager 各司其职，通过事件（OnStatsUpdated）实现 UI 解耦，新增系统无需修改核心循环。</p>
+            </div>
+          </div>
+          <div class="project__retro-item">
+            <span class="project__retro-icon project__retro-icon--grow"></span>
+            <div>
+              <h4>可改进的方向</h4>
+              <p>当前战斗为自动结算，可引入交互式回合制战斗；节点间缺少路径连线渲染；存档未加密，存在作弊风险；可增加金币经济与商店系统。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== Section 4: Project 3 — AnimeChatWeb ===== -->
+  <section class="project" id="project-3">
     <div class="project__inner">
 
       <!-- Project Header -->
@@ -695,8 +941,8 @@
   </section>
 
   <!-- ===== Section: Design Idea — 打雪仗 ===== -->
-  <section class="design-idea" id="project-3">
-    <div class="design-idea__bg" style="background-image: url('assets/打雪仗.png');"></div>
+  <section class="design-idea" id="project-4">
+    <div class="design-idea__bg" style="background-image: url('assets/打雪仗.webp');"></div>
     <div class="design-idea__inner reveal">
       <span class="design-idea__label">设计方案</span>
       <h2 class="design-idea__title">打雪仗</h2>
@@ -724,7 +970,7 @@
         <p class="design-idea__divider">如何去丰富玩法？</p>
 
         <p>打雪仗，两个人对丢雪球？</p>
-        <p>雪球制造，瞄准，蓄力，发射，雪球搓多了动手怎么办？</p>
+        <p>雪球制造，瞄准，蓄力，发射，雪球搓多了冻手怎么办？</p>
         <p>道具，手套，冻手解决了，但是搓的雪球质量没有纯手搓的好，</p>
         <p>在离谱一点"雪球制造机"，玩法单一？</p>
         <p>雪人变异，年兽出没...</p>
@@ -745,19 +991,19 @@
           <h3 class="asset-gallery__group-title">战机</h3>
           <div class="asset-gallery__grid">
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/紫色更有韵味.png">
-              <img src="肉鸽飞机大战/image/紫色更有韵味.png" alt="紫色更有韵味" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/紫色更有韵味.png" alt="紫色更有韵味">
               <span>紫色更有韵味</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/苍穹号.png">
-              <img src="肉鸽飞机大战/image/苍穹号.png" alt="苍穹号" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/苍穹号.png" alt="苍穹号">
               <span>苍穹号</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/墨子号.png">
-              <img src="肉鸽飞机大战/image/墨子号.png" alt="墨子号" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/墨子号.png" alt="墨子号">
               <span>墨子号</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/赤红号.png">
-              <img src="肉鸽飞机大战/image/赤红号.png" alt="赤红号" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/赤红号.png" alt="赤红号">
               <span>赤红号</span>
             </div>
           </div>
@@ -767,35 +1013,35 @@
           <h3 class="asset-gallery__group-title">Boss</h3>
           <div class="asset-gallery__grid">
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss1-独眼王.png">
-              <img src="肉鸽飞机大战/image/Boss1-独眼王.png" alt="独眼王" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/Boss1-独眼王.png" alt="独眼王">
               <span>独眼王</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss1-独眼王动作帧.png">
-              <img src="肉鸽飞机大战/image/Boss1-独眼王动作帧.png" alt="独眼王·动作帧" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/Boss1-独眼王动作帧.png" alt="独眼王·动作帧">
               <span>独眼王·动作帧</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss2-夜煞.png">
-              <img src="肉鸽飞机大战/image/Boss2-夜煞.png" alt="夜煞" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/Boss2-夜煞.png" alt="夜煞">
               <span>夜煞</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss2-夜煞动作帧.png">
-              <img src="肉鸽飞机大战/image/Boss2-夜煞动作帧.png" alt="夜煞·动作帧" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/Boss2-夜煞动作帧.png" alt="夜煞·动作帧">
               <span>夜煞·动作帧</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss3-冰邪王.png">
-              <img src="肉鸽飞机大战/image/Boss3-冰邪王.png" alt="冰邪王" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/Boss3-冰邪王.png" alt="冰邪王">
               <span>冰邪王</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss3-冰邪王动作帧率.png">
-              <img src="肉鸽飞机大战/image/Boss3-冰邪王动作帧率.png" alt="冰邪王·动作帧" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/Boss3-冰邪王动作帧率.png" alt="冰邪王·动作帧">
               <span>冰邪王·动作帧</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss4-巨灵神.png">
-              <img src="肉鸽飞机大战/image/Boss4-巨灵神.png" alt="巨灵神" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/Boss4-巨灵神.png" alt="巨灵神">
               <span>巨灵神</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/Boss4-巨灵神动作帧.png">
-              <img src="肉鸽飞机大战/image/Boss4-巨灵神动作帧.png" alt="巨灵神·动作帧" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/Boss4-巨灵神动作帧.png" alt="巨灵神·动作帧">
               <span>巨灵神·动作帧</span>
             </div>
           </div>
@@ -805,23 +1051,23 @@
           <h3 class="asset-gallery__group-title">敌人</h3>
           <div class="asset-gallery__grid">
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/一级敌人.png">
-              <img src="肉鸽飞机大战/image/一级敌人.png" alt="一级敌人" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/一级敌人.png" alt="一级敌人">
               <span>基础机</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/二级敌人.png">
-              <img src="肉鸽飞机大战/image/二级敌人.png" alt="二级敌人" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/二级敌人.png" alt="二级敌人">
               <span>射手</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/三级敌人.png">
-              <img src="肉鸽飞机大战/image/三级敌人.png" alt="三级敌人" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/三级敌人.png" alt="三级敌人">
               <span>突击</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/四级敌人.png">
-              <img src="肉鸽飞机大战/image/四级敌人.png" alt="四级敌人" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/四级敌人.png" alt="四级敌人">
               <span>旋刃</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/四级敌人2.png">
-              <img src="肉鸽飞机大战/image/四级敌人2.png" alt="四级敌人2" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/四级敌人2.png" alt="四级敌人2">
               <span>幻影</span>
             </div>
           </div>
@@ -831,19 +1077,19 @@
           <h3 class="asset-gallery__group-title">宝石 & 道具</h3>
           <div class="asset-gallery__grid">
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/宝石5分.png">
-              <img src="肉鸽飞机大战/image/宝石5分.png" alt="宝石5分" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/宝石5分.png" alt="宝石5分">
               <span>宝石 · 5 分</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/宝石10分.png">
-              <img src="肉鸽飞机大战/image/宝石10分.png" alt="宝石10分" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/宝石10分.png" alt="宝石10分">
               <span>宝石 · 10 分</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/宝石20分·.png">
-              <img src="肉鸽飞机大战/image/宝石20分·.png" alt="宝石20分" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/宝石20分·.png" alt="宝石20分">
               <span>宝石 · 20 分</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/爱心.png">
-              <img src="肉鸽飞机大战/image/爱心.png" alt="爱心" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/爱心.png" alt="爱心">
               <span>生命回复</span>
             </div>
           </div>
@@ -853,23 +1099,23 @@
           <h3 class="asset-gallery__group-title">陨石</h3>
           <div class="asset-gallery__grid">
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/陨石素材1.png">
-              <img src="肉鸽飞机大战/image/陨石素材1.png" alt="陨石1" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/陨石素材1.png" alt="陨石1">
               <span>陨石 1</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/陨石素材2.png">
-              <img src="肉鸽飞机大战/image/陨石素材2.png" alt="陨石2" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/陨石素材2.png" alt="陨石2">
               <span>陨石 2</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/陨石素材3.png">
-              <img src="肉鸽飞机大战/image/陨石素材3.png" alt="陨石3" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/陨石素材3.png" alt="陨石3">
               <span>陨石 3</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/陨石素材4.png">
-              <img src="肉鸽飞机大战/image/陨石素材4.png" alt="陨石4" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/陨石素材4.png" alt="陨石4">
               <span>陨石 4</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/陨石素材5.png">
-              <img src="肉鸽飞机大战/image/陨石素材5.png" alt="陨石5" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/陨石素材5.png" alt="陨石5">
               <span>陨石 5</span>
             </div>
           </div>
@@ -879,31 +1125,31 @@
           <h3 class="asset-gallery__group-title">特效 & 环境</h3>
           <div class="asset-gallery__grid">
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/冰墙素材.png">
-              <img src="肉鸽飞机大战/image/冰墙素材.png" alt="冰墙" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/冰墙素材.png" alt="冰墙">
               <span>冰墙</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/冰锥子弹.png">
-              <img src="肉鸽飞机大战/image/冰锥子弹.png" alt="冰锥子弹" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/冰锥子弹.png" alt="冰锥子弹">
               <span>冰锥子弹</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/冰霜漩涡.png">
-              <img src="肉鸽飞机大战/image/冰霜漩涡.png" alt="冰霜漩涡" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/冰霜漩涡.png" alt="冰霜漩涡">
               <span>冰霜漩涡</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/破损战舰1.png">
-              <img src="肉鸽飞机大战/image/破损战舰1.png" alt="破损战舰1" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/破损战舰1.png" alt="破损战舰1">
               <span>破损战舰 1</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/破损战舰2.png">
-              <img src="肉鸽飞机大战/image/破损战舰2.png" alt="破损战舰2" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/破损战舰2.png" alt="破损战舰2">
               <span>破损战舰 2</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/破损战舰3.png">
-              <img src="肉鸽飞机大战/image/破损战舰3.png" alt="破损战舰3" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/破损战舰3.png" alt="破损战舰3">
               <span>破损战舰 3</span>
             </div>
             <div class="asset-gallery__item" data-src="肉鸽飞机大战/image/破损战舰4.png">
-              <img src="肉鸽飞机大战/image/破损战舰4.png" alt="破损战舰4" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/破损战舰4.png" alt="破损战舰4">
               <span>破损战舰 4</span>
             </div>
           </div>
@@ -913,7 +1159,7 @@
           <h3 class="asset-gallery__group-title">背景</h3>
           <div class="asset-gallery__grid">
             <div class="asset-gallery__item asset-gallery__item--wide" data-src="肉鸽飞机大战/image/背景图零.png">
-              <img src="肉鸽飞机大战/image/背景图零.png" alt="背景图" loading="lazy">
+              <img data-src="肉鸽飞机大战/image/背景图零.png" alt="背景图">
               <span>星空背景</span>
             </div>
           </div>
@@ -1499,7 +1745,7 @@
           <a href="#experience">经历</a>
           <a href="#education">教育</a>
           <a href="#project">作品</a>
-          <a href="#project-3">设计方案</a>
+          <a href="#project-4">设计方案</a>
           <a href="#gaming-history">游戏史</a>
           <a href="#art">美术</a>
           <a href="#contact">联系</a>

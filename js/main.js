@@ -169,8 +169,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const openAssetsBtn = document.getElementById('openAssets');
   const closeAssetsBtn = document.getElementById('closeAssets');
 
+  let assetImagesLoaded = false;
   function openAssetGallery() {
     if (!assetGallery) return;
+    if (!assetImagesLoaded) {
+      assetGallery.querySelectorAll('.asset-gallery__item img[data-src]').forEach(img => {
+        img.src = img.dataset.src;
+      });
+      assetImagesLoaded = true;
+    }
     assetGallery.classList.add('asset-gallery--open');
     document.body.style.overflow = 'hidden';
   }
