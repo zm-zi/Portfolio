@@ -1140,6 +1140,83 @@ body {
   background: rgba(124, 106, 239, 0.1);
   border-color: var(--color-accent, #7c6aef);
 }
+
+/* --- Design Idea (simple) --- */
+.design-idea {
+  position: relative;
+  padding: 6rem 2rem;
+  border-top: 1px solid #eee;
+  overflow: hidden;
+}
+
+.design-idea__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.design-idea__inner {
+  position: relative;
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.82);
+  padding: 3rem 2.5rem;
+  border-radius: 16px;
+}
+
+.design-idea__label {
+  display: inline-block;
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-divider);
+  padding: 0.3em 1em;
+  border-radius: 100px;
+  margin-bottom: 1rem;
+}
+
+.design-idea__title {
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #5b9bd5;
+  margin-bottom: 0.3rem;
+}
+
+.design-idea__subtitle {
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+  font-weight: 300;
+  margin-bottom: 3rem;
+}
+
+.design-idea__body {
+  text-align: left;
+  color: #5b9bd5;
+  font-size: 0.95rem;
+  line-height: 2;
+}
+
+.design-idea__body p {
+  margin: 0;
+}
+
+.design-idea__body strong {
+  color: #3a7fc2;
+  font-weight: 600;
+}
+
+.design-idea__divider {
+  margin-top: 1.5rem;
+  margin-bottom: 0.3rem;
+  color: #3a7fc2;
+  font-weight: 500;
+}
 .skills {
   padding: 6rem 2rem;
   background: var(--color-bg);
@@ -1612,6 +1689,78 @@ body {
   }
 }
 
+/* Resume download card */
+.contact__resume {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.2rem 1.6rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, rgba(124, 106, 239, 0.04), rgba(124, 106, 239, 0.01));
+  border: 1px solid rgba(124, 106, 239, 0.18);
+  border-radius: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.contact__resume:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 6px 24px rgba(124, 106, 239, 0.12);
+  transform: translateY(-2px);
+}
+
+.contact__resume-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
+.contact__resume-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.contact__resume-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.contact__resume-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: 0.04em;
+}
+
+.contact__resume-hint {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.02em;
+}
+
+.contact__resume-download {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  color: var(--color-accent);
+  opacity: 0.6;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.contact__resume-download svg {
+  width: 100%;
+  height: 100%;
+}
+
+.contact__resume:hover .contact__resume-download {
+  opacity: 1;
+  transform: translateY(2px);
+}
+
 /* ===== Art Section ===== */
 .art {
   padding: 6rem 2rem;
@@ -1823,6 +1972,10 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
+}
+
+.featured__card--wide {
+  grid-column: 1 / -1;
 }
 
 .featured__card {
