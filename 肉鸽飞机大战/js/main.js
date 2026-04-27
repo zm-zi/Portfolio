@@ -38,11 +38,14 @@ if (IS_MOBILE) {
 
 // ── 图片加载注册表：所有 Image 统一注册，startGame 等待全部完成 ──
 const _pendingImages = [];
+let _loadedImageCount = 0;
+let _totalImageCount = 0;
 function _loadImg(src) {
+    _totalImageCount++;
     const img = new Image();
     _pendingImages.push(new Promise((resolve) => {
-        img.onload = resolve;
-        img.onerror = () => { console.warn('图片加载失败:', src); resolve(); };
+        img.onload = () => { _loadedImageCount++; resolve(); };
+        img.onerror = () => { console.warn('图片加载失败:', src); _loadedImageCount++; resolve(); };
     }));
     img.src = src;
     return img;
@@ -143,17 +146,380 @@ initExploreBg(exploreBgImg);
 
 initInput(canvas);
 
-// 等待所有图片和字体加载完毕再启动游戏循环
-function startGame() {
-    Promise.all(_pendingImages).then(() => {
-        Save.load();
-        gameLoop();
+// ── 加载屏幕系统 ──
+const _loadingState = {
+    fontsReady: false,
+    imagesReady: false,
+    allReady: false,
+    startTime: Date.now(),
+    stars: [],
+    particles: [],
+    showEnter: false,
+    entered: false,
+    loadPhase: 'init', // 'init' | 'images' | 'fonts' | 'ready' | 'entering'
+    currentAsset: '',
+    errorCount: 0,
+};
+
+// 生成加载屏星空
+for (let i = 0; i < 80; i++) {
+    _loadingState.stars.push({
+        x: Math.random() * LOGICAL_W,
+        y: Math.random() * LOGICAL_H,
+        size: Math.random() * 2 + 0.5,
+        speed: Math.random() * 1.5 + 0.5,
+        alpha: Math.random() * 0.6 + 0.15,
     });
 }
 
+// 生成背景粒子
+for (let i = 0; i < 20; i++) {
+    _loadingState.particles.push({
+        x: Math.random() * LOGICAL_W,
+        y: Math.random() * LOGICAL_H,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: -Math.random() * 0.8 - 0.2,
+        size: Math.random() * 3 + 1,
+        alpha: Math.random() * 0.3 + 0.05,
+        color: Math.random() > 0.5 ? '#00e5ff' : '#00ffcc',
+    });
+}
+
+// 加载状态文本
+function _getLoadingStatusText() {
+    if (!_loadingState.fontsReady) return '正在加载字体...';
+    if (!_loadingState.imagesReady) return '正在加载资源...';
+    return '加载完成';
+}
+
+// 加载百分比
+function _getLoadingProgress() {
+    const total = _totalImageCount + 1; // +1 for fonts
+    let loaded = _loadedImageCount;
+    if (_loadingState.fontsReady) loaded += 1;
+    return Math.min(loaded / total, 1);
+}
+
+// 绘制加载屏幕
+function _drawLoadingScreen() {
+    const ctx = Game.ctx;
+    const now = Date.now();
+    const elapsed = now - _loadingState.startTime;
+
+    // 背景
+    ctx.fillStyle = '#05080f';
+    ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+
+    // 星空动画
+    for (const star of _loadingState.stars) {
+        star.y += star.speed * 0.8;
+        if (star.y > LOGICAL_H) {
+            star.y = -2;
+            star.x = Math.random() * LOGICAL_W;
+        }
+        const twinkle = 0.5 + 0.5 * Math.sin(now * 0.003 + star.x);
+        ctx.fillStyle = `rgba(200, 220, 255, ${star.alpha * twinkle})`;
+        ctx.fillRect(star.x, star.y, star.size, star.size);
+    }
+
+    // 粒子效果
+    for (const p of _loadingState.particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.y < -10) {
+            p.y = LOGICAL_H + 10;
+            p.x = Math.random() * LOGICAL_W;
+        }
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha * (0.5 + 0.5 * Math.sin(now * 0.002 + p.x));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // 标题
+    ctx.textAlign = 'center';
+    const titleY = 160;
+    const titlePulse = 0.8 + 0.2 * Math.sin(now * 0.003);
+
+    // 标题发光
+    ctx.save();
+    ctx.shadowBlur = 30;
+    ctx.shadowColor = SCI.primary;
+    ctx.fillStyle = SCI.primary;
+    ctx.globalAlpha = titlePulse;
+    ctx.font = 'bold 42px ' + FONT_UI;
+    ctx.fillText('超时空激战', LOGICAL_W / 2, titleY);
+    ctx.restore();
+
+    // 副标题
+    ctx.fillStyle = `rgba(0, 229, 255, ${0.4 + 0.15 * Math.sin(now * 0.004)})`;
+    ctx.font = '18px ' + FONT_UI;
+    ctx.fillText('无尽冒险 · 词条搭配', LOGICAL_W / 2, titleY + 30);
+
+    // 分隔线
+    drawSciSeparator(ctx, LOGICAL_W / 2, titleY + 50, 240, SCI.primary);
+
+    // ── 进度条区域 ──
+    const barW = 320;
+    const barH = 16;
+    const barX = LOGICAL_W / 2 - barW / 2;
+    const barY = 320;
+    const progress = _getLoadingProgress();
+
+    // 进度条背景
+    ctx.fillStyle = 'rgba(0, 229, 255, 0.06)';
+    ctx.beginPath();
+    ctx.roundRect(barX, barY, barW, barH, 2);
+    ctx.fill();
+
+    // 进度条边框
+    ctx.strokeStyle = 'rgba(0, 229, 255, 0.25)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(barX, barY, barW, barH, 2);
+    ctx.stroke();
+
+    // 进度条填充
+    if (progress > 0) {
+        const fillW = barW * progress;
+        const grad = ctx.createLinearGradient(barX, 0, barX + fillW, 0);
+        grad.addColorStop(0, '#003366');
+        grad.addColorStop(0.5, '#00e5ff');
+        grad.addColorStop(1, '#00ffcc');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.roundRect(barX, barY, fillW, barH, 2);
+        ctx.fill();
+
+        // 填充发光
+        ctx.save();
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = '#00e5ff';
+        ctx.fillStyle = 'rgba(0, 229, 255, 0.3)';
+        ctx.beginPath();
+        ctx.roundRect(barX, barY, fillW, barH, 2);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    // 角装饰
+    drawSciCorners(ctx, barX - 4, barY - 4, barW + 8, barH + 8, 8, SCI.primary + '88');
+
+    // 百分比文字
+    const percentText = Math.floor(progress * 100) + '%';
+    ctx.fillStyle = SCI.white;
+    ctx.font = 'bold 14px ' + FONT_PIXEL;
+    ctx.fillText(percentText, LOGICAL_W / 2, barY + barH + 28);
+
+    // 状态文字
+    ctx.fillStyle = 'rgba(0, 229, 255, 0.6)';
+    ctx.font = '14px ' + FONT_UI;
+    ctx.fillText(_getLoadingStatusText(), LOGICAL_W / 2, barY + barH + 52);
+
+    // 加载详情
+    if (_totalImageCount > 0) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+        ctx.font = '12px ' + FONT_UI;
+        ctx.fillText(`资源: ${_loadedImageCount}/${_totalImageCount}`, LOGICAL_W / 2, barY + barH + 72);
+    }
+
+    // 超时提示（超过15秒未加载完）
+    if (!_loadingState.allReady && elapsed > 15000) {
+        const warnY = barY + barH + 100;
+        ctx.fillStyle = 'rgba(255, 215, 0, 0.6)';
+        ctx.font = '13px ' + FONT_UI;
+        ctx.fillText('加载较慢，请检查网络连接', LOGICAL_W / 2, warnY);
+
+        // 跳过按钮
+        const skipW = 160;
+        const skipH = 36;
+        const skipX = LOGICAL_W / 2 - skipW / 2;
+        const skipY = warnY + 18;
+        const skipPulse = 0.5 + 0.5 * Math.sin(now * 0.005);
+
+        ctx.fillStyle = `rgba(255, 215, 0, ${0.06 * skipPulse})`;
+        ctx.beginPath();
+        ctx.roundRect(skipX, skipY, skipW, skipH, 2);
+        ctx.fill();
+
+        ctx.save();
+        ctx.shadowBlur = 6 * skipPulse;
+        ctx.shadowColor = '#ffd700';
+        ctx.strokeStyle = '#ffd700';
+        ctx.lineWidth = 1;
+        ctx.globalAlpha = 0.5 + 0.3 * skipPulse;
+        ctx.beginPath();
+        ctx.roundRect(skipX, skipY, skipW, skipH, 2);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.fillStyle = `rgba(255, 215, 0, ${0.6 + 0.3 * skipPulse})`;
+        ctx.font = '12px ' + FONT_PIXEL;
+        ctx.fillText('跳过加载', LOGICAL_W / 2, skipY + 14);
+
+        _loadingState.skipRect = { x: skipX, y: skipY, w: skipW, h: skipH };
+    }
+
+    // ── 加载完成后显示点击进入 ──
+    if (_loadingState.allReady && !_loadingState.entered) {
+        _loadingState.showEnter = true;
+
+        const enterY = 500;
+        const enterPulse = 0.5 + 0.5 * Math.sin(now * 0.004);
+
+        // 点击进入按钮
+        const btnW = 240;
+        const btnH = 50;
+        const btnX = LOGICAL_W / 2 - btnW / 2;
+        const btnY = enterY - 10;
+
+        // 按钮背景
+        ctx.fillStyle = `rgba(0, 229, 255, ${0.06 * enterPulse})`;
+        ctx.beginPath();
+        ctx.roundRect(btnX, btnY, btnW, btnH, 3);
+        ctx.fill();
+
+        // 按钮边框 + 发光
+        ctx.save();
+        ctx.shadowBlur = 12 * enterPulse;
+        ctx.shadowColor = SCI.primary;
+        ctx.strokeStyle = SCI.primary;
+        ctx.lineWidth = 1.5;
+        ctx.globalAlpha = 0.6 + 0.4 * enterPulse;
+        ctx.beginPath();
+        ctx.roundRect(btnX, btnY, btnW, btnH, 3);
+        ctx.stroke();
+        ctx.restore();
+
+        // 角装饰
+        drawSciCorners(ctx, btnX, btnY, btnW, btnH, 10, SCI.primary + '88');
+
+        // 按钮文字
+        ctx.fillStyle = `rgba(255, 255, 255, ${0.7 + 0.3 * enterPulse})`;
+        ctx.font = '16px ' + FONT_PIXEL;
+        ctx.fillText('点击进入游戏', LOGICAL_W / 2, enterY + 18);
+
+        // 提示文字
+        ctx.fillStyle = 'rgba(0, 229, 255, 0.35)';
+        ctx.font = '13px ' + FONT_UI;
+        ctx.fillText('资源加载完成，点击任意位置开始', LOGICAL_W / 2, enterY + 60);
+
+        // 存储按钮区域用于点击检测
+        _loadingState.btnRect = { x: btnX, y: btnY, w: btnW, h: btnH };
+    }
+
+    // 底部装饰
+    ctx.fillStyle = 'rgba(0, 229, 255, 0.15)';
+    ctx.font = '11px ' + FONT_UI;
+    ctx.fillText('CLOUDFLARE CDN', LOGICAL_W / 2, LOGICAL_H - 30);
+    ctx.fillStyle = 'rgba(0, 229, 255, 0.08)';
+    ctx.fillText('超时空激战 v1.0', LOGICAL_W / 2, LOGICAL_H - 14);
+
+    ctx.textAlign = 'left';
+}
+
+// 加载动画循环
+function _loadingLoop() {
+    if (_loadingState.entered) return;
+
+    _drawLoadingScreen();
+
+    // 持续运行动画直到用户点击进入
+    requestAnimationFrame(_loadingLoop);
+}
+
+// 点击进入游戏
+function _onLoadingClick(e) {
+    if (_loadingState.entered) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = LOGICAL_W / rect.width;
+    const scaleY = LOGICAL_H / rect.height;
+    const mx = (e.clientX - rect.left) * scaleX;
+    const my = (e.clientY - rect.top) * scaleY;
+
+    // 检查跳过按钮
+    if (_loadingState.skipRect) {
+        const sr = _loadingState.skipRect;
+        if (mx >= sr.x && mx <= sr.x + sr.w && my >= sr.y && my <= sr.y + sr.h) {
+            _enterGame();
+            return;
+        }
+    }
+
+    // 点击进入按钮（加载完成后任意位置点击）
+    if (!_loadingState.showEnter) return;
+    _enterGame();
+}
+
+function _onLoadingTouch(e) {
+    e.preventDefault();
+    if (_loadingState.entered) return;
+
+    // 检查跳过按钮
+    if (_loadingState.skipRect) {
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = LOGICAL_W / rect.width;
+        const scaleY = LOGICAL_H / rect.height;
+        const mx = (touch.clientX - rect.left) * scaleX;
+        const my = (touch.clientY - rect.top) * scaleY;
+        const sr = _loadingState.skipRect;
+        if (mx >= sr.x && mx <= sr.x + sr.w && my >= sr.y && my <= sr.y + sr.h) {
+            _enterGame();
+            return;
+        }
+    }
+
+    if (!_loadingState.showEnter) return;
+    _enterGame();
+}
+
+function _enterGame() {
+    if (_loadingState.entered) return;
+    _loadingState.entered = true;
+    canvas.removeEventListener('click', _onLoadingClick);
+    canvas.removeEventListener('touchstart', _onLoadingTouch);
+    Save.load();
+    gameLoop();
+}
+
+// 等待所有图片和字体加载完毕，显示加载完成，等待点击
+function startGame() {
+    // 开始加载动画
+    _loadingState.loadPhase = 'images';
+    _loadingLoop();
+
+    // 注册点击事件
+    canvas.addEventListener('click', _onLoadingClick);
+    canvas.addEventListener('touchstart', _onLoadingTouch, { passive: false });
+
+    // 等待图片加载
+    Promise.all(_pendingImages).then(() => {
+        _loadingState.imagesReady = true;
+        _loadingState.loadPhase = 'ready';
+
+        // 等字体也准备好
+        const checkReady = () => {
+            if (_loadingState.fontsReady) {
+                _loadingState.allReady = true;
+            } else {
+                setTimeout(checkReady, 100);
+            }
+        };
+        checkReady();
+    });
+}
+
+// 字体加载
 if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(startGame);
+    document.fonts.ready.then(() => {
+        _loadingState.fontsReady = true;
+        startGame();
+    });
 } else {
-    // 降级：直接启动
+    _loadingState.fontsReady = true;
     startGame();
 }

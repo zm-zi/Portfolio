@@ -36,6 +36,12 @@ function gameLoop(timestamp) {
 
     // 未开始：显示开始界面
     if (!gm.isStarted) {
+        // 加载屏幕期间不绘制开始界面
+        if (typeof _loadingState !== 'undefined' && !_loadingState.entered) {
+            _setMobileHudVisible(false);
+            requestAnimationFrame(gameLoop);
+            return;
+        }
         drawStartScreen();
         _setMobileHudVisible(false);
         requestAnimationFrame(gameLoop);
