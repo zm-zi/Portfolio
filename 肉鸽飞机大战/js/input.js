@@ -1,7 +1,12 @@
 // 输入处理
 const keys = { left: false, right: false, up: false, down: false };
-const _joyKeys = { left: false, right: false, up: false, down: false };
+const _joyKeys = { left: false, right: false, up: false, down: false }; // legacy, always false on mobile now
 const _heldKeys = new Set();
+
+// ── 手指拖拽移动状态 ──
+var _dragPointerId = null;
+var _dragOffsetX = 0;
+var _dragOffsetY = 0;
 
 function beginGame() {
     G.game.isStarted = true;
@@ -183,6 +188,15 @@ function initInput(canvas) {
         const scaleY = LOGICAL_H / rect.height;
         const mx = (e.clientX - rect.left) * scaleX;
         const my = (e.clientY - rect.top) * scaleY;
+
+        // ── 手指拖拽移动（仅游戏进行中）──
+        if (IS_MOBILE && G.game.isStarted && !G.game.isPaused && !G.game.isGameOver && !G.game.buffChooseMode && !G.game.settingsOpen && !G.game.levelCompleted) {
+            _dragPointerId = e.pointerId;
+            _dragOffsetX = mx - G.player.x;
+            _dragOffsetY = my - G.player.y;
+            canvas.setPointerCapture(e.pointerId);
+            return;
+        }
 
         // 未开始时：主画面、关卡选择或战机选择
         if (!G.game.isStarted) {
@@ -373,7 +387,21 @@ function initInput(canvas) {
     });
 
     canvas.addEventListener('pointermove', (e) => {
-        // 多点触控：仅处理拖拽中或墨子号瞄准的 pointer
+        // ── 手指拖拽移动 ──
+        if (IS_MOBILE && e.pointerId === _dragPointerId) {
+            var p = G.player;
+            var rect = canvas.getBoundingClientRect();
+            var sx = LOGICAL_W / rect.width;
+            var sy = LOGICAL_H / rect.height;
+            var lx = (e.clientX - rect.left) * sx - _dragOffsetX;
+            var ly = (e.clientY - rect.top) * sy - _dragOffsetY;
+            p.x = Math.max(0, Math.min(LOGICAL_W - p.width, lx));
+            p.y = Math.max(0, Math.min(LOGICAL_H - p.height, ly));
+            e.preventDefault();
+            return;
+        }
+
+        // 多点触控：仅处理设置滑条或墨子号瞄准的 pointer
         if (G.game._settingsDrag && e.pointerId !== G.game._settingsPointerId) return;
 
         const { x: mx, y: my } = _canvasXY(e);
@@ -393,6 +421,10 @@ function initInput(canvas) {
     });
 
     canvas.addEventListener('pointerup', (e) => {
+        // 结束手指拖拽
+        if (IS_MOBILE && e.pointerId === _dragPointerId) {
+            _dragPointerId = null;
+        }
         if (G.game._settingsDrag && e.pointerId === G.game._settingsPointerId) {
             Save.save();
             G.game._settingsDrag = null;
@@ -401,6 +433,10 @@ function initInput(canvas) {
     });
 
     canvas.addEventListener('pointercancel', (e) => {
+        // 结束手指拖拽
+        if (IS_MOBILE && e.pointerId === _dragPointerId) {
+            _dragPointerId = null;
+        }
         if (G.game._settingsDrag && e.pointerId === G.game._settingsPointerId) {
             G.game._settingsDrag = null;
             G.game._settingsPointerId = null;
@@ -410,6 +446,7 @@ function initInput(canvas) {
     canvas.addEventListener('pointerleave', () => {
         G.game._settingsDrag = null;
         G.game._settingsPointerId = null;
+        // Don't reset drag here — pointer capture keeps drag active
     });
 
     // 窗口失焦时重置所有按键状态（浏览器不会触发 keyup）
@@ -417,12 +454,14 @@ function initInput(canvas) {
         keys.left = false; keys.right = false; keys.up = false; keys.down = false;
         _joyKeys.left = false; _joyKeys.right = false; _joyKeys.up = false; _joyKeys.down = false;
         _heldKeys.clear();
+        _dragPointerId = null;
     });
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
             keys.left = false; keys.right = false; keys.up = false; keys.down = false;
             _joyKeys.left = false; _joyKeys.right = false; _joyKeys.up = false; _joyKeys.down = false;
             _heldKeys.clear();
+            _dragPointerId = null;
         }
     });
 }
