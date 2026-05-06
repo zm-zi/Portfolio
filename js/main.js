@@ -120,6 +120,62 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ===== Project toggle (collapsible) =====
+  document.querySelectorAll('.project__toggle').forEach(btn => {
+    // Support both project__inner and design-idea__inner
+    const parent = btn.closest('.project__inner') || btn.closest('.design-idea__inner');
+    const details = parent?.querySelector('.project__details');
+    if (!details) return;
+
+    // For design-idea, also get the section element
+    const designIdeaSection = btn.closest('.design-idea');
+
+    // Set initial collapsed state for design-idea
+    if (designIdeaSection) {
+      designIdeaSection.classList.add('is-collapsed');
+    }
+
+    // Set initial height for collapsed state
+    details.style.setProperty('--details-height', '0px');
+
+    btn.addEventListener('click', () => {
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!isExpanded));
+
+      if (isExpanded) {
+        // Collapse: first set explicit height, then animate to 0
+        const currentHeight = details.scrollHeight;
+        details.style.setProperty('--details-height', currentHeight + 'px');
+        // Force reflow
+        details.offsetHeight;
+        details.style.setProperty('--details-height', '0px');
+        details.classList.remove('is-expanded');
+
+        // Add collapsed class for design-idea
+        if (designIdeaSection) {
+          designIdeaSection.classList.add('is-collapsed');
+        }
+      } else {
+        // Expand: calculate full height and set it
+        details.style.maxHeight = 'none';
+        const fullHeight = details.scrollHeight;
+        details.style.maxHeight = '';
+        details.style.setProperty('--details-height', fullHeight + 'px');
+        details.classList.add('is-expanded');
+
+        // Remove collapsed class for design-idea
+        if (designIdeaSection) {
+          designIdeaSection.classList.remove('is-collapsed');
+        }
+
+        // Trigger reveal animations for newly visible elements
+        details.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+          el.classList.add('visible');
+        });
+      }
+    });
+  });
+
   // ===== Scroll reveal for project sections =====
   const revealEls = document.querySelectorAll('.reveal');
 
@@ -135,7 +191,15 @@ document.addEventListener('DOMContentLoaded', () => {
     rootMargin: '0px 0px -40px 0px'
   });
 
-  revealEls.forEach(el => observer.observe(el));
+  revealEls.forEach(el => {
+    // Skip elements inside collapsed project details
+    const details = el.closest('.project__details');
+    if (details && !details.classList.contains('is-expanded')) {
+      // Still observe, but they won't be visible until expanded
+      return;
+    }
+    observer.observe(el);
+  });
 
   // ===== Lightbox =====
   const lightbox = document.getElementById('lightbox');
@@ -144,11 +208,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const lightboxImg = lightbox.querySelector('.lightbox__img');
     const lightboxClose = lightbox.querySelector('.lightbox__close');
 
+    function openLightbox(el) {
+      if (lightboxImg) lightboxImg.src = el.dataset.src;
+      lightbox.classList.add('lightbox--open');
+      document.body.style.overflow = 'hidden';
+      // Trap focus in lightbox
+      if (lightboxClose) lightboxClose.focus();
+    }
+
     document.querySelectorAll('.project__screenshot, .art__item, .asset-gallery__item').forEach(el => {
-      el.addEventListener('click', () => {
-        if (lightboxImg) lightboxImg.src = el.dataset.src;
-        lightbox.classList.add('lightbox--open');
-        document.body.style.overflow = 'hidden';
+      // Make elements keyboard accessible
+      el.setAttribute('tabindex', '0');
+      el.setAttribute('role', 'button');
+
+      // Click handler
+      el.addEventListener('click', () => openLightbox(el));
+
+      // Keyboard handler
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openLightbox(el);
+        }
       });
     });
 
@@ -160,6 +241,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
     lightbox.addEventListener('click', (e) => {
       if (e.target === lightbox) closeLightbox();
+    });
+
+    // Trap focus within lightbox when open
+    lightbox.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab' && lightbox.classList.contains('lightbox--open')) {
+        // Keep focus on close button
+        e.preventDefault();
+        if (lightboxClose) lightboxClose.focus();
+      }
     });
   }
 
