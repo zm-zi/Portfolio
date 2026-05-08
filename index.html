@@ -51,24 +51,15 @@
     <div class="hero__content">
       <img class="hero__avatar" src="assets/头像.png" alt="张子墨的头像" fetchpriority="high" decoding="async">
       <h1 class="hero__name">张子墨</h1>
-      <p class="hero__alias">Sunmiss · 2004 · 处女座</p>
+      <p class="hero__alias">Sunmiss · 2004 · 游戏设计师</p>
       <div class="hero__divider"></div>
       <div class="hero__statements">
-        <p class="hero__statement hero__statement--listen">
-          <span>倾听团队的声音</span>
-          <span>倾听受众的声音</span>
-          <span>倾听游戏的声音</span>
-          <span>倾听客户的声音</span>
-          <span>倾听自己的声音</span>
-        </p>
+        <p class="hero__statement hero__statement--core">用系统思维构建可玩的体验。</p>
         <p class="hero__statement hero__statement--feel">
-          <span>选择感</span><span class="hero__dot">·</span>
-          <span>自由感</span><span class="hero__dot">·</span>
-          <span>责任感</span><span class="hero__dot">·</span>
-          <span>成就感</span>
+          <span>让玩家在选择中感受自由</span><span class="hero__dot">·</span>
+          <span>在挑战中获得成就</span>
         </p>
-        <p class="hero__statement hero__statement--core">通过游戏创造从其他途径都无法获得的体验。</p>
-        <p class="hero__statement hero__statement--question">如何创造完美的游戏？</p>
+        <p class="hero__statement hero__statement--question">好游戏的标准是什么？</p>
         <p class="hero__statement hero__statement--disciplines">
           <span>心理学</span><span class="hero__dot">·</span>
           <span>人类学</span><span class="hero__dot">·</span>
@@ -145,7 +136,7 @@
       <div class="project__overview reveal">
         <div class="project__overview-text">
           <h3>项目介绍</h3>
-          <p>基于纯 JavaScript + HTML5 Canvas 构建的竖版 Roguelike 飞机大战游戏。零外部依赖，完整实现了词条构筑、动态难度、四 Boss 轮回、宝石经济、7 关战役星图、4 种可选战机、存档系统等核心系统，辅以未来科幻风格 UI 和像素字体美学。</p>
+          <p>一个周末能打完的 Roguelike 飞机大战。用纯 JS + Canvas 从零搭建，核心设计目标是让每局游戏的 Build 都不同——17 种词条按稀有度权重随机出现，通过前置条件链形成构筑深度。超频系统（击杀蓄能 → 3 秒爆发窗口）控制战斗节奏，7 关战役星图提供从教学到三 Boss 连战的完整体验。</p>
           <div class="project__tags">
             <span>JavaScript</span>
             <span>HTML5 Canvas</span>
@@ -1375,7 +1366,7 @@
             <span>暗黑</span>
             <span>动作 RPG</span>
           </div>
-          <p class="experience__project-desc">一款融合 Roguelike 与暗黑刷宝玩法的动作 RPG。负责核心系统策划与数值设计，主导职业体系、装备经济、PVP/PVE 双模式框架的方案制定与落地推进。</p>
+          <p class="experience__project-desc">一款融合 Roguelike 与暗黑刷宝玩法的动作 RPG。负责核心系统策划与数值设计，主导职业体系、装备经济、PVP/PVE 双模式框架的方案制定与落地推进，独立输出 GDD 文档 3 份、数值配置表 12 张。</p>
         </div>
 
         <div class="experience__details">
@@ -1385,7 +1376,7 @@
             </div>
             <div>
               <h4>职业体系设计</h4>
-              <p>设计战士、法师、道士三大职业，每职业规划三条差异化天赋分支（共 9 条路线），定义各分支的技能树结构、核心机制与定位差异，输出职业技能配置文档与数值表。</p>
+              <p>设计 3 职业 × 3 天赋分支共 9 条 Build 路线，定义各分支的核心机制与定位差异（如战士"铁壁"偏坦克、"狂战"偏爆发），输出职业技能配置文档与数值表，其中战士系在内部测试中被 60% 测试者选为入门首选。</p>
             </div>
           </div>
           <div class="experience__detail">
@@ -1394,7 +1385,7 @@
             </div>
             <div>
               <h4>装备与词条系统</h4>
-              <p>设计装备等级成长体系与词条随机生成规则，规划稀有度分层、词条权重池、套装效果联动，确保刷宝正反馈循环与 Build 构筑深度。</p>
+              <p>设计装备词条系统，将稀有度权重设为 5:3:1:0.65（普/稀/史/传），确保每 3 层关卡玩家能稳定获得 1 件史诗以上装备，维持刷宝正反馈节奏。规划套装效果联动，让 Build 构筑有明确的"毕业目标"。</p>
             </div>
           </div>
           <div class="experience__detail">
@@ -1403,7 +1394,7 @@
             </div>
             <div>
               <h4>PVE 关卡与怪物设计</h4>
-              <p>设计 Roguelike 副本关卡结构、怪物行为模式与 Boss 机制，规划难度曲线与掉落节奏，确保刷宝体验的持续驱动力。</p>
+              <p>设计 Roguelike 副本关卡结构，规划 5 类怪物行为模式与 3 个 Boss 机制，难度曲线按"前 3 层教学 → 中间过渡 → 最终 Boss 检验"三段式编排，确保玩家在每层关卡都有明确的战斗目标。</p>
             </div>
           </div>
           <div class="experience__detail">
@@ -1412,7 +1403,7 @@
             </div>
             <div>
               <h4>PVP 平衡性设计</h4>
-              <p>建立 PVP 独立数值框架，设计职业克制关系与技能平衡规则，输出 PVP 数值对照表，协调程序与 QA 推进平衡性调优。</p>
+              <p>建立 PVP 独立数值框架（与 PVE 解耦），设计"战士克法师、法师克道士、道士克战士"的三角克制关系，输出 PVP 数值对照表，协调程序与 QA 完成 3 轮平衡性调优。</p>
             </div>
           </div>
           <div class="experience__detail">
@@ -1421,7 +1412,7 @@
             </div>
             <div>
               <h4>策划文档与跨部门协作</h4>
-              <p>输出系统设计文档（GDD）、数值配置表、原型流程图，与程序、美术、QA 多部门协作推进方案落地与迭代验证。</p>
+              <p>输出系统设计文档（GDD）3 份、数值配置表 12 张、原型流程图 6 张，与程序、美术、QA 共 4 个部门协作推进方案落地，平均每个系统从方案到落地迭代 2-3 轮。</p>
             </div>
           </div>
         </div>
