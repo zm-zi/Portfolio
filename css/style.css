@@ -31,6 +31,88 @@ body {
   line-height: 1.6;
 }
 
+/* Project themes */
+.project--theme-blue {
+  --project-accent: #3b82f6;
+  --project-accent-bg: rgba(59, 130, 246, 0.06);
+}
+.project--theme-green {
+  --project-accent: #10b981;
+  --project-accent-bg: rgba(16, 185, 129, 0.06);
+}
+.project--theme-pink {
+  --project-accent: #ec4899;
+  --project-accent-bg: rgba(236, 72, 153, 0.06);
+}
+.project--theme-sky {
+  --project-accent: #0ea5e9;
+  --project-accent-bg: rgba(14, 165, 233, 0.06);
+}
+.project--theme-blue .project__label { border-color: rgba(59,130,246,0.3); color: #3b82f6; }
+.project--theme-blue .project__stat-num { color: #3b82f6; }
+.project--theme-blue .project__toggle:hover { border-color: #3b82f6; color: #3b82f6; background: rgba(59,130,246,0.05); }
+.project--theme-blue .project__demo-btn { background: #3b82f6; }
+.project--theme-blue .project__demo-btn:hover { background: #2563eb; }
+.project--theme-green .project__label { border-color: rgba(16,185,129,0.3); color: #10b981; }
+.project--theme-green .project__stat-num { color: #10b981; }
+.project--theme-green .project__toggle:hover { border-color: #10b981; color: #10b981; background: rgba(16,185,129,0.05); }
+.project--theme-green .project__demo-btn { background: #10b981; }
+.project--theme-green .project__demo-btn:hover { background: #059669; }
+.project--theme-pink .project__label { border-color: rgba(236,72,153,0.3); color: #ec4899; }
+.project--theme-pink .project__stat-num { color: #ec4899; }
+.project--theme-pink .project__toggle:hover { border-color: #ec4899; color: #ec4899; background: rgba(236,72,153,0.05); }
+.project--theme-pink .project__demo-btn { background: #ec4899; }
+.project--theme-pink .project__demo-btn:hover { background: #db2777; }
+.project--theme-sky .project__label { border-color: rgba(14,165,233,0.3); color: #0ea5e9; }
+.project--theme-sky .project__stat-num { color: #0ea5e9; }
+.project--theme-sky .project__toggle:hover { border-color: #0ea5e9; color: #0ea5e9; background: rgba(14,165,233,0.05); }
+.project--theme-sky .project__demo-btn { background: #0ea5e9; }
+.project--theme-sky .project__demo-btn:hover { background: #0284c7; }
+
+/* Formula display (replaces bar chart) */
+.project__formula-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.project__formula-header h4 {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.project__formula {
+  font-size: 0.82rem;
+  font-family: "SF Mono", "Fira Code", monospace;
+  color: var(--project-accent, var(--color-accent));
+  background: var(--project-accent-bg, rgba(124,106,239,0.06));
+  padding: 0.2em 0.6em;
+  border-radius: 6px;
+}
+.project__level-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+.project__level-cell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.8rem;
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  font-size: 0.82rem;
+}
+.project__level-cell span:first-child {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+.project__level-cell span:last-child {
+  font-weight: 600;
+  font-family: "SF Mono", "Fira Code", monospace;
+  font-size: 0.78rem;
+}
+
 /* ===== Hero ===== */
 .hero {
   position: relative;
@@ -96,7 +178,7 @@ body {
   font-size: clamp(5rem, 12vw, 10rem);
   font-weight: 700;
   color: transparent;
-  -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.06);
+  -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.13);
   line-height: 1;
   perspective: 800px;
 }
@@ -344,7 +426,7 @@ body {
 
 /* ===== Project Section ===== */
 .project {
-  padding: 6rem 2rem;
+  padding: 4.5rem 2rem;
   background: #fff;
   border-top: 1px solid #eee;
 }
@@ -357,7 +439,7 @@ body {
 /* --- Header --- */
 .project__header {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
 }
 
 .project__label {
@@ -501,7 +583,7 @@ body {
 
 /* --- Section titles --- */
 .project__section {
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
 }
 
 .project__section-title {
@@ -1186,7 +1268,7 @@ body {
 /* --- Design Idea (simple) --- */
 .design-idea {
   position: relative;
-  padding: 6rem 2rem;
+  padding: 4.5rem 2rem;
   border-top: 1px solid #eee;
   overflow: hidden;
 }
@@ -1315,7 +1397,7 @@ body {
   font-weight: 500;
 }
 .skills {
-  padding: 6rem 2rem;
+  padding: 4.5rem 2rem;
   background: var(--color-bg);
   border-top: 1px solid #eee;
 }
@@ -1461,7 +1543,7 @@ body {
 
 /* ===== Experience Section ===== */
 .experience {
-  padding: 6rem 2rem;
+  padding: 4.5rem 2rem;
   background: var(--color-bg);
   border-top: 1px solid #eee;
 }
@@ -1610,7 +1692,7 @@ body {
 
 /* ===== Education Section ===== */
 .education {
-  padding: 6rem 2rem;
+  padding: 4.5rem 2rem;
   background: var(--color-bg);
   border-top: 1px solid #eee;
 }
@@ -1695,7 +1777,7 @@ body {
 
 /* ===== Contact Section ===== */
 .contact {
-  padding: 6rem 2rem 4rem;
+  padding: 4.5rem 2rem 3rem;
   background: #fff;
   border-top: 1px solid #eee;
 }
@@ -1860,7 +1942,7 @@ body {
 
 /* ===== Art Section ===== */
 .art {
-  padding: 6rem 2rem;
+  padding: 4.5rem 2rem;
   background: #fff;
   border-top: 1px solid #eee;
 }
@@ -2032,7 +2114,7 @@ body {
 
 /* ===== Featured Section ===== */
 .featured {
-  padding: 6rem 2rem;
+  padding: 4.5rem 2rem;
   background: #fff;
 }
 
@@ -2089,9 +2171,11 @@ body {
 
 .featured__card-visual {
   height: 220px;
+  aspect-ratio: 16 / 10;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .featured__card-info {
@@ -2113,7 +2197,7 @@ body {
 
 /* ===== Gaming History Timeline ===== */
 .timeline {
-  padding: 6rem 0;
+  padding: 4.5rem 0;
   background: #fff;
   border-top: 1px solid #eee;
 }
@@ -2308,6 +2392,24 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+.timeline__color-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.timeline__scroll-hint {
+  display: none;
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--color-text-secondary);
+  opacity: 0.5;
+  margin-bottom: 1rem;
+  animation: scrollFloat 2s ease-in-out infinite;
+}
+
 /* ===== Footer ===== */
 .footer {
   padding: 3rem 2rem 2rem;
@@ -2499,6 +2601,15 @@ body {
     padding: 4rem 1.5rem;
   }
 
+  .timeline__scroll-hint {
+    display: block;
+  }
+
+  .game-tag {
+    font-size: 0.72rem;
+    padding: 3px 6px;
+  }
+
   .timeline__grid {
     grid-template-columns: repeat(16, minmax(52px, 1fr));
     min-width: 880px;
@@ -2552,8 +2663,13 @@ body {
   }
 
   .timeline__grid {
-    grid-template-columns: repeat(16, minmax(46px, 1fr));
-    min-width: 800px;
+    grid-template-columns: repeat(16, minmax(50px, 1fr));
+    min-width: 840px;
+  }
+
+  .game-tag {
+    font-size: 0.7rem;
+    padding: 3px 6px;
   }
 
   .timeline__legend {

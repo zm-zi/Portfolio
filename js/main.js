@@ -135,8 +135,14 @@ document.addEventListener('DOMContentLoaded', () => {
       designIdeaSection.classList.add('is-collapsed');
     }
 
-    // Set initial height for collapsed state
-    details.style.setProperty('--details-height', '0px');
+    // Set initial height based on expanded state
+    if (btn.classList.contains('is-expanded')) {
+      details.style.maxHeight = 'none';
+      details.style.setProperty('--details-height', details.scrollHeight + 'px');
+      details.style.maxHeight = '';
+    } else {
+      details.style.setProperty('--details-height', '0px');
+    }
 
     btn.addEventListener('click', () => {
       const isExpanded = btn.getAttribute('aria-expanded') === 'true';
