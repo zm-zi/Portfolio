@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ===== Project toggle (collapsible) =====
-  document.querySelectorAll('.project__toggle').forEach(btn => {
+  document.querySelectorAll('.project__toggle:not(.project__footer-collapse-btn):not(.design-idea__collapse-btn)').forEach(btn => {
     // Support both project__inner and design-idea__inner
     const parent = btn.closest('.project__inner') || btn.closest('.design-idea__inner');
     const details = parent?.querySelector('.project__details');
@@ -137,9 +137,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Set initial height based on expanded state
     if (btn.classList.contains('is-expanded')) {
-      details.style.maxHeight = 'none';
       details.style.setProperty('--details-height', details.scrollHeight + 'px');
-      details.style.maxHeight = '';
+      details.classList.add('is-expanded');
+      parent.classList.add('is-expanded');
+      // Show floating collapse button for initially expanded projects
+      const floatingBtn = parent.querySelector('.project__footer-collapse-btn');
+      if (floatingBtn) floatingBtn.classList.add('is-floating');
+      btn.classList.add('is-hidden');
     } else {
       details.style.setProperty('--details-height', '0px');
     }
@@ -152,10 +156,24 @@ document.addEventListener('DOMContentLoaded', () => {
         // Collapse: first set explicit height, then animate to 0
         const currentHeight = details.scrollHeight;
         details.style.setProperty('--details-height', currentHeight + 'px');
-        // Force reflow
-        details.offsetHeight;
-        details.style.setProperty('--details-height', '0px');
+        // Use rAF to ensure browser registers the starting height before animating
+        requestAnimationFrame(() => {
+          details.style.setProperty('--details-height', '0px');
+        });
         details.classList.remove('is-expanded');
+        parent.classList.remove('is-expanded');
+
+        // Hide floating collapse button after animation completes
+        const floatingBtn = parent.querySelector('.project__footer-collapse-btn');
+        if (floatingBtn) {
+          floatingBtn.classList.remove('is-visible');
+          setTimeout(() => {
+            floatingBtn.classList.remove('is-floating');
+          }, 500);
+        }
+
+        // Show header toggle
+        btn.classList.remove('is-hidden');
 
         // Add collapsed class for design-idea
         if (designIdeaSection) {
@@ -163,11 +181,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } else {
         // Expand: calculate full height and set it
-        details.style.maxHeight = 'none';
         const fullHeight = details.scrollHeight;
-        details.style.maxHeight = '';
         details.style.setProperty('--details-height', fullHeight + 'px');
         details.classList.add('is-expanded');
+        parent.classList.add('is-expanded');
+
+        // Show floating collapse button
+        const floatingBtn = parent.querySelector('.project__footer-collapse-btn');
+        if (floatingBtn) {
+          floatingBtn.classList.add('is-floating');
+          floatingBtn.classList.add('is-visible');
+        }
+
+        // Hide header toggle
+        btn.classList.add('is-hidden');
 
         // Remove collapsed class for design-idea
         if (designIdeaSection) {
@@ -178,6 +205,72 @@ document.addEventListener('DOMContentLoaded', () => {
         details.querySelectorAll('.reveal:not(.visible)').forEach(el => {
           el.classList.add('visible');
         });
+
+        // Recalculate height after lazy-loaded images finish loading
+        details.querySelectorAll('img[loading="lazy"]').forEach(img => {
+          if (!img.complete) {
+            img.addEventListener('load', () => {
+              if (details.classList.contains('is-expanded')) {
+                // Store actual height so future expand/collapse animations work
+                const savedMaxHeight = details.style.maxHeight;
+                details.style.maxHeight = 'none';
+                const fullHeight = details.scrollHeight;
+                details.style.setProperty('--details-height', fullHeight + 'px');
+                details.style.maxHeight = savedMaxHeight;
+              }
+            }, { once: true });
+          }
+        });
+      }
+    });
+  });
+
+  // ===== Floating button visibility (show only when project is in view) =====
+  const floatingObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const parent = entry.target.closest('.project__inner') || entry.target.closest('.design-idea__inner');
+      const floatingBtn = parent?.querySelector('.project__footer-collapse-btn');
+      if (!floatingBtn) return;
+
+      if (entry.isIntersecting && entry.target.classList.contains('is-expanded')) {
+        floatingBtn.classList.add('is-visible');
+      } else if (!entry.isIntersecting) {
+        floatingBtn.classList.remove('is-visible');
+      }
+    });
+  }, { threshold: 0.05, rootMargin: '-64px 0px 0px 0px' });
+
+  document.querySelectorAll('.project__details, .design-idea__details').forEach(details => {
+    floatingObserver.observe(details);
+  });
+
+  // ===== Bottom collapse buttons =====
+  document.querySelectorAll('.project__footer-collapse-btn, .design-idea__collapse-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const parent = btn.closest('.project__inner') || btn.closest('.design-idea__inner');
+      const details = parent?.querySelector('.project__details');
+      const headerToggle = parent?.querySelector('.project__header .project__toggle');
+      if (!details || !parent) return;
+
+      // Directly collapse the content
+      const currentHeight = details.scrollHeight;
+      details.style.setProperty('--details-height', currentHeight + 'px');
+      requestAnimationFrame(() => {
+        details.style.setProperty('--details-height', '0px');
+      });
+      details.classList.remove('is-expanded');
+      parent.classList.remove('is-expanded');
+
+      // Keep floating button visible during collapse animation, remove after
+      btn.classList.remove('is-visible');
+      setTimeout(() => {
+        btn.classList.remove('is-floating');
+      }, 500);
+
+      // Show header toggle and sync its aria-expanded state
+      if (headerToggle) {
+        headerToggle.classList.remove('is-hidden');
+        headerToggle.setAttribute('aria-expanded', 'false');
       }
     });
   });

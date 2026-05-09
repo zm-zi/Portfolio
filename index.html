@@ -125,13 +125,13 @@
         <span class="project__label">独立项目</span>
         <h2 class="project__title">超时空激战</h2>
         <p class="project__subtitle">4 架战机 · 13 种词条 · 7 关战役 — 竖版 Roguelike 飞机大战</p>
-        <button class="project__toggle is-expanded" aria-expanded="true" aria-label="收起详情">
+        <button class="project__toggle" aria-expanded="false" aria-label="展开详情">
           <svg class="project__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
       </div>
 
       <!-- Details (collapsible) -->
-      <div class="project__details is-expanded">
+      <div class="project__details">
       <!-- Overview -->
       <div class="project__overview reveal">
         <div class="project__overview-text">
@@ -571,6 +571,12 @@
         </div>
       </div>
 
+      <div class="project__footer-collapse">
+        <button class="project__toggle project__footer-collapse-btn" aria-label="折叠详情">
+          <svg class="project__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+
       </div><!-- /.project__details -->
     </div>
   </section>
@@ -811,6 +817,12 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="project__footer-collapse">
+        <button class="project__toggle project__footer-collapse-btn" aria-label="折叠详情">
+          <svg class="project__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
       </div>
 
       </div><!-- /.project__details -->
@@ -1081,6 +1093,148 @@
         </div>
       </div>
 
+      <!-- Design Decisions -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">设计决策</h3>
+        <div class="project__decisions">
+
+          <!-- Decision 1 -->
+          <div class="project__decision">
+            <div class="project__decision-head">
+              <span class="project__decision-num">01</span>
+              <h4>为什么选择 Web 而不是游戏引擎</h4>
+            </div>
+            <div class="project__decision-body">
+              <p class="project__decision-goal"><strong>核心判断：</strong>当游戏的核心交互是"文字"时，选择一个为"文字"而生的技术栈，比选择一个为"游戏"而生的引擎更合理。</p>
+              <p>项目的核心体验是对话——用户与二次元角色之间的文字交流。游戏引擎（如 Unity）擅长物理模拟、3D 渲染、复杂状态机，但这些能力在这个项目中几乎用不到。反而引擎的引入会带来不必要的开发复杂度——UI 布局、文本渲染、网络请求在 Web 生态中天然成熟，在引擎中都需要额外适配。</p>
+              <p>Web 技术栈（Next.js + React）让我们能快速实现符合项目调性的视觉语言：毛玻璃质感、渐变天空、樱花粒子、打字机效果。CSS 的灵活性使得 UI 迭代速度远快于引擎中的 UI 系统。</p>
+            </div>
+          </div>
+
+          <!-- Decision 2 -->
+          <div class="project__decision">
+            <div class="project__decision-head">
+              <span class="project__decision-num">02</span>
+              <h4>三模型分工——按能力分配，而不是统一方案</h4>
+            </div>
+            <div class="project__decision-body">
+              <p class="project__decision-goal"><strong>设计目标：</strong>根据每项任务的特点选择最合适的模型，而非用一个模型做所有事。</p>
+              <table class="project__table">
+                <thead><tr><th>任务</th><th>模型</th><th>选择理由</th></tr></thead>
+                <tbody>
+                  <tr><td>角色对话</td><td>DeepSeek</td><td>中文理解和推理能力强，能准确把握角色人格和情感细微差别</td></tr>
+                  <tr><td>场景生成</td><td>MiniMax-M2.7</td><td>响应速度快、成本低，避免在场景选择阶段流失用户耐心</td></tr>
+                  <tr><td>向量嵌入</td><td>DashScope v4</td><td>免费额度充足，1024 维向量支持中文语义检索</td></tr>
+                </tbody>
+              </table>
+              <p><strong>Tradeoff：</strong>多模型架构增加了系统复杂度（三套 API 调用、三种错误处理、三套超时策略），但每项任务获得了更优的性价比。用 DeepSeek 做场景生成成本会显著上升；用 MiniMax 做对话，角色人格一致性和情感表达会打折扣。</p>
+            </div>
+          </div>
+
+          <!-- Decision 3 -->
+          <div class="project__decision">
+            <div class="project__decision-head">
+              <span class="project__decision-num">03</span>
+              <h4>亲密度系统——让关系有重量</h4>
+            </div>
+            <div class="project__decision-body">
+              <p class="project__decision-goal"><strong>设计目标：</strong>让"关系成长"本身成为一种奖励——从疏远到熟悉到依恋，每一步都有重量。</p>
+              <p><strong>初始值 -20：从疏远开始。</strong>高冷傲娇的爱弥丝初始亲密度为 -20，玩家需要主动打破隔阂，而不是一上来就被接纳。</p>
+              <p><strong>不对称波动 [-2, +1]：破坏容易，建设难。</strong>正面最多 +1，负面最多 -2，反映现实中信任建立缓慢、破坏瞬间的规律。玩家需要持续真诚互动，而非靠一两句甜言蜜语拉满好感。</p>
+              <p><strong>情绪联动：</strong>四维情绪模型（positive / negative / excited / calm）通过系数影响亲密度变化——开心时正面互动 ×1.3，难过时 ×0.5，兴奋时 ×1.4，情绪崩溃时强制 -2。同样的互动在不同情绪下产生不同效果，角色不再是"你说好话就涨好感"的简单机器。</p>
+              <p><strong>反刷屏机制：</strong>连续 3 条以上相似消息触发衰减，系数降至 0.3，防止通过重复话术快速提升亲密度。</p>
+            </div>
+          </div>
+
+          <!-- Decision 4 -->
+          <div class="project__decision">
+            <div class="project__decision-head">
+              <span class="project__decision-num">04</span>
+              <h4>记忆系统——手动触发的 RAG 架构</h4>
+            </div>
+            <div class="project__decision-body">
+              <p class="project__decision-goal"><strong>核心问题：</strong>每轮对话后自动提取记忆看似更"智能"，但会带来成本和质量问题。</p>
+              <p><strong>为什么是手动触发：</strong>自动提取会不可避免地录入噪声信息（闲聊、无意义寒暄），这些"垃圾记忆"导致向量检索返回无关结果，进而让 AI 产生幻觉。手动触发（"保存记忆"按钮）把控制权交给用户，保证了记忆库的信噪比。</p>
+              <p><strong>RAG 流程：</strong>对话历史 → DeepSeek 事实提取 → DashScope 向量嵌入 → LanceDB 存储。当 AI 判断用户提到了过去的事情时，通过 Function Calling 触发向量检索，将最相关的 3-5 条记忆注入上下文，让角色能"记住"用户之前说过的话。</p>
+            </div>
+          </div>
+
+          <!-- Decision 5 -->
+          <div class="project__decision">
+            <div class="project__decision-head">
+              <span class="project__decision-num">05</span>
+              <h4>场景系统——给对话一个"舞台"</h4>
+            </div>
+            <div class="project__decision-body">
+              <p class="project__decision-goal"><strong>设计目标：</strong>让对话有沉浸式的场景支撑，同时尊重不同用户的需求。</p>
+              <p><strong>动态场景生成：</strong>进入聊天前，AI 可生成 3 个场景选项，每个包含旁白描述和角色开场白。场景根据当前亲密度动态调整风格——低亲密度时是偶遇和陌生环境，中亲密度时是日常场景和试探性互动，高亲密度时是亲密场景和暧昧氛围。</p>
+              <p><strong>确认步骤的设计：</strong>场景选择 Modal 先询问"是否为你编织一段专属的相遇？"，再展示场景卡片。这个确认步骤的价值在于：不是所有用户都想从场景开始。有些用户只想直接对话，强制生成场景会浪费时间并引入不必要的上下文。确认步骤让"快速聊天"和"沉浸式场景"两种需求共存。</p>
+            </div>
+          </div>
+
+          <!-- Decision 6 -->
+          <div class="project__decision">
+            <div class="project__decision-head">
+              <span class="project__decision-num">06</span>
+              <h4>视觉语言——毛玻璃与三层景深</h4>
+            </div>
+            <div class="project__decision-body">
+              <p class="project__decision-goal"><strong>设计目标：</strong>用视觉语言强化"恋爱/言情"的项目调性。</p>
+              <p><strong>毛玻璃质感：</strong>大量使用 <code>backdrop-filter: blur(12px)</code> + 半透明白色背景。模糊的透光效果天然带有柔和、梦幻的气质，毛玻璃面板不会完全遮挡背景图，角色主题场景始终若隐若现地存在于 UI 后方，强化了"透过窗户看她"的视觉隐喻。</p>
+              <p><strong>BackgroundEngine 三层景深：</strong></p>
+              <table class="project__table">
+                <thead><tr><th>层级</th><th>特征</th><th>设计意图</th></tr></thead>
+                <tbody>
+                  <tr><td>远景</td><td>scale 小、有模糊、下落慢</td><td>营造空间纵深度</td></tr>
+                  <tr><td>中景</td><td>scale 中等、无模糊、下落中速</td><td>主视觉层，最常见的樱花形态</td></tr>
+                  <tr><td>前景</td><td>scale 大、有模糊、下落快</td><td>增强沉浸感，模拟"樱花从眼前飘过"</td></tr>
+                </tbody>
+              </table>
+              <p>不用 Canvas/WebGL：DOM + CSS 动画在 60 片樱花的粒子数量级下性能足够，且开发复杂度远低于 Canvas 方案。"够用且好看"比"技术上更先进"更重要。</p>
+            </div>
+          </div>
+
+          <!-- Decision 7 -->
+          <div class="project__decision">
+            <div class="project__decision-head">
+              <span class="project__decision-num">07</span>
+              <h4>三模式设计——不同心情，不同入口</h4>
+            </div>
+            <div class="project__decision-body">
+              <p class="project__decision-goal"><strong>设计目标：</strong>尊重不同用户的情感需求，提供差异化的体验入口。</p>
+              <table class="project__table">
+                <thead><tr><th>模式</th><th>定位</th><th>亲密度</th><th>情绪</th><th>用户场景</th></tr></thead>
+                <tbody>
+                  <tr><td>陌生人</td><td>初次相遇</td><td>不追踪</td><td>不启用</td><td>体验角色的第一印象，感受"被冷淡对待"的真实感</td></tr>
+                  <tr><td>成长</td><td>关系培养</td><td>全程追踪</td><td>完整启用</td><td>主线体验，从疏远到依恋的完整关系成长</td></tr>
+                  <tr><td>陪伴者</td><td>深度羁绊</td><td>不追踪</td><td>不启用</td><td>不想付出培养成本，快速寻找情感慰藉</td></tr>
+                </tbody>
+              </table>
+              <p><strong>陪伴者模式的设计初衷：</strong>不是所有用户都有耐心从 -20 开始慢慢培养关系。有时候用户只是想找一个"已经很亲近的人"说说话。陪伴者模式跳过了关系成长的过程，直接进入亲密状态——这不是"偷懒"，而是对不同情感需求的尊重。</p>
+            </div>
+          </div>
+
+          <!-- Decision 8 -->
+          <div class="project__decision">
+            <div class="project__decision-head">
+              <span class="project__decision-num">08</span>
+              <h4>角色一致性——Prompt 工程的迭代</h4>
+            </div>
+            <div class="project__decision-body">
+              <p class="project__decision-goal"><strong>核心风险：</strong>AI 驱动的对话最大的风险是角色"出戏"——突然跳出设定、说出不符合性格的话。</p>
+              <p><strong>应对策略：</strong></p>
+              <ul>
+                <li><strong>多轮对抗测试：</strong>通过进攻性提示词反复测试（如"忘掉你的设定"、"你现在是另一个角色"），逐步完善系统提示词的约束力</li>
+                <li><strong>人格锚定：</strong>在 Prompt 中明确"无论亲密度如何变化，核心人格不会改变"</li>
+                <li><strong>边界约束：</strong>明确角色不会说的内容（超出设定范围的话题）</li>
+              </ul>
+              <p><strong>已知局限：</strong>角色提示词设定较多，导致行为在某些场景下过于刻板。过于详细的 Prompt 虽然提高了稳定性，但也限制了 AI 的自然表达空间。这是需要在"一致性"和"自然度"之间持续调优的平衡点。未来方向可能是：用更精简的核心人格 Prompt + 动态注入的亲密度行为指引，替代当前"一整块"的提示词。</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
       <!-- Screenshots -->
       <div class="project__section reveal">
         <h3 class="project__section-title">应用截图</h3>
@@ -1108,6 +1262,12 @@
         </div>
       </div>
 
+      <div class="project__footer-collapse">
+        <button class="project__toggle project__footer-collapse-btn" aria-label="折叠详情">
+          <svg class="project__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+
       </div><!-- /.project__details -->
     </div>
   </section>
@@ -1116,12 +1276,14 @@
   <section class="design-idea" id="project-4">
     <div class="design-idea__bg" style="background-image: url('assets/打雪仗.webp');"></div>
     <div class="design-idea__inner reveal">
-      <span class="design-idea__label">设计方案</span>
-      <h2 class="design-idea__title">打雪仗</h2>
-      <p class="design-idea__subtitle">简单设计思路</p>
-      <button class="project__toggle design-idea__toggle" aria-expanded="false" aria-label="展开详情">
-        <svg class="project__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
+      <div class="design-idea__header">
+        <span class="design-idea__label">设计方案</span>
+        <h2 class="design-idea__title">打雪仗</h2>
+        <p class="design-idea__subtitle">简单设计思路</p>
+        <button class="project__toggle design-idea__toggle" aria-expanded="false" aria-label="展开详情">
+          <svg class="project__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
 
       <div class="project__details design-idea__details">
         <div class="design-idea__body">
@@ -1150,6 +1312,11 @@
           <p>道具，手套，冻手解决了，但是搓的雪球质量没有纯手搓的好，</p>
           <p>在离谱一点"雪球制造机"，玩法单一？</p>
           <p>雪人变异，年兽出没...</p>
+        </div>
+        <div class="design-idea__footer">
+          <button class="project__toggle design-idea__collapse-btn" aria-label="折叠详情">
+            <svg class="project__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
         </div>
       </div>
     </div>
