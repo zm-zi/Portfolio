@@ -124,7 +124,7 @@
       <div class="project__header reveal">
         <span class="project__label">独立项目</span>
         <h2 class="project__title">超时空激战</h2>
-        <p class="project__subtitle">无尽冒险 · 关卡战役 · 词条搭配 — 竖版 Roguelike 飞机大战</p>
+        <p class="project__subtitle">4 架战机 · 13 种词条 · 7 关战役 — 竖版 Roguelike 飞机大战</p>
         <button class="project__toggle is-expanded" aria-expanded="true" aria-label="收起详情">
           <svg class="project__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
@@ -136,33 +136,34 @@
       <div class="project__overview reveal">
         <div class="project__overview-text">
           <h3>项目介绍</h3>
-          <p>一个周末能打完的 Roguelike 飞机大战。用纯 JS + Canvas 从零搭建，核心设计目标是让每局游戏的 Build 都不同——17 种词条按稀有度权重随机出现，通过前置条件链形成构筑深度。超频系统（击杀蓄能 → 3 秒爆发窗口）控制战斗节奏，7 关战役星图提供从教学到三 Boss 连战的完整体验。</p>
+          <p>用纯 JS + Canvas 从零搭建的竖版 Roguelike 飞机大战，零外部依赖。4 架战机各有独立攻击逻辑（直射/散射/炸弹/激光），13 种词条按 4 级稀有度加权随机出现，通过叠加组合产生差异化的 Build 体验。超频系统让击杀蓄能转化为 3 秒无敌爆发窗口，控制战斗的风险回报节奏。7 关战役星图从教学关逐步引入敌人机制，最终以三 Boss 连战收尾，完整体验约 30 分钟。</p>
           <div class="project__tags">
             <span>JavaScript</span>
             <span>HTML5 Canvas</span>
             <span>Roguelike</span>
             <span>STG</span>
             <span>零依赖</span>
-            <span>关卡战役</span>
+            <span>4 机甲</span>
+            <span>7 关战役</span>
             <span>存档系统</span>
           </div>
         </div>
         <div class="project__stats">
           <div class="project__stat">
-            <span class="project__stat-num">33+</span>
+            <span class="project__stat-num">33</span>
             <span class="project__stat-label">JS 模块</span>
           </div>
           <div class="project__stat">
-            <span class="project__stat-num">17</span>
+            <span class="project__stat-num">13</span>
             <span class="project__stat-label">词条系统</span>
           </div>
           <div class="project__stat">
             <span class="project__stat-num">4</span>
-            <span class="project__stat-label">Boss 战</span>
+            <span class="project__stat-label">架战机</span>
           </div>
           <div class="project__stat">
-            <span class="project__stat-num">200</span>
-            <span class="project__stat-label">fps 基准</span>
+            <span class="project__stat-num">4</span>
+            <span class="project__stat-label">Boss 战</span>
           </div>
         </div>
       </div>
@@ -175,28 +176,28 @@
             <span class="project__goal-num">01</span>
             <div>
               <h4>Roguelike 词条构筑</h4>
-              <p>4种稀有度 × 17种词条 × 权重随机 × 前置条件链，每局游戏产生差异化的 Build 体验，让玩家在有限选择中寻找最优策略。</p>
+              <p>13 种词条分 4 级稀有度（普通 5 / 稀有 3 / 史诗 1 / 传说 0.65），击杀后从 3 张卡牌中选 1 张。词条可叠加（如射速最多叠 3 层），部分词条有协同——穿透满级后解锁闪电连锁，僚机词条之间互相增幅。每局随机出现顺序不同，玩家需要在"当前最优"和"为后续词条铺路"之间做决策。</p>
             </div>
           </div>
           <div class="project__goal">
             <span class="project__goal-num">02</span>
             <div>
               <h4>双模式游戏体验</h4>
-              <p>无尽冒险模式搭配渐进式难度曲线（25l² + 75l + 50），7 关战役星图模式提供从新手教学到三 Boss 连战的完整关卡流程。</p>
+              <p>两种模式定位不同：无尽模式面向刷分挑战，难度随分数自动攀升（每 500 分敌人更强、刷新更快）；战役模式面向完整体验，7 关按 S 形星图排列，从教学关的单一敌人逐步引入到最终关的三 Boss 连战 + 全敌人混战。4 架战机（直射型/散射型/轰炸型/激光型）让同一关卡有完全不同的打法。</p>
             </div>
           </div>
           <div class="project__goal">
             <span class="project__goal-num">03</span>
             <div>
               <h4>未来科幻美学</h4>
-              <p>青色主题 CSS 变量驱动、发光边框、角括号装饰、脉冲动画、科幻面板 UI，搭配像素字体（Press Start 2P + HYPixel11pxU-2），营造沉浸式科幻氛围。</p>
+              <p>统一的未来科幻视觉语言：青色主色调贯穿 UI 与弹幕，发光边框和角括号装饰强化科技感，CRT 噪点滤镜和屏幕震动反馈增强打击感。粒子系统支持 6 种视觉通道（烟雾/碎片/核心/闪光/火花/光环），Boss 出场和击杀都有独立的屏幕特效。</p>
             </div>
           </div>
           <div class="project__goal">
             <span class="project__goal-num">04</span>
             <div>
-              <h4>高性能渲染</h4>
-              <p>基准 200fps，原地数组压缩、6 通道粒子批渲染、离屏缓存、lighter 合成替代 shadowBlur，确保复杂场景下流畅运行。</p>
+              <h4>流畅手感与精准判定</h4>
+              <p>在 800 粒子上限、多 Boss 弹幕的复杂场景下保持流畅操作手感。玩家碰撞箱设计为三角形而非矩形，匹配战机外形，让擦弹判定更公平合理。</p>
             </div>
           </div>
         </div>
@@ -311,11 +312,11 @@
         <h3 class="project__section-title">数据与结果</h3>
         <div class="project__results">
           <div class="project__result">
-            <span class="project__result-num">33+</span>
-            <span>JS 模块文件</span>
+            <span class="project__result-num">33</span>
+            <span>JS 模块</span>
           </div>
           <div class="project__result">
-            <span class="project__result-num">36+</span>
+            <span class="project__result-num">36</span>
             <span>游戏素材</span>
           </div>
           <div class="project__result">
@@ -323,8 +324,8 @@
             <span>外部依赖</span>
           </div>
           <div class="project__result">
-            <span class="project__result-num">6</span>
-            <span>帧率档位</span>
+            <span class="project__result-num">13</span>
+            <span>种词条</span>
           </div>
         </div>
       </div>
@@ -336,24 +337,185 @@
           <div class="project__retro-item">
             <span class="project__retro-icon project__retro-icon--good"></span>
             <div>
-              <h4>注册表模式</h4>
-              <p>四套注册表（ENEMY/BOSS/BUFF/CRAFT）实现了声明式扩展，新增敌人/Boss/词条/战机无需修改核心循环，证明了数据驱动架构在小型游戏中的可行性。</p>
+              <h4>词条构筑验证</h4>
+              <p>13 种词条中，射速/僚机/穿透三条线路最受欢迎，超频相关词条选取率偏低——说明"击杀蓄能"的节奏感还不够直观，后续可以增加能量获取的视觉反馈来提升选取意愿。</p>
             </div>
           </div>
           <div class="project__retro-item">
             <span class="project__retro-icon project__retro-icon--good"></span>
             <div>
-              <h4>性能优化策略</h4>
-              <p>原地数组压缩替代 splice、lighter 合成模拟辉光、6 通道粒子批渲染——这些在 800 粒子上限下仍保持 200fps 稳定。</p>
+              <h4>三角碰撞箱</h4>
+              <p>将玩家判定框从矩形改为三角形后，擦弹体验明显改善，玩家反馈"感觉更公平了"。这个经验可以推广到其他弹幕游戏。</p>
             </div>
           </div>
           <div class="project__retro-item">
             <span class="project__retro-icon project__retro-icon--grow"></span>
             <div>
               <h4>可改进的方向</h4>
-              <p>当前为单文件加载（33+ 脚本），可引入模块打包器优化加载性能；美术素材由 AI 生成，可建立标准化素材生成流水线。</p>
+              <p>美术素材由 AI 生成，风格一致性有提升空间；当前 33 个脚本文件通过全局变量串联，可引入模块打包器降低加载复杂度；无尽模式后期缺乏新机制引入，容易产生重复感。</p>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Design Decisions -->
+      <div class="project__section reveal">
+        <h3 class="project__section-title">设计决策</h3>
+        <div class="project__decisions">
+
+          <!-- Decision 1 -->
+          <div class="project__decision">
+            <div class="project__decision-head">
+              <span class="project__decision-num">01</span>
+              <h4>战机体系设计——覆盖全攻击谱系</h4>
+            </div>
+            <div class="project__decision-body">
+              <p class="project__decision-goal"><strong>设计目标：</strong>用 4 种战机覆盖弹幕射击的所有基础攻击模式，让不同类型玩家都有归属感。</p>
+              <table class="project__table">
+                <thead><tr><th>战机</th><th>定位</th><th>风险/收益</th><th>目标玩家</th></tr></thead>
+                <tbody>
+                  <tr><td>紫色弹幕</td><td>通用型，无短板</td><td>低风险/稳定输出</td><td>新手、稳健型</td></tr>
+                  <tr><td>苍穹</td><td>近战爆发，散射覆盖</td><td>高风险/高回报（射程 320px 限制）</td><td>有操作的玩家</td></tr>
+                  <tr><td>墨子号</td><td>AOE 范围伤害，鼠标瞄准</td><td>中风险/高覆盖（唯一鼠标操作）</td><td>喜欢 FPS 手感的玩家</td></tr>
+                  <tr><td>赤虹</td><td>实时激光，穿透 + 无弹道延迟</td><td>中风险/持续输出</td><td>追求即时反馈的玩家</td></tr>
+                </tbody>
+              </table>
+              <p><strong>关键决策：</strong>赤虹的激光系统完全绕过了子弹系统——不是"发射子弹"而是"持续输出 DPS"。穿透 buff 对激光的效果从"多穿一个敌人"变为"加宽 6px/层"。这是在词条系统设计完成后才做的战机，但提前规划好了每个词条如何与激光交互。</p>
+              <p><strong>散射的射程限制：</strong>参考散弹枪的"近距离高爆发"设定，加了 320px 射程限制。如果不限制，散射在远距离也能输出，会打破"高风险高回报"的核心定位。底层不支持伤害衰减，所以用"消失"代替"衰减"。</p>
+            </div>
+          </div>
+
+          <!-- Decision 2 -->
+          <div class="project__decision">
+            <div class="project__decision-head">
+              <span class="project__decision-num">02</span>
+              <h4>Buff 系统——从常用词条到 Build 树</h4>
+            </div>
+            <div class="project__decision-body">
+              <p class="project__decision-goal"><strong>设计起点：</strong>最初只有几种弹幕射击常见词条（射速叠加、增加子弹数量等），后续通过测试逐步添加。</p>
+              <p><strong>迭代过程：</strong></p>
+              <ul>
+                <li>砍掉了"寒冰弹"、"爆炸弹"等设计不合理/强度超标的词条</li>
+                <li>保留 13 个经过验证的词条，分 4 个稀有度（普通 5 / 稀有 3 / 史诗 1 / 传说 0.65）</li>
+                <li>树状 Build 设计：僚机和追踪导弹两条线做了树状升级（需要先拿本体才能解锁进阶），其他词条保持线性。树状设计需要考虑的组合更多，目前只有这两条线经过充分测试。</li>
+              </ul>
+              <p><strong>被砍掉的词条：</strong>寒冰弹（减速效果破坏游戏节奏）、爆炸弹（与墨子号定位重叠且强度超标）。</p>
+            </div>
+          </div>
+
+          <!-- Decision 3 -->
+          <div class="project__decision">
+            <div class="project__decision-head">
+              <span class="project__decision-num">03</span>
+              <h4>超频系统——鼓励进攻的"爽感奖励"</h4>
+            </div>
+            <div class="project__decision-body">
+              <p class="project__decision-goal"><strong>核心问题：</strong>如何设计一个"奖励机制"让玩家主动进攻而不是躲在角落？</p>
+              <p><strong>方案对比：</strong></p>
+              <div class="project__compare">
+                <div class="project__compare-item project__compare-item--fail">
+                  <span class="project__compare-icon">✕</span>
+                  <div>
+                    <strong>时间充能</strong>
+                    <p>会导致玩家"等"而不是"打"</p>
+                  </div>
+                </div>
+                <div class="project__compare-item project__compare-item--fail">
+                  <span class="project__compare-icon">✕</span>
+                  <div>
+                    <strong>受伤充能</strong>
+                    <p>在生存系统中难以立足，鼓励挨打不合理</p>
+                  </div>
+                </div>
+                <div class="project__compare-item project__compare-item--pass">
+                  <span class="project__compare-icon">✓</span>
+                  <div>
+                    <strong>击杀充能</strong>
+                    <p>必须不断击杀才能积累能量，迫使玩家保持进攻节奏</p>
+                  </div>
+                </div>
+              </div>
+              <p><strong>超频 = 无敌 + 双倍射速：</strong>将无敌和爆发绑定，让玩家"无所顾虑地获得短暂爽感"——既满足输出效率，又消除"怕没输出环境"的顾虑。如果只有无敌，玩家可能还是保守；如果只有加速，玩家可能不敢冲。两者结合才是完整的"爽感体验"。</p>
+            </div>
+          </div>
+
+          <!-- Decision 4 -->
+          <div class="project__decision">
+            <div class="project__decision-head">
+              <span class="project__decision-num">04</span>
+              <h4>Boss 设计——机制教学而非纯难度递进</h4>
+            </div>
+            <div class="project__decision-body">
+              <p class="project__decision-goal"><strong>设计理念：</strong>3 个 Boss 的难度不是简单的线性递增，而是各有侧重的机制教学。</p>
+              <table class="project__table">
+                <thead><tr><th>Boss</th><th>核心机制</th><th>教会玩家什么</th></tr></thead>
+                <tbody>
+                  <tr><td>独眼王</td><td>扫射 + 护盾 + 召唤</td><td>应对固定弹幕、学会利用 Boss 间隙输出、处理多目标</td></tr>
+                  <tr><td>夜煞</td><td>追踪 + 扫射 + 弹幕墙</td><td>应对追踪弹幕的躲避策略、识别弹幕空隙</td></tr>
+                  <tr><td>冰邪王</td><td>扫射 + 冰墙 + 冰霜弹</td><td>防御机制可以是攻击性的（冰墙阻挡 + 反伤）、环境弹幕应对</td></tr>
+                </tbody>
+              </table>
+              <p><strong>循环增强机制：</strong>无尽模式中 Boss HP 按 (1 + round × 0.5) 倍率增长，出场间隔从 500 分逐步增加到 2000 分。数值没有用 Excel 模拟，完全通过反复测试体验确定——约 2000 分时，如果没有合理词条搭配，玩家会开始感到吃力。</p>
+            </div>
+          </div>
+
+          <!-- Decision 5 -->
+          <div class="project__decision">
+            <div class="project__decision-head">
+              <span class="project__decision-num">05</span>
+              <h4>数值体系——二次函数等级公式</h4>
+            </div>
+            <div class="project__decision-body">
+              <p class="project__decision-goal"><strong>等级公式：</strong>Threshold(l) = 25l² + 75l + 50</p>
+              <table class="project__table">
+                <thead><tr><th>等级</th><th>所需经验</th><th>特点</th></tr></thead>
+                <tbody>
+                  <tr><td>0→1</td><td>50</td><td>前期快速升级，快速获得第一个词条</td></tr>
+                  <tr><td>1→2</td><td>150</td><td>仍然较快</td></tr>
+                  <tr><td>2→3</td><td>300</td><td>开始放缓</td></tr>
+                  <tr><td>3→4</td><td>500</td><td>与难度增长匹配</td></tr>
+                  <tr><td>4→5</td><td>750</td><td>后期需要更多击杀</td></tr>
+                  <tr><td>5→6</td><td>1050</td><td>与无尽模式难度深度匹配</td></tr>
+                </tbody>
+              </table>
+              <p><strong>为什么是二次函数：</strong>线性增长太单调，指数增长太快。二次函数实现"前期快、后期慢"的曲线，既满足"前期快速叠加词条增强战力"的需求，又与无尽模式的难度递增形成深度匹配。</p>
+            </div>
+          </div>
+
+          <!-- Decision 6 -->
+          <div class="project__decision">
+            <div class="project__decision-head">
+              <span class="project__decision-num">06</span>
+              <h4>金色镀层——来自泰拉瑞亚的防御设计</h4>
+            </div>
+            <div class="project__decision-body">
+              <p class="project__decision-goal"><strong>灵感来源：</strong>泰拉瑞亚的套装效果——长时间未受伤会抵挡下一次伤害。</p>
+              <p><strong>玩家反馈曲线：</strong></p>
+              <ul>
+                <li><strong>初期：</strong>新手不会选，觉得"10 秒不受伤太难"</li>
+                <li><strong>中期：</strong>意识到生命价值后开始尝试</li>
+                <li><strong>后期：</strong>成为优先选择的传说词条</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Decision 7 -->
+          <div class="project__decision">
+            <div class="project__decision-head">
+              <span class="project__decision-num">07</span>
+              <h4>设计反思</h4>
+            </div>
+            <div class="project__decision-body">
+              <p><strong>如果重来：</strong></p>
+              <ul>
+                <li><strong>局外经济系统：</strong>战机默认全解锁太浪费，可以设计不同的获取方式（成就解锁、代币购买等）</li>
+                <li><strong>关卡模式深度：</strong>纯 Boss 关（3/5/6）和 Boss+小兵关（7）的区分没有深入设计</li>
+                <li><strong>事前数值模拟：</strong>2000 分后的平衡完全靠反复测试，如果事先做数值模拟会更高效</li>
+              </ul>
+              <p><strong>最重要的教训：</strong>不能急功近利。事先做好数值模拟和系统演练，比事后调整更节约成本。</p>
+            </div>
+          </div>
+
         </div>
       </div>
 
