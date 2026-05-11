@@ -1,0 +1,10 @@
+# 游戏子项目
+肉鸽飞机大战/
+
+# 设计文档 & 简历
+assets/*.md
+assets/*.pdf
+
+# 同步脚本
+sync-game.bat
+sync-game.ps1
