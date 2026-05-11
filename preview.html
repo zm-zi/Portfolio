@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>《三角洲行动》产品拆解案 — 在线预览</title>
+  <meta name="description" content="《三角洲行动》1000小时深度产品拆解案，涵盖核心机制、经济系统、关卡设计与竞品对比。">
+  <link rel="icon" href="assets/头像.png" type="image/png">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root {
+      --preview-accent: #f59e0b;
+      --preview-accent-bg: rgba(245, 158, 11, 0.08);
+      --preview-surface: #ffffff;
+      --preview-border: #e5e7eb;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --preview-surface: #1a1a2e;
+        --preview-border: #2a2a3e;
+        --color-bg: #0f0f1a;
+        --color-text: #e0e0e0;
+        --color-text-secondary: #9ca3af;
+      }
+    }
+    body { background: var(--color-bg); min-height: 100vh; }
+
+    .preview-bar {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--preview-surface);
+      border-bottom: 1px solid var(--preview-border);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+    .preview-bar__inner {
+      max-width: 860px; margin: 0 auto; padding: 0.75rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .preview-bar__left { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+    .preview-bar__back {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.4rem 0.75rem; border-radius: 8px; font-size: 0.82rem; font-weight: 500;
+      color: var(--color-text-secondary); text-decoration: none;
+      border: 1px solid var(--preview-border); background: transparent;
+      transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
+    }
+    .preview-bar__back:hover { color: var(--preview-accent); border-color: var(--preview-accent); background: var(--preview-accent-bg); }
+    .preview-bar__back svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .preview-bar__title { font-size: 0.9rem; font-weight: 600; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .preview-bar__badge {
+      display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px;
+      font-size: 0.7rem; font-weight: 600;
+      background: var(--preview-accent-bg); color: var(--preview-accent);
+      border: 1px solid rgba(245, 158, 11, 0.2); flex-shrink: 0;
+    }
+
+    .preview-progress { position: fixed; top: 0; left: 0; width: 0%; height: 3px; background: linear-gradient(90deg, #f59e0b, #f97316); z-index: 200; transition: width 0.1s; }
+
+    .preview-content { max-width: 860px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+
+    .md-body { font-size: 0.95rem; line-height: 1.85; color: var(--color-text); }
+    .md-body h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--preview-accent); }
+    .md-body h2 { font-size: 1.35rem; font-weight: 700; margin-top: 2.5rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--preview-border); }
+    .md-body h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.8rem; margin-bottom: 0.5rem; }
+    .md-body h4 { font-size: 1rem; font-weight: 600; margin-top: 1.2rem; margin-bottom: 0.4rem; color: var(--preview-accent); }
+    .md-body p { margin-bottom: 1rem; }
+    .md-body strong { font-weight: 600; }
+    .md-body hr { border: none; border-top: 1px solid var(--preview-border); margin: 2rem 0; }
+
+    .md-body table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.85rem; }
+    .md-body thead th { background: var(--preview-accent-bg); color: var(--preview-accent); font-weight: 600; text-align: left; padding: 0.6rem 0.8rem; border: 1px solid var(--preview-border); white-space: nowrap; }
+    .md-body tbody td { padding: 0.55rem 0.8rem; border: 1px solid var(--preview-border); vertical-align: top; }
+    .md-body tbody tr:nth-child(even) { background: rgba(245, 158, 11, 0.03); }
+    .md-body tbody tr:hover { background: var(--preview-accent-bg); }
+
+    .md-body pre { background: #1e1e2e; color: #cdd6f4; padding: 1.2rem; border-radius: 10px; overflow-x: auto; margin: 1rem 0; font-size: 0.82rem; line-height: 1.6; border: 1px solid #313244; }
+    .md-body code { background: var(--preview-accent-bg); color: var(--preview-accent); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.88em; font-family: "JetBrains Mono", "Fira Code", monospace; }
+    .md-body pre code { background: none; color: inherit; padding: 0; border-radius: 0; font-size: inherit; }
+
+    .md-body ul, .md-body ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+    .md-body li { margin-bottom: 0.35rem; }
+    .md-body li::marker { color: var(--preview-accent); }
+
+    .md-body a { color: var(--preview-accent); text-decoration: underline; text-decoration-color: rgba(245, 158, 11, 0.3); text-underline-offset: 3px; transition: text-decoration-color 0.2s; }
+    .md-body a:hover { text-decoration-color: var(--preview-accent); }
+
+    .md-body blockquote { border-left: 3px solid var(--preview-accent); padding: 0.8rem 1.2rem; margin: 1rem 0; background: var(--preview-accent-bg); border-radius: 0 8px 8px 0; color: var(--color-text-secondary); }
+
+    .preview-toc { position: fixed; right: 1.5rem; top: 50%; transform: translateY(-50%); max-height: 60vh; overflow-y: auto; width: 200px; font-size: 0.72rem; z-index: 50; opacity: 0; transition: opacity 0.3s; }
+    .preview-toc.is-visible { opacity: 1; }
+    .preview-toc__title { font-weight: 600; color: var(--preview-accent); margin-bottom: 0.5rem; font-size: 0.75rem; }
+    .preview-toc a { display: block; color: var(--color-text-secondary); text-decoration: none; padding: 0.2rem 0; border-left: 2px solid transparent; padding-left: 0.6rem; transition: all 0.2s; line-height: 1.4; }
+    .preview-toc a:hover, .preview-toc a.is-active { color: var(--preview-accent); border-left-color: var(--preview-accent); }
+    .preview-toc a[data-level="3"] { padding-left: 1.2rem; font-size: 0.68rem; }
+    .preview-toc a[data-level="4"] { padding-left: 1.8rem; font-size: 0.65rem; }
+    @media (max-width: 1200px) { .preview-toc { display: none; } }
+
+    .preview-top {
+      position: fixed; bottom: 2rem; right: 2rem; width: 42px; height: 42px;
+      border-radius: 50%; background: var(--preview-surface);
+      border: 1px solid var(--preview-border); color: var(--preview-accent);
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      opacity: 0; transform: translateY(10px); transition: all 0.3s; z-index: 50;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    }
+    .preview-top.is-visible { opacity: 1; transform: translateY(0); }
+    .preview-top:hover { background: var(--preview-accent); color: #fff; border-color: var(--preview-accent); }
+    .preview-top svg { width: 18px; height: 18px; }
+  </style>
+</head>
+<body>
+  <div class="preview-progress" id="progress"></div>
+
+  <header class="preview-bar">
+    <div class="preview-bar__inner">
+      <div class="preview-bar__left">
+        <a href="index.html#design-analysis" class="preview-bar__back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          返回作品集
+        </a>
+        <span class="preview-bar__title">《三角洲行动》产品拆解案</span>
+      </div>
+      <span class="preview-bar__badge">在线预览</span>
+    </div>
+  </header>
+
+  <main class="preview-content">
+    <article class="md-body" id="md-body"></article>
+  </main>
+
+  <nav class="preview-toc" id="toc"></nav>
+
+  <button class="preview-top" id="topBtn" aria-label="回到顶部">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+  <script id="md-source" type="text/markdown">
+# 三角洲行动 产品拆解案
+
+---
+
+## 一、绪论：腾讯战术射击游戏又一现象级大作
+
+### 1.1 报告综述与研究视角
+
+本拆解按旨在个人求职游戏策划岗位编写的初步产品拆解案。报告立足于2025年下半年，以及2026年5月份之前的《三角洲行动》的运营数据与版本迭代路径，采用逆向工程与数据考古相结合的方法，对该产品的核心玩法循环、经济系统架构、关卡设计哲学及全球化发行策略进行穷尽式分析。作为琳琅天上团队在"下一代战术射击"领域的旗舰产品，该作不仅承载着激活经典IP的历史使命，更是腾讯在《和平精英》与《穿越火线》之后，试图通过"玩法融合"策略攻占硬核FPS市场的关键落子。本报告将重点剖析其如何在一个客户端内平衡"烽火地带"（生存撤离）、"全面战场"（大规模攻防）与"黑鹰坠落"（经典PVE战役）三种截然不同的体验，并针对2025年下半年和2026年上旬出现的舆情危机提出个人见解。
+
+### 1.2 市场定位与宏观背景
+
+2025年是全球射击游戏市场从"单一玩法"向"复合体验"转型的分水岭，也是腾讯射击品类全面爆发的一年。根据腾讯2025年全年财报显示，游戏业务总收入达到2416亿元，同比增长22%，其中国际市场收入首次突破100亿美元大关，同比增长33%。这一增长曲线的核心引擎正是射击品类——据伽马数据统计，射击类游戏以仅7%的产品数量贡献了前100移动游戏18.29%的收入份额，全年增量超过百亿元。其中《三角洲行动》的表现尤为瞩目：2025年收入同比暴涨29倍，移动端累计收入突破5亿美元，9月DAU突破3000万，到2026年春节档更创下日流水历史峰值，国服DAU峰值突破5000万，正式从"新品爆款"跨入"长青游戏"行列。与此同时，"搜打撤"模式以3000万DAU的体量成为FPS增长最快的子品类，《无畏契约》系列月活突破5000万，《和平精英》除夕夜DAU突破9000万——腾讯已构建起行业最完整的FPS产品矩阵，正在推动射击品类在中国市场从20%的份额向全球平均35%的水平跃迁，这意味着至少存在数百亿元的增量空间。
+
+**数据来源**
+
+- 腾讯2025Q3财报原文PDF：https://static.www.tencent.com/uploads/2025/11/13/73620e855728335c9cd735047daacc12.pdf
+- 腾讯2025全年财报解析：https://finance.ifeng.com/c/8rchDZPxjJg
+- 腾讯Q3电话会议全文：https://finance.sina.com.cn/roll/2025-11-13/doc-infxhqmu3722322.shtml
+- 《三角洲行动》DAU与营收：
+  - DAU突破3000万（36氪）：https://m.36kr.com/p/3477575524522629
+  - DAU破3000万解析（什么值得买）：https://post.smzdm.com/p/a65edrw0
+  - 《三角洲行动》成腾讯财报新引擎：https://post.smzdm.com/p/az8pe7gn
+  - 腾讯财报与三角洲战略分析：https://news.qq.com/rain/a/20260319A0892G00
+- 2026春节档数据：
+  - 春节档收入盘点（36氪）：https://m.36kr.com/p/3698675996896896
+  - 春节档爆发（36氪）：https://m.36kr.com/p/3712910338027653
+  - 三角洲行动暴增433%：https://finance.sina.com.cn/roll/2026-02-25/doc-inhnzvze7794638.shtml
+- 行业报告与市场分析：
+  - 2025游戏行业变与不变（36氪）：https://m.36kr.com/p/3608219236189188
+  - 腾讯稳坐全球FPS头把交椅：https://finance.sina.com.cn/stock/relnews/hk/2025-08-14/doc-infkxykc5284176.shtml
+  - 腾讯2025全年财报：https://zhuanlan.zhihu.com/p/2017745364845867118
+  - 触乐行业大事（含沐瞳收购等）：https://news.qq.com/rain/a/20260321A04LV800
+- 全球FPS市场数据：
+  - FPS市场规模报告：https://www.businessresearchinsights.com/zh/market-reports/fps-game-market-117646
+  - 射击游戏行业调研（格隆汇）：https://m.gelonghui.com/p/1456709
+  - Sensor Tower 2026游戏市场报告：https://sensortower.com/zh-CN/report/state-of-gaming-2026
+  - 搜打撤赛道分析：https://news.qq.com/rain/a/20250617A09QZK00
+- 腾讯发布会：
+  - 2025腾讯游戏发布会（钛媒体）：https://www.tmtpost.com/7544526.html
+  - 46款游戏发布会（腾讯新闻）：https://news.qq.com/rain/a/20250423A08B0I00
+
+### 1.3 游戏定位
+
+| 项目 | 内容 |
+|------|------|
+| 游戏名称 | 三角洲行动 |
+| 开发商 | 腾讯 |
+| 发行商 | 腾讯 |
+| 上线时间 | 2024年9月 |
+| 游戏平台 | 双端互通 |
+| 游戏类型 | FPS |
+| 商业模式 | 游戏免费，皮肤道具等付费 |
+
+## 二、核心机制拆解
+
+### 2.1 烽火地带(搜打撤)
+
+融合了MOBA元素的搜打撤游戏，三角洲行动和其他搜打车游戏最大的区别在于，他不想暗区突围和逃离塔克夫那样角色单调和硬核，更符合当代的游戏节奏和大众胃口，上手简单，新鲜感足。
+
+#### 2.1.1 核心体验定位
+
+这个模式给玩家带来的不仅由传统FPS游戏的竞技，对抗，还有生存，掠夺，紧张感，财富积累
+"高风险决策下的紧张博弈感" —— 每一局都是一场关于"贪与怂"的心理拉扯。
+
+具体拆解为三个体验关键词：
+
+| 体验关键词 | 对应设计 | 玩家心理 |
+|-----------|---------|---------|
+| 紧张感 | 死亡永久失去装备 + 撤离点超载机制 | "我带了最好的装备，这局不能死" |
+| 决策感 | 搜 vs 打 vs 撤的实时判断 | "继续搜还是现在撤？那个脚步声是人机还是玩家？" |
+| 成就感 | 成功撤离后的物资变现 + 资产积累 | "这局赚了100万，值了！" |
+
+#### 2.1.2 核心循环（搜--打--撤）
+
+```
+准备阶段（仓库配装）
+    ↓
+入场（出生点分配）
+    ↓
+┌─────────────────────────────────┐
+│  搜 → 遭遇 → 打 → 搜 → 判断 → 撤  │  ← 单局循环
+└─────────────────────────────────┘
+    ↓
+撤离成功 → 物资变现 → 仓库积累 → 下一局配装
+撤离失败 → 装备全失 → 从头再来
+```
+
+#### 2.1.3 环节拆解
+
+**「搜」—— 信息博弈与资源获取**
+- 地图中有固定物资刷新点 + 随机稀有物资（曼德尔砖）
+- 不同难度地图（普通/机密/绝密）物资品质递增，风险同步递增
+- 搜索过程本身就是一个"暴露位置"的风险行为
+
+**「打」—— 战术对抗与资源争夺**
+- PvPvE：既要打AI巡逻队，又要防真人玩家小队
+- 3人小队配合：兵种分工（突击/支援/侦察/工程）
+- 击杀敌人可掠夺其装备，但战斗本身消耗弹药、护甲、血量
+
+**「撤」—— 风险管理的终极考验**
+- 多种撤离点类型：常规（常开）、概率（随机开放）、条件（需丢包/限重）、付费（花游戏币）
+- 撤离超载机制：部分撤离点限制人数（如5人），超出者撤离失败
+- 携带稀有物资（曼德尔砖）时位置全图暴露
+
+#### 2.1.4 经济系统（哈夫币）
+
+经济系统是烽火地带最重要的系统，经济系统是搜打撤模式的命脉，直接决定了游戏寿命，所有内容都是围绕着核心经济"哈夫币"展开的
+
+- **收入：** 主要由对局获取物资撤离带出，其次由任务活动获取
+- **支出：** 主要用于购买进入对局的装备，其次用于升级特勤处等基础设施
+
+```
+仓库（持久化） ←→ 单局（消耗+获取）
+撤离：带入装备 + 搜索物资 + 成功撤离 → 存入仓库
+失败：带入装备 + 搜集物资 + 撤离失败 → 全部丢失
+```
+
+存入仓库的物资可变卖为哈夫币，用哈夫币获取更强力的装备，提高撤离几率。
+
+**核心设计矛盾：**
+
+- 如果物资获取太容易 → 玩家很快"毕业"，失去游玩动力
+- 如果物资获取太难 → 玩家频繁"破产"，挫败感过强
+- 三角洲的做法：不同难度地图形成"梯度经济"，普通地图保本，机密/绝密地图高风险高回报
+
+| 地图难度 | 成本 | 收益(估算值) |
+|---------|------|------------|
+| 普通 | 0-50w | 50w |
+| 机密 | 10w-300w | 200w |
+| 绝密 | 55w-300w | 500w |
+
+假设机密地图撤离率为40%，平均收益200万，平均成本50W万，则：
+
+单局期望收益 = 200万 × 40% - 50万 × 60% = 80万 - 30万 = 50万
+
+假设绝密地图撤离率为30%，平均收益500万，平均成本150万，则：
+
+单局期望收益 = 500万 × 30% - 100万 × 70% = 150万 - 70万 = 80万
+
+这说明绝密地图的期望收益是机密地图的1.6倍，但风险（方差）远高于机密地图，符合"高风险高回报"的设计意图。
+
+**保险箱系统分析：**
+
+保险箱内的物资不会因撤离失败丢失。这个机制
+- 大幅降低了死亡惩罚的挫败感
+- 为新手提供了"保底"心理安全感
+- 创造了"保险箱经济学"——玩家会优先把最值钱的东西放保险箱
+
+**破产保护机制：**
+
+- 零门槛进入普通地图获取物资，虽然收获少但是只需要付出时间成本即可，其他任务或或者活动等也会提供物资
+- 物资刷新率与稀有度分布：与地图难度呈正相关，但是具体物资爆率是动态的，有固定物资点但是出货概率不固定，普遍说法分为个人爆率，容器爆率，与地图爆率。
+
+**通货膨胀控制：**
+
+- 增加入局所需战备值（装备价值），增加撤离难度等，但是每次调整都会引来玩家的不满，本质还是哈夫币的获取难度增加了。
+- 这是三角洲的一大痛点，策划在开服的时候豪言仓库物资永久保存，导致通货膨胀容易出现，只能变相通过一些手段来控制。
+
+**问题：** 经济通胀难以控制
+
+**我的方案：** 引入"赛季远征"机制（参考ARC Raiders）——玩家达到一定等级后可选择重置进度，换取限定奖励和下赛季的增益Buff。这样：
+
+- 硬核玩家有了长线目标（追求远征成就）
+- 休闲玩家不用被迫重置（保留进度）
+- 经济系统自然重置（参与远征的玩家清空仓库）
+- 官方不需要"砍收益"来控制通胀（减少玩家反感）
+
+**护甲减伤曲线：**
+
+护甲收益确实有，但是在同级子弹下就是一两枪的差距，所有护甲收益并不高，玩家之间也流传出"穷什么都不能穷子弹"的说法
+
+**弹药经济：**
+
+这是游戏比较大的开支，子弹的消耗在高端对局可能会占到总消耗的一半甚至更多，这也导致游戏内与子弹有关的物品价格持高不下。
+
+#### 2.1.5 战斗系统
+
+**干员机制：**
+
+非传统公平竞技，而是采用了每个干员都有自己的定位和技能，采用了MOBA元素，给游戏带来了更多的竞技性和可玩性。
+
+| 兵种 | 定位 | 战术价值 |
+|------|------|---------|
+| 突击 | 近距离作战 | 开路先锋，吸引火力 |
+| 支援 | 团队续航 | 降低团队生存压力 |
+| 侦察 | 信息获取 | 信息中枢，掌控战局 |
+| 工程 | 防御/控制 | 前线布控，区域控制 |
+
+**TTK（击杀时间）:**
+
+不同枪械不同子弹的TTK的区别比较大，以统计防具和子弹来说正常的TTK不会超过0.5S与传统的FPS游戏差不多，高级打低级甚至会达到0.2S以内，低级打高级则可能接近1S，这与传统的FPS游戏差距不大，上述只讨论正常打上半身。游戏中还存在一些比较特殊的子弹和，如肉蛋，专打四肢，TTK在0.4S左右，打头很多武器都是1-3枪就会死，不做计算。总的来说与传统FPS差别不大，但是该游戏的设定并非非常硬核，所以客观来看TTK稍微有些短，对新手比较友好，但是对老玩家，或者高战备入场的玩家来说，差距不容易放大。
+
+#### 2.2.6 撤离系统
+
+**撤离点类型：**
+常规撤离点，特殊撤离点（丢包，负重，随机，任务，付费），拉闸撤离点。不同的撤离点出发的条件不同，随着地图难度增加，撤离点的数量也就要少，触发条件越苛刻。撤离是整个游戏最重要的环节，如果撤不出去，对局中的大部分努力都将白费。（保险箱内的物资不会因为撤离失败而丢失）
+
+**超载机制：** "撤离超载机制是三角洲在2025年10月'共享监狱'事件后引入的设计。其核心意图是：通过限制撤离人数，恢复'搜打撤'模式的核心张力——'你死我活'的竞争关系。但这一设计的副作用是：它惩罚了所有玩家，而不仅仅是'共享监狱'的参与者。更优的设计可能是：在地图层面增加'合作撤离'与'竞争撤离'的分区，让不同偏好的玩家各得其所。"
+
+#### 2.2.7 关卡拆解（航天基地）
+
+作为烽火地带最热门的地图，他的设计也是颇具艺术的：
+
+- **设计哲学：** "中心辐射型"——强制向心博弈
+- **核心矛盾：** 所有玩家被逼向同一核心区，冲突不可避免
+- **撤离机制：** 拉闸制（需激活撤离点），飞升（做任务），丢包撤离（丢弃背包，只能携带少量物资撤离）
+- **核心体验：** 高压竞技，"最后一队活着出去"
+- **核心设计意图：** 所有出生点分布在地图外围，所有高价值物资和撤离点集中在核心区。玩家必须向中心移动才能获取收益和撤离，这天然制造了"向心冲突"。
+
+**流派分析：**
+- **猛攻队（欧美打法）：** 购买最好的装备，进图不为吃东西，只为把全图的玩家清空。
+- **正常玩家：** 正常购买装备，不是最好但也不差，能吃则吃，能打则打，常规玩法。
+- **跑刀流：** 使用最廉价的装备，最低的成本进入地图，几乎没有战斗力，以搜索为主，眼观六路耳听八方，选择风险最低的撤离方案，以小博大。
+- **单三：** 一个人带两个人或者三个人的装备，具备一打三过硬的实力，绝活哥的代表。
+- **老鼠队：** 装备很差，寻找机会埋伏最后一队，窃取胜利果实。
+- **自爆流：** 使用最廉价的装备，最低的成本进入地图，带着游戏最大的保险，保险塞满就自杀。
+
+| 出生区域 | 位置 | 刷队概率 | 一号位判定 | 初始动线（不刷卡） |
+|---------|------|---------|-----------|----------------|
+| 中控区 | 核心区边缘 | | 强一号位 | 直接进入核心区抢占先机 |
+| 二员区 | 东区外围 | 必刷 | 一号位 | 需穿越通道进入核心区 |
+| 发射区 | 东南外围 | | 一号位 | 距核心区较近，但路线单一 |
+| 西大区 | 西区外围 | | 牢位 | 距核心区较远，需穿越多个区域 |
+| 宿舍区 | 西北外围 | 必刷 | 非一号位 | 物资贫瘠，需长途跋涉 |
+| 牢大 | 北部外围 | | 天崩位 | 物资极少，容易被堵门 |
+| 牢二 | 北部外围 | | 天崩位 | 物资极少，容易被堵门 |
+| 牢三 | 北部外围 | | 天崩位 | 物资极少，容易被堵门 |
+
+刷卡则西大，牢三，二员为离心，黑市，蓝市一号位置，中控和发射区为伪一号位
+
+**静音航天：** 指没有玩家敢开第一枪，一旦有两队玩家率先开战，可能全图的玩家听到了都会去劝架，然而得吃的只能是最后一对，充分演绎了螳螂捕蝉黄雀在后。
+
+**撤离方式：** 丢包撤（机密三人，绝密一人），飞升撤离（接取任务，等待时间或者完成任务即可撤离），拉闸撤离（拉蓝市和离心两个位置的闸在闸点）
+
+**总结：** 所有玩家的复活点均在地图的外围，而物资点，撤离点，都集中分布在核心区，进入核心区，可以刷卡走捷径，也可以绕路走免费的通道，所以玩家想要获取高价值物资，或者撤离需要去核心区，这也，核心区物资点丰富密集，高风险，高回报，是的航天基地这张地图的竞技性，可玩性，物资是所有游戏中最高的。整张图的构思都非常巧妙，让玩家对这张地图又爱又恨，基本上每局只能有一队或者两队能活着出去，但也因为撤离不容易，所以很多玩家都不愿先开战，导致最后可能进入大混战，以至于没有时间拉闸，导致没有一队可以撤离。它不像其他搜打撤游戏那样"搜完就跑"，而是制造了一个"你死我活"的终局博弈，极大地提升了对局的紧张感和戏剧性。
+
+#### 2.2.8 设计亮点（个人见解）
+
+**亮点一：** MOBA元素的干员设计，打破传统FPS游戏壁垒，使游戏可玩性更高，受众更广。
+
+**亮点二：** 多种玩家玩法
+
+| 玩家类型 | 核心诉求 | 三角洲如何满足/未满足 |
+|---------|---------|-------------------|
+| 硬核玩家 | 高风险高回报，技术差距能体现 | 绝密地图 + 段位系统 |
+| 休闲玩家 | 低压力体验，偶尔赚到就开心 | 普通地图 + 保险箱 + 零门槛入场 |
+| 社交玩家 | 和朋友一起玩，团队配合 | 3人小队 + 干员分工 |
+| "鼠鼠流"玩家 | 不打架，偷偷搜物资就跑 | 条件撤离点 + 付费撤离点 |
+| "老六"玩家 | 蹲撤离点伏击 | 撤离超载机制（某种程度上限制了这种玩法） |
+
+#### 2.2.9 设计问题（个人见解）
+
+**2025年最值得分析的游戏设计案例："共享监狱事件"**
+
+- **事件背景：** 玩家在最高难度地图"潮汐监狱"自发形成合作——选防御型干员"深蓝"，通过暗号确认友善后一起搜物资撤离
+- **官方应对：** 10月5日紧急更新，撤离点限5人 + 深蓝防爆减伤从30%砍到10% + 持盾移速削弱
+- **玩家反应：** 50万差评，收入暴跌，罢游运动
+- **设计启示：** 玩家自发行为 vs 官方经济调控的根本矛盾——这是搜打撤品类的"无解难题"
+
+- 为什么玩家会自发形成合作？（因为绝密地图风险太高，合作比对抗的期望收益更高）
+- 官方的调控逻辑是什么？（维护经济系统的长期健康）
+- 为什么玩家反应如此激烈？（感觉被"背刺"——官方教玩家怎么玩游戏）
+- 如果你是策划，你会怎么处理？（先做出应急措施，暂时关闭监狱地图，内部开会商讨，做游戏调研，倾听玩家心声，寻找到一个玩家和开发商都能接受的折中做法）
+
+**外挂横行：** 作为一款免费游戏，制作外挂与使用外挂的成本极低，虽然腾讯有着全球最顶尖的技术但是并不能完全避免外挂现象，这也导致了玩家体验差，游戏开发商头疼的现象，其次三角洲有有偿跑刀（花钱找人给自己的号赚钱）和护航（请两个专业的打手保护自己清图爽吃撤离）现象，进一步促进了外挂产业。但是外挂对于三角洲来说并不完全是坏事，它可以很大程度减少通货膨胀这一现象，促进哈夫币消耗等。
+
+#### 2.2.10 竞品对比（个人见解）
+
+三角洲 vs 塔科夫 vs 暗区突围 vs ARC Raiders 的核心差异：
+
+| 维度 | 三角洲行动 | 逃离塔科夫 | 暗区突围 | ARC Raiders |
+|------|-----------|-----------|---------|-------------|
+| 核心体验 | 快节奏搜打撤 | 硬核拟真 | 手机端搜打撤 | PvEvP提取射击 |
+| TTK | 中等（0.3-0.5s） | 极短（0.1-0.2s） | 短 | 中等 |
+| 死亡惩罚 | 保险箱保底 + 全失 | 全失（无保底） | 保险箱保底 | 部分保留 |
+| 经济调控 | 可选赛季重置 | 强制赛季清空 | 赛季重置 | 远征计划（可选重置） |
+| 干员系统 | 有（MOBA式技能） | 无（纯装备驱动） | 无 | 有（轻度） |
+| 付费模式 | 免费+皮肤 | 买断制 | 免费+皮肤 | 买断制 |
+
+#### 2.2.11 版本迭代分析
+
+| 赛季 | 关键更新 | 设计意图 | 玩家反馈 |
+|------|---------|---------|---------|
+| S1-S3 | 基础框架建立 | 快速验证核心玩法 | 正面为主 |
+| S5 "破壁" | 新赛季内容 | 保持新鲜感 | DAU持续增长 |
+| 2025.10 | 撤离点限5人+深蓝削弱 | 控制经济通胀 | 50万差评，罢游 |
+| 2026春节 | 新春活动+刘涛代言 | 拉新+回流 | DAU创新高 |
+
+#### 2.2.11 商业模式分析
+
+三角洲是免费游戏 + 皮肤付费模式
+
+**皮肤对FPS游戏的影响（是否有Pay-to-Win争议？）**
+- 枪械与干员皮肤对公平竞技没有任何影响
+- 但是刀皮和通行证对对局有轻微的失衡影响，刀的出刀速度和伤害，付费的普遍比免费的要好，虽然PVP很少用到刀，但是还是也少数时候是会用到的。其次是通行证，付费的会赠与玩家大量物资与一个赛季的2X3的保险箱，会拉开付费玩家与普通玩家的贫富差距
+- 总结：虽然有影响，但是整体感知不大，玩家也都能接受。
+
+#### 2.2.11 策划启示（个人见解）
+  </script>
+
+  <script>
+    (function () {
+      var body = document.getElementById('md-body');
+      var tocEl = document.getElementById('toc');
+      var progress = document.getElementById('progress');
+      var topBtn = document.getElementById('topBtn');
+      var mdSource = document.getElementById('md-source');
+
+      marked.setOptions({ breaks: true, gfm: true });
+
+      body.innerHTML = marked.parse(mdSource.textContent);
+      buildTOC();
+
+      if (location.hash) {
+        var target = body.querySelector(location.hash);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      function buildTOC() {
+        var headings = body.querySelectorAll('h2, h3, h4');
+        if (headings.length < 3) { tocEl.style.display = 'none'; return; }
+        var html = '<div class="preview-toc__title">目录</div>';
+        headings.forEach(function (h, i) {
+          var id = 'heading-' + i;
+          h.id = id;
+          var level = h.tagName[1];
+          html += '<a href="#' + id + '" data-level="' + level + '">' + h.textContent + '</a>';
+        });
+        tocEl.innerHTML = html;
+        var observer = new IntersectionObserver(function (entries) {
+          tocEl.classList.toggle('is-visible', !entries[0].isIntersecting);
+        }, { threshold: 0 });
+        observer.observe(document.querySelector('.preview-bar'));
+      }
+
+      var tocLinks = [];
+      setTimeout(function () { tocLinks = tocEl.querySelectorAll('a'); }, 100);
+
+      function updateActiveTOC() {
+        var headings = body.querySelectorAll('h2, h3, h4');
+        var current = '';
+        headings.forEach(function (h) {
+          if (h.getBoundingClientRect().top <= 120) current = h.id;
+        });
+        tocLinks.forEach(function (a) {
+          a.classList.toggle('is-active', a.getAttribute('href') === '#' + current);
+        });
+      }
+
+      function updateProgress() {
+        var scrollTop = window.scrollY;
+        var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progress.style.width = pct + '%';
+        topBtn.classList.toggle('is-visible', scrollTop > 400);
+      }
+
+      window.addEventListener('scroll', function () {
+        updateProgress();
+        updateActiveTOC();
+      }, { passive: true });
+
+      topBtn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+  </script>
+</body>
+</html>

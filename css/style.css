@@ -7,6 +7,11 @@
   box-sizing: border-box;
 }
 
+/* ===== Modal lock ===== */
+body.modal-open {
+  overflow: hidden;
+}
+
 /* ===== Base ===== */
 :root {
   --color-bg: #fafafa;
@@ -555,10 +560,6 @@ body {
   max-height: var(--details-height);
   overflow: hidden;
   transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.project__details.is-expanded {
-  max-height: var(--details-height);
 }
 
 /* --- Overview --- */
@@ -1431,7 +1432,6 @@ body {
   width: 100%;
   max-height: 100px;
   object-fit: contain;
-  image-rendering: pixelated;
   border-radius: 4px;
 }
 
@@ -1564,10 +1564,6 @@ body {
   max-height: var(--details-height);
   overflow: hidden;
   transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.design-idea__details.is-expanded {
-  max-height: var(--details-height);
 }
 
 /* Design Idea Collapsed State */
@@ -2407,7 +2403,6 @@ body {
 }
 
 .featured__card-visual {
-  height: 220px;
   aspect-ratio: 16 / 10;
   display: flex;
   align-items: center;
@@ -2921,6 +2916,67 @@ body {
   .footer__links {
     gap: 1rem;
   }
+}
+
+/* ===== Design Analysis Theme ===== */
+.project--theme-orange {
+  --project-accent: #f59e0b;
+  --project-accent-bg: rgba(245, 158, 11, 0.06);
+}
+.project--theme-orange .project__label { border-color: rgba(245,158,11,0.3); color: #f59e0b; }
+.project--theme-orange .project__stat-num { color: #f59e0b; }
+.project--theme-orange .project__toggle:hover { border-color: #f59e0b; color: #f59e0b; background: rgba(245,158,11,0.05); }
+
+/* Analysis specific */
+.analysis-quote {
+  border-left: 3px solid #f59e0b;
+  padding: 0.8rem 1.2rem;
+  margin: 1rem 0;
+  background: rgba(245, 158, 11, 0.04);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+}
+.analysis-quote strong { color: var(--color-text); }
+.analysis-notice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: #ef4444;
+}
+.analysis-callout {
+  padding: 1rem 1.5rem;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.04);
+  margin: 1rem 0;
+}
+.analysis-callout h4 {
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #f59e0b;
+}
+.analysis-callout p,
+.analysis-callout li {
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+.analysis-callout ul {
+  padding-left: 1.2rem;
+  margin-top: 0.3rem;
+}
+.analysis-preview-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.35) !important;
+  filter: brightness(1.08);
 }
 
 /* ===== Reduced Motion ===== */

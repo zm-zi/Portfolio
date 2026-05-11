@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let animFrame;
 
   function animateGlow(timestamp) {
+    if (!glowRunning) return;
     const t = timestamp * 0.001;
     glows.forEach((glow, i) => {
       const base = glowBase[i];
@@ -54,16 +55,41 @@ document.addEventListener('DOMContentLoaded', () => {
     animFrame = requestAnimationFrame(animateGlow);
   }
 
+  let glowRunning = false;
+  function startGlow() {
+    if (!glowRunning && glows.length) {
+      glowRunning = true;
+      animFrame = requestAnimationFrame(animateGlow);
+    }
+  }
+  function stopGlow() {
+    glowRunning = false;
+    cancelAnimationFrame(animFrame);
+  }
+
   if (glows.length) {
-    animFrame = requestAnimationFrame(animateGlow);
+    startGlow();
+  }
+
+  // Pause glow when hero is out of viewport
+  const heroSection = document.querySelector('.hero');
+  if (heroSection) {
+    const heroObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        startGlow();
+      } else {
+        stopGlow();
+      }
+    }, { threshold: 0 });
+    heroObserver.observe(heroSection);
   }
 
   // Cancel rAF when tab is hidden to save resources
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
-      cancelAnimationFrame(animFrame);
-    } else if (glows.length) {
-      animFrame = requestAnimationFrame(animateGlow);
+      stopGlow();
+    } else {
+      startGlow();
     }
   });
 
@@ -83,11 +109,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
 
     // Scroll state
+    let navScrolled = false;
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 80) {
-        nav.classList.add('nav--scrolled');
-      } else {
-        nav.classList.remove('nav--scrolled');
+      const scrolled = window.scrollY > 80;
+      if (scrolled !== navScrolled) {
+        navScrolled = scrolled;
+        nav.classList.toggle('nav--scrolled', scrolled);
       }
     }, { passive: true });
   }
@@ -123,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== Project toggle (collapsible) =====
   document.querySelectorAll('.project__toggle:not(.project__footer-collapse-btn):not(.design-idea__collapse-btn)').forEach(btn => {
     // Support both project__inner and design-idea__inner
-    const parent = btn.closest('.project__inner') || btn.closest('.design-idea__inner');
+    const parent = btn.closest('.analysis-block') || btn.closest('.project__inner') || btn.closest('.design-idea__inner');
     const details = parent?.querySelector('.project__details');
     if (!details) return;
 
@@ -201,9 +228,14 @@ document.addEventListener('DOMContentLoaded', () => {
           designIdeaSection.classList.remove('is-collapsed');
         }
 
-        // Trigger reveal animations for newly visible elements
+        // Re-observe reveal elements so scroll-reveal works inside expanded sections
         details.querySelectorAll('.reveal:not(.visible)').forEach(el => {
-          el.classList.add('visible');
+          const rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight && rect.bottom > 0) {
+            el.classList.add('visible');
+          } else {
+            observer.observe(el);
+          }
         });
 
         // Recalculate height after lazy-loaded images finish loading
@@ -211,12 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!img.complete) {
             img.addEventListener('load', () => {
               if (details.classList.contains('is-expanded')) {
-                // Store actual height so future expand/collapse animations work
-                const savedMaxHeight = details.style.maxHeight;
-                details.style.maxHeight = 'none';
-                const fullHeight = details.scrollHeight;
-                details.style.setProperty('--details-height', fullHeight + 'px');
-                details.style.maxHeight = savedMaxHeight;
+                details.style.setProperty('--details-height', details.scrollHeight + 'px');
               }
             }, { once: true });
           }
@@ -247,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== Bottom collapse buttons =====
   document.querySelectorAll('.project__footer-collapse-btn, .design-idea__collapse-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const parent = btn.closest('.project__inner') || btn.closest('.design-idea__inner');
+      const parent = btn.closest('.analysis-block') || btn.closest('.project__inner') || btn.closest('.design-idea__inner');
       const details = parent?.querySelector('.project__details');
       const headerToggle = parent?.querySelector('.project__header .project__toggle');
       if (!details || !parent) return;
@@ -291,12 +318,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   revealEls.forEach(el => {
-    // Skip elements inside collapsed project details
-    const details = el.closest('.project__details');
-    if (details && !details.classList.contains('is-expanded')) {
-      // Still observe, but they won't be visible until expanded
-      return;
-    }
     observer.observe(el);
   });
 
@@ -308,10 +329,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const lightboxClose = lightbox.querySelector('.lightbox__close');
 
     function openLightbox(el) {
-      if (lightboxImg) lightboxImg.src = el.dataset.src;
+      if (lightboxImg) {
+        lightboxImg.src = el.dataset.src;
+        const thumbImg = el.querySelector('img');
+        lightboxImg.alt = thumbImg ? thumbImg.alt : '';
+      }
       lightbox.classList.add('lightbox--open');
-      document.body.style.overflow = 'hidden';
-      // Trap focus in lightbox
+      document.body.classList.add('modal-open');
       if (lightboxClose) lightboxClose.focus();
     }
 
@@ -334,7 +358,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     closeLightbox = () => {
       lightbox.classList.remove('lightbox--open');
-      document.body.style.overflow = '';
+      document.body.classList.remove('modal-open');
+      if (lightboxImg) {
+        lightboxImg.removeAttribute('src');
+        lightboxImg.alt = '';
+      }
     };
 
     if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
@@ -345,9 +373,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Trap focus within lightbox when open
     lightbox.addEventListener('keydown', (e) => {
       if (e.key === 'Tab' && lightbox.classList.contains('lightbox--open')) {
-        // Keep focus on close button
-        e.preventDefault();
-        if (lightboxClose) lightboxClose.focus();
+        const focusable = lightbox.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])');
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
       }
     });
   }
@@ -367,13 +407,13 @@ document.addEventListener('DOMContentLoaded', () => {
       assetImagesLoaded = true;
     }
     assetGallery.classList.add('asset-gallery--open');
-    document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-open');
   }
 
   function closeAssetGallery() {
     if (!assetGallery) return;
     assetGallery.classList.remove('asset-gallery--open');
-    document.body.style.overflow = '';
+    document.body.classList.remove('modal-open');
   }
 
   if (openAssetsBtn) openAssetsBtn.addEventListener('click', openAssetGallery);

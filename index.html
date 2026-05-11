@@ -11,7 +11,6 @@
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="css/style.css">
   <link rel="preload" as="image" href="assets/头像.png">
-  <link rel="preload" as="image" href="assets/打雪仗.webp">
 </head>
 <body>
   <a href="#featured" class="skip-link">跳转到主要内容</a>
@@ -26,6 +25,7 @@
       </button>
       <div class="nav__links">
         <a href="#project" class="nav__link">作品</a>
+        <a href="#design-analysis" class="nav__link">设计分析</a>
         <a href="#skills" class="nav__link">技能</a>
         <a href="#experience" class="nav__link">经历</a>
         <a href="#education" class="nav__link">教育</a>
@@ -54,16 +54,17 @@
       <p class="hero__alias">Sunmiss · 2004 · 游戏设计师</p>
       <div class="hero__divider"></div>
       <div class="hero__statements">
-        <p class="hero__statement hero__statement--core">用系统思维构建可玩的体验。</p>
+        <p class="hero__statement hero__statement--core">系统策划 · 擅长 Roguelike 构筑、数值设计与原型验证</p>
         <p class="hero__statement hero__statement--feel">
-          <span>让玩家在选择中感受自由</span><span class="hero__dot">·</span>
-          <span>在挑战中获得成就</span>
+          <span>我认为好的系统不是让玩家"选最强"</span><span class="hero__dot">·</span>
+          <span>而是让玩家"舍不得放弃任何一个选项"</span>
         </p>
-        <p class="hero__statement hero__statement--question">好游戏的标准是什么？</p>
+        <p class="hero__statement hero__statement--question">3 个独立项目 · 从 0 到可玩原型 · 每个都有 GDD 与复盘</p>
         <p class="hero__statement hero__statement--disciplines">
-          <span>心理学</span><span class="hero__dot">·</span>
-          <span>人类学</span><span class="hero__dot">·</span>
-          <span>设计学</span>
+          <span>数值平衡</span><span class="hero__dot">·</span>
+          <span>系统构筑</span><span class="hero__dot">·</span>
+          <span>关卡节奏</span><span class="hero__dot">·</span>
+          <span>原型验证</span>
         </p>
       </div>
     </div>
@@ -104,14 +105,6 @@
             <p>AI 动漫角色聊天 · Next.js · DeepSeek</p>
           </div>
         </a>
-        <a href="#project-4" class="featured__card reveal">
-          <div class="featured__card-visual" style="background-image: url('assets/打雪仗.webp'); background-size: cover; background-position: center;">
-          </div>
-          <div class="featured__card-info">
-            <h3>打雪仗 — 游戏设计方案</h3>
-            <p>氛围驱动 · 怀旧治愈 · Game Design Concept</p>
-          </div>
-        </a>
       </div>
     </div>
   </section>
@@ -136,7 +129,9 @@
       <div class="project__overview reveal">
         <div class="project__overview-text">
           <h3>项目介绍</h3>
-          <p>用纯 JS + Canvas 从零搭建的竖版 Roguelike 飞机大战，零外部依赖。4 架战机各有独立攻击逻辑（直射/散射/炸弹/激光），13 种词条按 4 级稀有度加权随机出现，通过叠加组合产生差异化的 Build 体验。超频系统让击杀蓄能转化为 3 秒无敌爆发窗口，控制战斗的风险回报节奏。7 关战役星图从教学关逐步引入敌人机制，最终以三 Boss 连战收尾，完整体验约 30 分钟。</p>
+          <p>一款竖版 Roguelike 飞机大战，核心设计问题是：<strong>如何让玩家在 30 分钟的短局里，体验到从"小心翼翼"到"火力全开"的 Build 成长曲线？</strong></p>
+              <p>解法分三层——词条层面：13 种词条 × 4 级稀有度，通过三选一 + 可叠加机制，每局产生不同的构筑路径；节奏层面：超频系统以"击杀蓄能 → 3 秒无敌爆发"的循环，制造高低起伏的情绪曲线；关卡层面：7 关战役星图从单一敌人逐步引入到三 Boss 连战，让机制学习与难度递进同步发生。</p>
+              <p>纯 JS + Canvas 实现，零外部依赖，可直接在浏览器试玩。</p>
           <div class="project__tags">
             <span>JavaScript</span>
             <span>HTML5 Canvas</span>
@@ -337,8 +332,8 @@
           <div class="project__retro-item">
             <span class="project__retro-icon project__retro-icon--good"></span>
             <div>
-              <h4>词条构筑验证</h4>
-              <p>13 种词条中，射速/僚机/穿透三条线路最受欢迎，超频相关词条选取率偏低——说明"击杀蓄能"的节奏感还不够直观，后续可以增加能量获取的视觉反馈来提升选取意愿。</p>
+              <h4>词条构筑验证（7 人测试反馈）</h4>
+              <p>找 7 位有 Roguelike 经验的玩家试玩后统计：射速（5/7 人优先选取）、僚机（4/7）、穿透（4/7）三条线路最受欢迎；超频相关词条仅 2/7 选取。分析原因：击杀蓄能的进度条反馈不够直观，玩家无法快速判断"还差多少进入超频"。后续增加了击杀粒子的汇聚动画，选取率有明显改善。这次测试也验证了一个设计假设：<strong>不是数值不够强，是反馈不够清晰。</strong></p>
             </div>
           </div>
           <div class="project__retro-item">
@@ -532,6 +527,7 @@
             素材展示
           </button>
           <p class="project__demo-hint">新窗口打开 · 键盘操控 · 按 Esc 暂停</p>
+          <p class="project__demo-hint">加载过慢请尝试使用 VPN 加速</p>
         </div>
       </div>
 
@@ -849,7 +845,9 @@
       <div class="project__overview reveal">
         <div class="project__overview-text">
           <h3>项目介绍</h3>
-          <p>从 Unity 桌面应用移植到 Web 的 AI 动漫角色聊天应用。用户选择动漫风格虚拟角色，通过 AI 驱动的流式对话进行沉浸式互动。完整实现了亲密度、情绪、向量记忆、动态场景生成等六大核心系统。</p>
+          <p>一个 Galgame 式的 AI 角色互动游戏。核心设计挑战是：<strong>当对话由 AI 生成而非策划预设时，如何确保角色不"出戏"、关系成长有可感知的深度？</strong></p>
+              <p>解法核心是四层系统的协同——亲密度系统（-100 到 +100，10 阶段，不对称波动 [-2, +1] 让关系"破坏容易建设难"）、情绪系统（4 维情绪 × 亲密度系数，同一句话在不同情绪下效果不同）、向量记忆（让角色能"记住"过去的关键对话）、三模式设计（陌生人/成长/陪伴者覆盖不同玩家需求）。</p>
+              <p>这个项目让我理解了一个设计原则：<strong>约束比自由度更重要。</strong>过于详细的角色 Prompt 提高了稳定性但限制了自然感，精简 Prompt + 动态行为指引才是更好的平衡——这跟游戏设计中"规则 vs 自由度"的命题是相通的。</p>
           <div class="project__tags">
             <span>Next.js</span>
             <span>React</span>
@@ -1272,56 +1270,6 @@
     </div>
   </section>
 
-  <!-- ===== Section: Design Idea — 打雪仗 ===== -->
-  <section class="design-idea" id="project-4">
-    <div class="design-idea__bg" style="background-image: url('assets/打雪仗.webp');"></div>
-    <div class="design-idea__inner reveal">
-      <div class="design-idea__header">
-        <span class="design-idea__label">设计方案</span>
-        <h2 class="design-idea__title">打雪仗</h2>
-        <p class="design-idea__subtitle">简单设计思路</p>
-        <button class="project__toggle design-idea__toggle" aria-expanded="false" aria-label="展开详情">
-          <svg class="project__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-      </div>
-
-      <div class="project__details design-idea__details">
-        <div class="design-idea__body">
-          <p>"雪太大了，学校停课"</p>
-          <p>"寒假的早晨，睡醒发现满地白雪"</p>
-          <p>"天气很冷，但阳光明媚，天空蔚蓝"</p>
-          <p>"在庭院，街道玩耍"</p>
-          <p>"小伙伴在门口呼唤你一起玩"</p>
-          <p>"一个雪球向你袭来"</p>
-          <p>"街道两旁堆满雪人，有的生动华丽，有的像坟头"</p>
-          <p>"穿着厚厚的棉服，手冻得通红"</p>
-
-          <p class="design-idea__divider">好像一下就带入了情景，这是文字带来的体验。如何通过美术，音乐营造氛围感？</p>
-
-          <p>"天气很冷"的体验怎么传达？</p>
-          <p>可能会想到，呼吸时会产生白气...冻得发抖...一道呼啸而来的寒风...</p>
-
-          <p class="design-idea__divider">给游戏贴上什么样的标签呢</p>
-
-          <p><strong>"怀旧"</strong> <strong>"治愈"</strong></p>
-
-          <p class="design-idea__divider">如何去丰富玩法？</p>
-
-          <p>打雪仗，两个人对丢雪球？</p>
-          <p>雪球制造，瞄准，蓄力，发射，雪球搓多了冻手怎么办？</p>
-          <p>道具，手套，冻手解决了，但是搓的雪球质量没有纯手搓的好，</p>
-          <p>在离谱一点"雪球制造机"，玩法单一？</p>
-          <p>雪人变异，年兽出没...</p>
-        </div>
-        <div class="design-idea__footer">
-          <button class="project__toggle design-idea__collapse-btn" aria-label="折叠详情">
-            <svg class="project__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Asset Gallery Modal -->
   <div class="asset-gallery" id="assetGallery">
     <div class="asset-gallery__panel">
@@ -1512,7 +1460,357 @@
     </div>
   </div>
 
-  <!-- ===== Section: Skills & Tools ===== -->
+  <!-- ===== Section: Design Analysis ===== -->
+<section class="project project--theme-orange" id="design-analysis">
+  <div class="project__inner">
+
+    <!-- Section Header -->
+    <div class="project__header reveal">
+      <span class="project__label">策划思维</span>
+      <h2 class="project__title">游戏设计分析</h2>
+      <p class="project__subtitle">深度拆解 × 市场洞察 × 设计思考</p>
+    </div>
+
+    <!-- Analysis 1: Delta Force -->
+    <div class="analysis-block reveal" style="margin-bottom:2.5rem;">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;flex-wrap:wrap;">
+        <h3 style="font-size:1.25rem;font-weight:600;">《三角洲行动》1000小时深度拆解</h3>
+        <span class="analysis-notice">⚠ 拆解案进行中，当前完成度约 30%，后续内容持续更新中</span>
+      </div>
+      <p style="font-size:0.88rem;color:var(--color-text-secondary);margin-bottom:1rem;">搜打撤模式的系统性分析 — 从玩家体验到经济架构，包含市场数据、核心机制拆解、关卡设计哲学与竞品对比分析</p>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+        <a href="preview.html" class="analysis-preview-btn" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;border-radius:8px;font-size:0.82rem;font-weight:600;background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;text-decoration:none;transition:all 0.2s;box-shadow:0 2px 8px rgba(245,158,11,0.25);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          在线预览全文
+        </a>
+      </div>
+
+      <div class="project__toggle-wrap" style="margin-bottom:1.5rem;">
+        <button class="project__toggle is-expanded" aria-expanded="true" aria-label="展开详情">
+          <svg class="project__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <div class="project__details is-expanded" style="--details-height:auto;">
+
+        <!-- Market Data -->
+        <div class="project__section reveal">
+          <h3 class="project__section-title">市场定位与宏观背景</h3>
+          <div class="project__results" style="margin-bottom:1rem;">
+            <div class="project__result">
+              <span class="project__result-num" style="color:#f59e0b;">5000万</span>
+              <span>DAU 峰值</span>
+            </div>
+            <div class="project__result">
+              <span class="project__result-num" style="color:#f59e0b;">5亿$+</span>
+              <span>积累收入</span>
+            </div>
+            <div class="project__result">
+              <span class="project__result-num" style="color:#f59e0b;">29倍</span>
+              <span>同比增长</span>
+            </div>
+            <div class="project__result">
+              <span class="project__result-num" style="color:#f59e0b;">1000h</span>
+              <span>个人游戏时长</span>
+            </div>
+          </div>
+          <p style="font-size:0.82rem;color:var(--color-text-secondary);line-height:1.7;">2025年是全球射击游戏市场从“单一玩法”向“复合体验”转型的分水岭。腾讯射击品类以仅 7% 的产品数量贡献了前 100 移动游戏 18.29% 的收入份额。《三角洲行动》从“新品爆款”跨入“长青游戏”行列，“搜打撤”模式以 3000万 DAU 的体量成为 FPS 增长最快的子品类。</p>
+        </div>
+
+        <!-- Core Experience -->
+        <div class="project__section reveal">
+          <h3 class="project__section-title">核心体验：“螂螂捕蝉，黄雀在后”</h3>
+          <div class="analysis-quote">
+            <strong>一句话总结我的玩法：</strong>不是猛攻队，也不是跑刀流，而是“先吃后打”——前期低调搜物资、绕开正面冲突，把图上能拿的资源先吃完；然后通过枪声和剩余队伍数量判断局势，在最后阶段去伏击那支浴血奋战刚刚活下来的队伍。
+          </div>
+          <div class="project__goals" style="margin-top:1rem;">
+            <div class="project__goal">
+              <span class="project__goal-num">01</span>
+              <div>
+                <h4>用脑子赢</h4>
+                <p>1000小时下来枪法不差，但预判对方动线、卡好伏击位、在对的时间点出现在对的地方——这种感觉是正面强拼给不了的。</p>
+              </div>
+            </div>
+            <div class="project__goal">
+              <span class="project__goal-num">02</span>
+              <div>
+                <h4>信息差带来的掌控感</h4>
+                <p>侦察干员、脚步声、枪声方向——信息本身就是武器。知道对方在哪而对方不知道我在哪，这种不对等很上瘾。</p>
+              </div>
+            </div>
+            <div class="project__goal">
+              <span class="project__goal-num">03</span>
+              <div>
+                <h4>以弱胜强的戏剧性</h4>
+                <p>老鼠队装备往往不是最好的，靠策略把装备比自己强的队伍打穿，每局都可能发生。搜打撤的劲儿就在这。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Economic System -->
+        <div class="project__section reveal">
+          <h3 class="project__section-title">经济系统：哈夫币经济学</h3>
+          <div class="analysis-callout">
+            <h4>核心设计矛盾</h4>
+            <p>如果物资获取太容易 → 玩家很快“毕业”，失去游玩动力；如果物资获取太难 → 玩家频繁“破产”，挫败感过强。三角洲的做法：不同难度地图形成“梯度经济”，普通地图保本，机密/绝密地图高风险高回报。</p>
+          </div>
+          <div class="project__num-tables" style="margin-top:1rem;">
+            <div class="project__num-card">
+              <h4>装备带入成本 vs 平均撤离收益</h4>
+              <table class="project__table">
+                <thead><tr><th>地图难度</th><th>带入成本</th><th>平均收益</th><th>单局期望收益</th></tr></thead>
+                <tbody>
+                  <tr><td>普通</td><td>0-50w</td><td>50w</td><td>稳定盈利</td></tr>
+                  <tr><td>机密</td><td>10w-300w</td><td>200w</td><td>50w（撤离率40%）</td></tr>
+                  <tr><td>绝密</td><td>55w-300w</td><td>500w</td><td>80w（撤离率30%）</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="analysis-callout" style="margin-top:1rem;">
+            <h4>保险箱经济学</h4>
+            <p>保险箱内的物资不会因撤离失败丢失。这个机制大幅降低了死产惩罚的挫败感，为新手提供了“保底”心理安全感，创造了“保险箱经济学”——玩家会优先把最值钱的东西放保险箱。</p>
+          </div>
+          <div class="analysis-callout" style="margin-top:1rem;">
+            <h4>通货膨胀痛点 × 个人方案</h4>
+            <p>策划在开服时承诺“仓库永久保存”，导致通货膨胀只能变相砍收益，每次调整都引发玩家不满。</p>
+            <p style="margin-top:0.5rem;"><strong>我的方案：</strong>引入“赛季远征”机制（参考 ARC Raiders）——玩家达到一定等级后可选择重置进度，换取限定奖励和下赛季增益 Buff。硬核玩家有了长线目标，休闲玩家不用被迫重置，经济系统自然重置，官方不需要“砍收益”来控制通胀。</p>
+          </div>
+        </div>
+
+        <!-- Map Design -->
+        <div class="project__section reveal">
+          <h3 class="project__section-title">关卡设计：航天基地的“中心辐射型”设计</h3>
+          <div class="analysis-quote">
+            <strong>设计哲学：</strong>所有出生点分布在地图外围，所有高价值物资和撤离点集中在核心区。玩家必须向中心移动才能获取收益和撤离，这天然制造了“向心冲突”。它不像其他搜打撤游戏那样“搜完就跑”，而是制造了一个“你死我活”的终局博弈。
+          </div>
+          <div class="project__goals" style="margin-top:1rem;">
+            <div class="project__goal">
+              <span class="project__goal-num">01</span>
+              <div>
+                <h4>向心博弈</h4>
+                <p>所有玩家被逼向同一核心区，冲突不可避免，每局必然有一个终局——而这个终局就是玩家的猌场。</p>
+              </div>
+            </div>
+            <div class="project__goal">
+              <span class="project__goal-num">02</span>
+              <div>
+                <h4>流派分化</h4>
+                <p>猛攻队、正常玩家、跑刀流、单三、老鼠队、自爆流——同一张地图容纳了完全不同的打法，这是地图设计的最高境界。</p>
+              </div>
+            </div>
+            <div class="project__goal">
+              <span class="project__goal-num">03</span>
+              <div>
+                <h4>“静音航天”现象</h4>
+                <p>全图没人敢开第一枪，因为枪声一响，所有人都会循声赶来。充分演绎了“螂螂捕蝉，黄雀在后”的终局博弈。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Competitive Analysis -->
+        <div class="project__section reveal">
+          <h3 class="project__section-title">竞品对比</h3>
+          <table class="project__table">
+            <thead><tr><th>维度</th><th>三角洲行动</th><th>逃离塔科夫</th><th>暗区突围</th><th>ARC Raiders</th></tr></thead>
+            <tbody>
+              <tr><td>核心体验</td><td>快节奏搜打撤</td><td>硬核拟真</td><td>手机端搜打撤</td><td>PvEvP提取</td></tr>
+              <tr><td>TTK</td><td>中等 (0.3-0.5s)</td><td>极短 (0.1-0.2s)</td><td>短</td><td>中等</td></tr>
+              <tr><td>死产惩罚</td><td>保险箱保底 + 全失</td><td>全失（无保底）</td><td>保险箱保底</td><td>部分保留</td></tr>
+              <tr><td>干员系统</td><td>有（MOBA式）</td><td>无</td><td>无</td><td>有（轻度）</td></tr>
+              <tr><td>付费模式</td><td>免费+皮肤</td><td>买断制</td><td>免费+皮肤</td><td>买断制</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Design Problems -->
+        <div class="project__section reveal">
+          <h3 class="project__section-title">设计问题分析</h3>
+          <div class="analysis-callout">
+            <h4>“共享监狱事件”——搜打撤品类的“无解难题”</h4>
+            <p>2025年10月，玩家在最高难度地图“潮汐监狱”自发形成合作——选防御型干员“深蓝”，通过暗号确认友善后一起搜物资撤离。官方紧急更新限制撤离人数 + 削弱干员，引发50万差评和罢游运动。</p>
+            <p style="margin-top:0.5rem;"><strong>设计启示：</strong>玩家自发行为 vs 官方经济调控的根本矛盾。更优的设计可能是：在地图层面增加“合作撤离”与“竞争撤离”的分区，让不同偏好的玩家各得其所。</p>
+          </div>
+          <div class="analysis-callout" style="margin-top:1rem;">
+            <h4>核心痛点总结</h4>
+            <ul>
+              <li>通货膨胀无法根治：承诺“仓库永久保存”就断了赛季清空这条路</li>
+              <li>外挂问题难以根治：免费游戏的老难题，有偿跑刀和护航进一步促进了外挂产业</li>
+              <li>匹配机制不够精准：不同实力、不同装备段位的玩家混进同一局，影响玩法多样性</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Version Analysis -->
+        <div class="project__section reveal">
+          <h3 class="project__section-title">版本迭代分析</h3>
+          <table class="project__table">
+            <thead><tr><th>赛季</th><th>关键更新</th><th>设计意图</th><th>玩家反馈</th></tr></thead>
+            <tbody>
+              <tr><td>S1-S3</td><td>基础框架建立</td><td>快速验证核心玩法</td><td>正面为主</td></tr>
+              <tr><td>S5 “破壁”</td><td>新赛季内容</td><td>保持新鲜感</td><td>DAU持续增长</td></tr>
+              <tr><td>2025.10</td><td>撤离点限5人+深蓝削弱</td><td>控制经济通胀</td><td style="color:#ef4444;">50万差评，罢游</td></tr>
+              <tr><td>2026春节</td><td>新春活动+刘涛代言</td><td>拉新+回流</td><td style="color:#22c55e;">DAU创新高</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Insights from exam doc -->
+        <div class="project__section reveal">
+          <h3 class="project__section-title">策划启示</h3>
+          <div class="analysis-callout">
+            <h4>如果能问策划一个问题</h4>
+            <p>我会问：“匹配机制打算怎么做？”因为匹配是所有设计的地基。航天基地的图设计得再好、干员系统再有深度、经济闭环再精妙，如果匹配把实力差距悬殊的玩家扔进同一局，上面所有的设计都会被“被碾压”的挫败感盖过去。</p>
+          </div>
+          <div class="analysis-callout" style="margin-top:1rem;">
+            <h4>游戏经历带来的设计洞察</h4>
+            <ul>
+              <li><strong>泰拉瑞亚 2000h：</strong>好的建造系统给玩家更强的自由度和表达欲望，而不是更多的数值追求</li>
+              <li><strong>杀其士奈列：</strong>“选一张不是加一张，而是放弃其他所有”——这种取舍的博弈是策略游戏的核心乐趣</li>
+              <li><strong>星露谷物语 500h：</strong>经营类游戏的魅力在于“看着自己的世界一点点成长”的正反馈循环</li>
+            </ul>
+          </div>
+        </div>
+
+      </div><!-- /project__details -->
+    </div><!-- /analysis-block -->
+
+    <!-- Analysis 2: Mobile Market Analysis -->
+    <div class="analysis-block reveal" style="margin-top:3rem;">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;flex-wrap:wrap;">
+        <h3 style="font-size:1.25rem;font-weight:600;">强玩法模拟经营手游市场分析</h3>
+        <span class="project__label" style="font-size:0.7rem;border-color:rgba(245,158,11,0.3);color:#f59e0b;padding:0.15em 0.6em;">市场洞察</span>
+      </div>
+      <p style="font-size:0.88rem;color:var(--color-text-secondary);margin-bottom:1.5rem;">市场趋势 × 案例研究 × 设计规律——包含《无尽冬日》《三国：谋定天下》《Top Heroes》等大量案例分析</p>
+
+      <div class="project__toggle-wrap" style="margin-bottom:1.5rem;">
+        <button class="project__toggle is-expanded" aria-expanded="true" aria-label="展开详情">
+          <svg class="project__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <div class="project__details is-expanded" style="--details-height:auto;">
+
+        <!-- Market Trends -->
+        <div class="project__section reveal">
+          <h3 class="project__section-title">市场趋势</h3>
+          <div class="project__goals">
+            <div class="project__goal">
+              <span class="project__goal-num">01</span>
+              <div>
+                <h4>留存驱动与精品化</h4>
+                <p>2025年全球手游市场正从“增量扩张”转向“留存驱动”。玩家不再满足于简单的数值比拼，开始追求有深度、有策略性、能带来沉浸感的游戏体验。这正是强玩法模拟经营游戏的核心优势。</p>
+              </div>
+            </div>
+            <div class="project__goal">
+              <span class="project__goal-num">02</span>
+              <div>
+                <h4>碎片化时间天然契合</h4>
+                <p>手游用户的核心使用场景是通勤、午休、睡前等碎片化时间段。模拟经营类游戏的“随时暂停、随时继续”特性，比需要持续在线的 MOBA 或 MMO 更适合这种使用习惯。</p>
+              </div>
+            </div>
+            <div class="project__goal">
+              <span class="project__goal-num">03</span>
+              <div>
+                <h4>“SLG+X”模式验证</h4>
+                <p>近年来《无尽冬日》《三国：谋定天下》等产品证明，将深度策略玩法与轻量化入口结合，可以在手游市场取得巨大成功。玩家愿意为有深度的玩法买单，关键在于如何设计好入门门槛和学习曲线。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Core Pattern -->
+        <div class="project__section reveal">
+          <h3 class="project__section-title">核心规律：“渐进式释放”模式</h3>
+          <div class="analysis-quote">
+            成功的深度手游都遵循“先减后加”原则——初期用轻量化内容降低门槛，逐步释放深度玩法。模拟经营玩法天然具备“搭建→管理→扩张”的正反馈循环，非常适合作为深度玩法融合的基底。
+          </div>
+          <div class="project__num-tables" style="margin-top:1rem;">
+            <div class="project__num-card">
+              <h4>“渐进式释放”案例对比</h4>
+              <table class="project__table">
+                <thead><tr><th>产品</th><th>入口玩法</th><th>深度内核</th><th>转化节奏</th></tr></thead>
+                <tbody>
+                  <tr><td>无尽冬日</td><td>模拟经营+合成</td><td>SLG联盟对战</td><td>7-10天</td></tr>
+                  <tr><td>三国谋定天下</td><td>“降肝减氦”策略</td><td>传统SLG框架迭代</td><td>渐进式</td></tr>
+                  <tr><td>Top Heroes</td><td>RPG探索+自动战斗</td><td>主城建造+SLG</td><td>竖屏轻量入口</td></tr>
+                  <tr><td>口袋奇兵</td><td>拖动合成玩法</td><td>SLG重度成长</td><td>开创“合成+SLG”品类</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case Studies -->
+        <div class="project__section reveal">
+          <h3 class="project__section-title">关键案例</h3>
+          <div class="project__goals">
+            <div class="project__goal">
+              <span class="project__goal-num">01</span>
+              <div>
+                <h4>《无尽冬日》——“X+SLG”模式标杆</h4>
+                <p>以模拟经营作为核心玩法入口，SLG作为深度变现内核。2024-2025年中国手游出海收入TOP1，流水预估几乎是第二名的3.5倍。先以小游戏形态测试市场，再通过APP端扩大受众。</p>
+              </div>
+            </div>
+            <div class="project__goal">
+              <span class="project__goal-num">02</span>
+              <div>
+                <h4>《三国：谋定天下》——“降肝减氦”的传统赛道迭代</h4>
+                <p>B站首次发行SLG游戏就取得巨大成功。系统化地解决了传统SLG的多项痛点（操作繁琐、付费壁垒高、新手劝退等），证明即使是“熟透”的传统赛道，只要能系统化地解决用户痛点，仍然存在大量市场机会。</p>
+              </div>
+            </div>
+            <div class="project__goal">
+              <span class="project__goal-num">03</span>
+              <div>
+                <h4>《Kingshot》——“渐进式玩法释放”的持续迭代</h4>
+                <p>在《无尽冬日》框架基础上进一步迭代，引入类似《王权陰落》的战斗机制+塔防元素，累计吸金突破7500万美元。证明“渐进式玩法释放”模式可以持续迭代优化。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Core Insights -->
+        <div class="project__section reveal">
+          <h3 class="project__section-title">核心规律总结</h3>
+          <div class="project__retro">
+            <div class="project__retro-item">
+              <span class="project__retro-icon project__retro-icon--good"></span>
+              <div>
+                <h4>玩法深度是留存的根本驱动力</h4>
+                <p>Sensor Tower 数据显示，2024年全球手游玩家投入游戏的总时长同比上升 8%，玩家更偏爱能够长期投入的游戏。深度玩法游戏天然具备这一优势。</p>
+              </div>
+            </div>
+            <div class="project__retro-item">
+              <span class="project__retro-icon project__retro-icon--good"></span>
+              <div>
+                <h4>“渐进式释放”是最佳的入门设计</h4>
+                <p>无论是《无尽冬日》的模拟经营→SLG过渡，还是《Top Heroes》的RPG→建造经营→SLG递进，成功的深度手游都遵循“先减后加”原则。</p>
+              </div>
+            </div>
+            <div class="project__retro-item">
+              <span class="project__retro-icon project__retro-icon--good"></span>
+              <div>
+                <h4>模拟经营是“玩法融合”的最佳载体</h4>
+                <p>模拟经营玩法天然具备“搭建→管理→扩张”的正反馈循环，且操作门槛相对较低、节奏可控，非常适合作为深度玩法融合的基底。</p>
+              </div>
+            </div>
+            <div class="project__retro-item">
+              <span class="project__retro-icon project__retro-icon--good"></span>
+              <div>
+                <h4>小游戏平台成为新的获客利器</h4>
+                <p>《无尽冬日》和《三国：冰河时代》都先以小游戏形态验证市场，再通过APP端扩大受众。这种策略大幅降低了试错成本。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /project__details -->
+    </div><!-- /analysis-block -->
+
+  </div>
+</section>
+
+<!-- ===== Section: Skills & Tools ===== -->
   <section class="skills" id="skills">
     <div class="skills__inner">
       <div class="skills__header reveal">
@@ -1521,71 +1819,34 @@
       </div>
       <div class="skills__grid">
         <!-- 技能 -->
-        <div class="skills__card reveal">
+        <div class="skills__card skills__card--wide reveal">
           <div class="skills__card-head">
             <div class="skills__card-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20l9-5-9-5-9 5 9 5z"/><path d="M12 12l9-5-9-5-9 5 9 5z"/></svg>
             </div>
-            <h3>技能</h3>
+            <h3>核心能力</h3>
           </div>
           <div class="skills__card-body">
             <div class="skills__list">
               <div class="skills__item">
                 <h4>系统设计</h4>
-                <p>数据驱动架构、注册表模式、声明式扩展</p>
+                <p>四套注册表模式、事件驱动解耦、数据与逻辑分离 —— 超时空激战 33 模块零耦合</p>
               </div>
               <div class="skills__item">
                 <h4>数值设计</h4>
-                <p>经济平衡、难度曲线、概率与成长公式</p>
+                <p>二次函数等级曲线、加权稀有度分配、伤害公式推导 —— 猎魂传奇 9 维属性 × 5 品质体系</p>
               </div>
               <div class="skills__item">
-                <h4>体验设计</h4>
-                <p>情绪节奏、手感打磨、反馈设计</p>
-              </div>
-              <div class="skills__item">
-                <h4>角色与叙事</h4>
-                <p>人格建模、关系系统、程序化叙事</p>
-              </div>
-              <div class="skills__item">
-                <h4>关卡设计</h4>
-                <p>敌人配置、Boss 机制、节奏编排</p>
+                <h4>关卡与节奏设计</h4>
+                <p>三段式难度曲线、Boss 机制教学编排、无尽模式动态难度 —— 烈火英雄 5 类怪物 + 3 Boss</p>
               </div>
               <div class="skills__item">
                 <h4>原型验证</h4>
-                <p>快速从 0 到 1 做出可玩产品</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- 方法论 -->
-        <div class="skills__card reveal">
-          <div class="skills__card-head">
-            <div class="skills__card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            </div>
-            <h3>方法论</h3>
-          </div>
-          <div class="skills__card-body">
-            <div class="skills__list">
-              <div class="skills__item">
-                <h4>心理学视角</h4>
-                <p>用情绪系数、关系阶段等心理模型驱动系统设计</p>
+                <p>从 0 到可玩原型，每个项目快速产出 MVP，通过实测反馈迭代而非纸上设计</p>
               </div>
               <div class="skills__item">
-                <h4>数据驱动思维</h4>
-                <p>数值不写死在逻辑里，用公式和常量表控制</p>
-              </div>
-              <div class="skills__item">
-                <h4>玩家体验优先</h4>
-                <p>先定义感受，再反推机制</p>
-              </div>
-              <div class="skills__item">
-                <h4>原型驱动开发</h4>
-                <p>快速验证大于完美设计</p>
-              </div>
-              <div class="skills__item">
-                <h4>跨领域迁移</h4>
-                <p>游戏系统思维应用到 AI 产品、Unity 架构映射到 Web</p>
+                <h4>叙事与情感化设计</h4>
+                <p>亲密度阶梯模型、情绪驱动对话系统、氛围优先的游戏概念 —— AnimeChatWeb 四层情感系统</p>
               </div>
             </div>
           </div>
@@ -1695,7 +1956,7 @@
             <span>暗黑</span>
             <span>动作 RPG</span>
           </div>
-          <p class="experience__project-desc">一款融合 Roguelike 与暗黑刷宝玩法的动作 RPG。负责核心系统策划与数值设计，主导职业体系、装备经济、PVP/PVE 双模式框架的方案制定与落地推进，独立输出 GDD 文档 3 份、数值配置表 12 张。</p>
+          <p class="experience__project-desc">一款融合 Roguelike 与暗黑刷宝玩法的动作 RPG。作为策划岗实习生，主要参与职业体系中的战士线设计（3 分支 × 核心机制定义）、装备词条的稀有度权重配比（5:3:1:0.65）、以及 PVE 关卡的三段式难度曲线规划。实习期间输出 GDD 文档 3 份、数值配置表 12 张，每个系统在导师反馈下迭代 2-3 轮后落地。</p>
         </div>
 
         <div class="experience__details">
@@ -1765,7 +2026,7 @@
           <span class="education__period">2023 — 2027</span>
         </div>
         <div class="education__detail">
-          <p>27 届毕业生，主修大数据技术，具备数据结构、数据库、数据分析等专业基础，在校期间独立完成多个游戏设计与开发项目，具备跨学科实践能力。</p>
+          <p>大数据专业背景为策划工作提供了两个独特视角：(1) <strong>数值设计直觉</strong>——统计学和数据分析训练让我习惯用公式和分布思考问题，而非拍脑袋定数值；(2) <strong>数据验证意识</strong>——做设计的同时就在想"上线后看哪个指标能验证这个设计是否成立"。在校期间自学《游戏设计艺术》，独立完成 3 个游戏项目从构思到可玩原型的全流程。</p>
         </div>
       </div>
     </div>
@@ -1997,6 +2258,25 @@
             </div>
           </div>
         </div>
+
+      <div class="timeline__insights" style="max-width:860px;margin:2.5rem auto 0;padding:0 2rem;">
+        <h3 style="text-align:center;font-size:0.85rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:1.5rem;">从中获得的三个设计认知</h3>
+        <div style="display:grid;gap:1.2rem;">
+          <div style="padding:1.2rem 1.5rem;border:1px solid #eee;border-radius:12px;">
+            <h4 style="font-size:0.92rem;font-weight:500;margin-bottom:0.3rem;">《泰拉瑞亚》2000h → "套装效果"不是奖励，是引导</h4>
+            <p style="font-size:0.82rem;color:#555;line-height:1.7;">泰拉瑞亚的套装效果（长时间未受伤抵挡下一次伤害）教会我一个设计原则：好的奖励系统不是给玩家更强的数值，而是引导玩家尝试不同的行为模式。这个发现直接启发了超时空激战的「金色镀层」词条设计。</p>
+          </div>
+          <div style="padding:1.2rem 1.5rem;border:1px solid #eee;border-radius:12px;">
+            <h4 style="font-size:0.92rem;font-weight:500;margin-bottom:0.3rem;">《杀戮尖塔》→ 三选一不是减少选择，是增加选择的重量</h4>
+            <p style="font-size:0.82rem;color:#555;line-height:1.7;">如果每次给你 10 张牌任选，你不会认真看每一张。但三选一迫使你仔细权衡——"当前最优"vs"为后续铺路"的博弈，才是构筑类游戏的核心乐趣。这个机制被我移植到了超时空激战的词条选择系统。</p>
+          </div>
+          <div style="padding:1.2rem 1.5rem;border:1px solid #eee;border-radius:12px;">
+            <h4 style="font-size:0.92rem;font-weight:500;margin-bottom:0.3rem;">《逃离塔科夫》→ 撤离比战斗更令人心跳加速</h4>
+            <p style="font-size:0.82rem;color:#555;line-height:1.7;">塔科夫最刺激的时刻不是击杀敌人，而是带着战利品跑向撤离点的过程。这让我理解了风险博弈的核心不是"可能失去什么"，而是"即将保住什么"。猎魂传奇的搜打撤循环就是围绕这个心理锚点设计的。</p>
+          </div>
+        </div>
+      </div>
+
       </div>
     </div>
   </section>
@@ -2083,7 +2363,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
           </div>
           <span class="contact__label-text">电话</span>
-          <span class="contact__value" style="direction:rtl;unicode-bidi:bidi-override">2155755851</span>
+          <span class="contact__value" style="direction:rtl;unicode-bidi:bidi-override" aria-label="15855575512">2155755851</span>
         </a>
         <div class="contact__item">
           <div class="contact__icon">
@@ -2124,7 +2404,7 @@
           <a href="#experience">经历</a>
           <a href="#education">教育</a>
           <a href="#project">作品</a>
-          <a href="#project-4">设计方案</a>
+          <a href="#design-analysis">设计分析</a>
           <a href="#gaming-history">游戏史</a>
           <a href="#art">美术</a>
           <a href="#contact">联系</a>
@@ -2139,7 +2419,7 @@
   <!-- Lightbox -->
   <div class="lightbox" id="lightbox" role="dialog" aria-label="图片预览" aria-modal="true">
     <button class="lightbox__close" aria-label="关闭">&times;</button>
-    <img class="lightbox__img" src="" alt="">
+    <img class="lightbox__img" alt="">
   </div>
 
   <script src="js/main.js"></script>
