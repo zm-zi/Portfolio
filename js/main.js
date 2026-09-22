@@ -302,6 +302,58 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // ===== Internship UI gallery collapse (默认收起) =====
+  document.querySelectorAll('.internship__collapse-btn').forEach(btn => {
+    const body = document.getElementById(btn.getAttribute('aria-controls'));
+    if (!body) return;
+
+    // 默认收起
+    body.style.setProperty('--details-height', '0px');
+    btn.setAttribute('aria-expanded', 'false');
+
+    btn.addEventListener('click', () => {
+      const willExpand = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', String(willExpand));
+
+      if (willExpand) {
+        // 先设成当前内容高度，再让浏览器量一次新布局，避免响应式下高度算错
+        body.style.setProperty('--details-height', body.scrollHeight + 'px');
+        body.classList.add('is-expanded');
+        requestAnimationFrame(() => {
+          body.style.setProperty('--details-height', body.scrollHeight + 'px');
+        });
+
+        // 缩略图未加载完时会导致高度变化，加载后重新量一次
+        body.querySelectorAll('img[loading="lazy"]').forEach(img => {
+          if (!img.complete) {
+            img.addEventListener('load', () => {
+              if (body.classList.contains('is-expanded')) {
+                body.style.setProperty('--details-height', body.scrollHeight + 'px');
+              }
+            }, { once: true });
+          }
+        });
+      } else {
+        body.style.setProperty('--details-height', body.scrollHeight + 'px');
+        requestAnimationFrame(() => {
+          body.style.setProperty('--details-height', '0px');
+        });
+        body.classList.remove('is-expanded');
+      }
+    });
+  });
+
+  // 展开状态下窗口尺寸变化时重新计算高度
+  let uiGalleryResizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(uiGalleryResizeTimer);
+    uiGalleryResizeTimer = setTimeout(() => {
+      document.querySelectorAll('.internship__collapse.is-expanded').forEach(body => {
+        body.style.setProperty('--details-height', body.scrollHeight + 'px');
+      });
+    }, 150);
+  });
+
   // ===== Scroll reveal for project sections =====
   const revealEls = document.querySelectorAll('.reveal');
 
