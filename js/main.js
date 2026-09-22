@@ -339,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (lightboxClose) lightboxClose.focus();
     }
 
-    document.querySelectorAll('.project__screenshot, .art__item, .asset-gallery__item').forEach(el => {
+    document.querySelectorAll('.project__screenshot, .art__item, .asset-gallery__item, .internship__gallery-item').forEach(el => {
       // Make elements keyboard accessible
       el.setAttribute('tabindex', '0');
       el.setAttribute('role', 'button');
