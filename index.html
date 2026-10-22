@@ -3,26 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    /* 渐进增强：文字默认就是可见的，只有 main.js 真的跑起来才隐藏起来播入场动画。
+       1) 脚本报错/老浏览器解析失败 → 立刻取消隐藏
+       2) 3 秒内 main.js 还没启动（跨海线路卡住、脚本 404）→ 自动取消隐藏
+       这样即使 JS 没加载成功，页面也只会"没有动画"，不会变成白屏。 */
+    (function () {
+      var root = document.documentElement;
+      if (!root.classList) return;
+      root.classList.add('js-anim');
+      window.__mainJsReady = false;
+      window.addEventListener('error', function () {
+        root.classList.remove('js-anim');
+      });
+      setTimeout(function () {
+        if (!window.__mainJsReady) root.classList.remove('js-anim');
+      }, 3000);
+    })();
+  </script>
+  <script src="js/main.js" defer></script>
   <title>张子墨 | Sunmiss — 游戏设计师作品集</title>
-  <meta name="description" content="张子墨（Sunmiss）的游戏设计师作品集。展示 Roguelike 飞机大战《超时空激战》、Unity 2D Roguelike 搜打撤《猎魂传奇》、AI 动漫角色聊天应用 AnimeChatWeb 等独立项目，涵盖系统设计、数值设计、体验设计等核心能力。">
+  <meta name="description" content="张子墨（Sunmiss）的游戏策划作品集。展示 Roguelike 飞机大战《超时空激战》、Unity 2D 搜打撤《猎魂传奇》、AI 动漫角色聊天应用 AnimeChatWeb 等独立项目，以及在手游公司参与军事题材对战手游系统设计的实习经历。">
+  <meta name="author" content="张子墨">
+  <link rel="canonical" href="https://portfolio-1ry.pages.dev/">
+  <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f0f1a" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="assets/头像.png" type="image/png">
   <meta property="og:title" content="张子墨 | Sunmiss — 游戏设计师作品集">
   <meta property="og:description" content="展示 Roguelike 飞机大战、AI 动漫角色聊天等独立项目的游戏设计师作品集。">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/头像.png">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:url" content="https://portfolio-1ry.pages.dev/">
+  <meta property="og:site_name" content="张子墨 | Sunmiss">
+  <meta property="og:image" content="https://portfolio-1ry.pages.dev/assets/%E8%B6%85%E6%97%B6%E7%A9%BA%E6%BF%80%E6%88%98%E9%A2%84%E8%A7%88%E5%9B%BE.webp">
+  <meta property="og:image:alt" content="《超时空激战》游戏画面">
+  <meta property="og:image:width" content="1672">
+  <meta property="og:image:height" content="941">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="张子墨 | Sunmiss — 游戏设计师作品集">
   <meta name="twitter:description" content="展示 Roguelike 飞机大战、AI 动漫角色聊天等独立项目的游戏设计师作品集。">
-  <meta name="twitter:image" content="assets/头像.png">
+  <meta name="twitter:image" content="https://portfolio-1ry.pages.dev/assets/%E8%B6%85%E6%97%B6%E7%A9%BA%E6%BF%80%E6%88%98%E9%A2%84%E8%A7%88%E5%9B%BE.webp">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "张子墨",
     "alternateName": "Sunmiss",
+    "jobTitle": "游戏策划",
     "description": "游戏设计师，专注于系统设计、数值设计与体验设计",
-    "url": ".",
-    "sameAs": [],
+    "url": "https://portfolio-1ry.pages.dev/",
+    "image": "https://portfolio-1ry.pages.dev/assets/头像.png",
+    "sameAs": ["https://github.com/zm-zi"],
+    "alumniOf": {
+      "@type": "CollegeOrUniversity",
+      "name": "合肥城市学院"
+    },
     "knowsAbout": ["游戏设计", "Roguelike", "系统设计", "数值设计", "Unity", "JavaScript"]
   }
   </script>
@@ -90,7 +124,7 @@
       <div class="hero__flip-char" style="--i:3"><span>划</span></div>
     </div>
     <div class="hero__content">
-      <img class="hero__avatar" src="assets/头像.png" alt="张子墨的头像" fetchpriority="high" decoding="async">
+      <img class="hero__avatar" src="assets/头像.png" alt="张子墨的头像" width="199" height="200" fetchpriority="high" decoding="async">
       <h1 class="hero__name">张子墨</h1>
       <p class="hero__alias">Sunmiss · 2004 · 游戏设计师</p>
       <div class="hero__divider"></div>
@@ -99,7 +133,7 @@
         <p class="hero__statement hero__statement--feel">
           <span>外向、好沟通，逻辑清楚，情绪不容易上头</span>
         </p>
-        <p class="hero__statement hero__statement--question">3 个独立项目 · 每个都做到能玩 · 都留了 GDD 和复盘</p>
+        <p class="hero__statement hero__statement--question">3 个独立项目做到能玩 · <span class="hero__keep">1 段研发实习</span>独立搭起 GDD 体系</p>
         <p class="hero__statement hero__statement--disciplines">
           <span>数值平衡</span><span class="hero__dot">·</span>
           <span>系统构筑</span><span class="hero__dot">·</span>
@@ -123,7 +157,7 @@
       <div class="featured__grid">
         <a href="#project" class="featured__card reveal">
           <div class="featured__card-visual">
-            <img src="assets/超时空激战预览图.webp" alt="超时空激战预览图" loading="lazy">
+            <img src="assets/超时空激战预览图.webp" alt="超时空激战预览图" width="1672" height="941" loading="lazy" decoding="async">
           </div>
           <div class="featured__card-info">
             <h3>超时空激战</h3>
@@ -132,7 +166,7 @@
         </a>
         <a href="#project-2" class="featured__card reveal">
           <div class="featured__card-visual">
-            <img src="assets/猎魂传奇预览图.webp" alt="猎魂传奇预览图" loading="lazy">
+            <img src="assets/猎魂传奇预览图.webp" alt="猎魂传奇预览图" width="1448" height="1086" loading="lazy" decoding="async">
           </div>
           <div class="featured__card-info">
             <h3>猎魂传奇</h3>
@@ -141,7 +175,7 @@
         </a>
         <a href="#project-3" class="featured__card reveal">
           <div class="featured__card-visual">
-            <img src="assets/Animechat宣传图.webp" alt="AnimeChatWeb预览图" loading="lazy">
+            <img src="assets/Animechat宣传图.webp" alt="AnimeChatWeb预览图" width="1672" height="941" loading="lazy" decoding="async">
           </div>
           <div class="featured__card-info">
             <h3>AnimeChatWeb</h3>
@@ -160,18 +194,25 @@
         <h2 class="internship__title">Internship</h2>
       </div>
 
-      <!-- 公司卡片 -->
+      <!-- 公司卡片（公司名与项目代号已按保密要求隐去） -->
       <div class="internship__card reveal">
         <div class="internship__top">
           <div class="internship__meta">
-            <h3 class="internship__company">红蓝火线</h3>
-            <span class="internship__role">游戏策划实习生 · 《重返安博莱》项目</span>
+            <h3 class="internship__company">
+              <span>某手游研发公司</span>
+              <span class="internship__nda" title="应实习公司保密要求，公司名称已隐去">NDA</span>
+            </h3>
+            <span class="internship__role">游戏策划实习生 · 军事题材对战手游项目</span>
           </div>
           <span class="internship__period">2026.05 — 2026.08</span>
         </div>
         <div class="internship__detail">
-          <p>《重返安博莱》是一款军事题材的竖屏俯视角对战手游，底子接近《皇室战争》：军令当资源，拖拽部署兵种，推掉对面大本营就赢。出战带 8 个兵种 + 1 个将军，32 个兵种子类型和 5 个学派、21 个将军撑起流派空间。实习期间这块设计文档基本是我一个人从零搭起来的——从世界观到 UI 交互规范，核心战斗、局外系统、游戏模式、商业化的文档都归我。</p>
+          <p>这是一款军事题材的竖屏俯视角对战手游，底子接近《皇室战争》：军令当资源，拖拽部署兵种，推掉对面大本营就赢。出战带 8 个兵种 + 1 个将军，32 个兵种子类型和 5 个学派、21 个将军撑起流派空间。实习期间这块设计文档基本是我一个人从零搭起来的——从世界观到 UI 交互规范，核心战斗、局外系统、游戏模式、商业化的文档都归我。</p>
         </div>
+        <p class="internship__note">
+          <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#icon-shield"/></svg>
+          <span>应实习公司保密要求，公司名称与项目代号已隐去；本页展示的设计文档为作品集脱敏展示版，仅用于说明设计方法与文档能力。</span>
+        </p>
       </div>
 
       <!-- 关键数据 -->
@@ -238,37 +279,38 @@
           </button>
         </h3>
         <div class="internship__collapse" id="ui-gallery-body">
+          <p class="internship__gallery-hint">交互线框示意 · 非最终美术，仅用于说明界面结构</p>
           <div class="internship__gallery">
             <div class="internship__gallery-item" data-src="assets/internship/UI/战斗面板（默认）.webp">
-              <img src="assets/internship/UI/战斗面板（默认）.webp" alt="战斗面板" loading="lazy">
+              <img src="assets/internship/UI/战斗面板（默认）.webp" alt="战斗面板" width="500" height="1000" loading="lazy" decoding="async">
               <span>战斗面板</span>
             </div>
             <div class="internship__gallery-item" data-src="assets/internship/UI/局内战斗面板.webp">
-              <img src="assets/internship/UI/局内战斗面板.webp" alt="局内战斗面板" loading="lazy">
+              <img src="assets/internship/UI/局内战斗面板.webp" alt="局内战斗面板" width="500" height="1000" loading="lazy" decoding="async">
               <span>局内战斗</span>
             </div>
             <div class="internship__gallery-item" data-src="assets/internship/UI/部队面板（将军界面（默认））.webp">
-              <img src="assets/internship/UI/部队面板（将军界面（默认））.webp" alt="部队面板" loading="lazy">
+              <img src="assets/internship/UI/部队面板（将军界面（默认））.webp" alt="部队面板" width="500" height="1000" loading="lazy" decoding="async">
               <span>部队面板</span>
             </div>
             <div class="internship__gallery-item" data-src="assets/internship/UI/将军详情页面板.webp">
-              <img src="assets/internship/UI/将军详情页面板.webp" alt="将军详情" loading="lazy">
+              <img src="assets/internship/UI/将军详情页面板.webp" alt="将军详情" width="500" height="1000" loading="lazy" decoding="async">
               <span>将军详情</span>
             </div>
             <div class="internship__gallery-item" data-src="assets/internship/UI/商城面板.webp">
-              <img src="assets/internship/UI/商城面板.webp" alt="商城面板" loading="lazy">
+              <img src="assets/internship/UI/商城面板.webp" alt="商城面板" width="500" height="1000" loading="lazy" decoding="async">
               <span>商城面板</span>
             </div>
             <div class="internship__gallery-item" data-src="assets/internship/UI/基地面板.webp">
-              <img src="assets/internship/UI/基地面板.webp" alt="基地面板" loading="lazy">
+              <img src="assets/internship/UI/基地面板.webp" alt="基地面板" width="500" height="1000" loading="lazy" decoding="async">
               <span>基地面板</span>
             </div>
             <div class="internship__gallery-item" data-src="assets/internship/UI/关卡列表.webp">
-              <img src="assets/internship/UI/关卡列表.webp" alt="关卡列表" loading="lazy">
+              <img src="assets/internship/UI/关卡列表.webp" alt="关卡列表" width="500" height="1000" loading="lazy" decoding="async">
               <span>关卡列表</span>
             </div>
             <div class="internship__gallery-item" data-src="assets/internship/UI/军团面板（已加入）.webp">
-              <img src="assets/internship/UI/军团面板（已加入）.webp" alt="军团面板" loading="lazy">
+              <img src="assets/internship/UI/军团面板（已加入）.webp" alt="军团面板" width="500" height="1000" loading="lazy" decoding="async">
               <span>军团面板</span>
             </div>
           </div>
@@ -277,7 +319,7 @@
 
       <!-- 相关文档 -->
       <div class="internship__section reveal">
-        <h3>相关文档</h3>
+        <h3>相关文档 <span class="internship__section-tag">脱敏展示版</span></h3>
         <div class="internship__docs">
           <a class="internship__doc" href="assets/internship/README.md" target="_blank" rel="noopener">
             <svg class="icon" width="14" height="14"><use href="#icon-file-text"/></svg>
@@ -304,6 +346,10 @@
             PVE 模块文档
           </a>
         </div>
+        <p class="internship__note internship__note--docs">
+          <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#icon-shield"/></svg>
+          <span>以上文档为作品集展示版，公司名称与项目代号已隐去，仅用于说明设计方法。</span>
+        </p>
       </div>
 
     </div>
@@ -1265,23 +1311,23 @@
         <h3 class="project__section-title">应用截图</h3>
         <div class="project__screenshots">
           <div class="project__screenshot" data-src="assets/屏幕截图 2026-04-22 002108.webp">
-            <img src="assets/屏幕截图 2026-04-22 002108.webp" alt="角色选择界面" loading="lazy">
+            <img src="assets/屏幕截图 2026-04-22 002108.webp" alt="角色选择界面" width="2559" height="1439" loading="lazy" decoding="async">
             <span>角色选择界面</span>
           </div>
           <div class="project__screenshot" data-src="assets/屏幕截图 2026-04-22 003432.webp">
-            <img src="assets/屏幕截图 2026-04-22 003432.webp" alt="动态剧情生成" loading="lazy">
+            <img src="assets/屏幕截图 2026-04-22 003432.webp" alt="动态剧情生成" width="1280" height="813" loading="lazy" decoding="async">
             <span>动态剧情生成</span>
           </div>
           <div class="project__screenshot" data-src="assets/屏幕截图 2026-04-22 004004.webp">
-            <img src="assets/屏幕截图 2026-04-22 004004.webp" alt="聊天界面 · 明星日鞠" loading="lazy">
+            <img src="assets/屏幕截图 2026-04-22 004004.webp" alt="聊天界面 · 明星日鞠" width="1133" height="756" loading="lazy" decoding="async">
             <span>聊天界面 · 明星日鞠</span>
           </div>
           <div class="project__screenshot" data-src="assets/屏幕截图 2026-04-22 004200.webp">
-            <img src="assets/屏幕截图 2026-04-22 004200.webp" alt="聊天界面 · 早濑优香" loading="lazy">
+            <img src="assets/屏幕截图 2026-04-22 004200.webp" alt="聊天界面 · 早濑优香" width="1132" height="757" loading="lazy" decoding="async">
             <span>聊天界面 · 早濑优香</span>
           </div>
           <div class="project__screenshot" data-src="assets/屏幕截图 2026-04-22 004410.webp">
-            <img src="assets/屏幕截图 2026-04-22 004410.webp" alt="终端日志输出" loading="lazy">
+            <img src="assets/屏幕截图 2026-04-22 004410.webp" alt="终端日志输出" width="844" height="614" loading="lazy" decoding="async">
             <span>终端日志输出</span>
           </div>
         </div>
@@ -2091,6 +2137,8 @@
       <div class="timeline__header reveal">
         <span class="timeline__label">游戏史</span>
         <h2 class="timeline__title">Gaming History</h2>
+        <p class="timeline__intro">从 2011 年第一次打开《愤怒的小鸟》，到现在——这条时间线是我判断「什么好玩」的参照系。</p>
+        <span class="timeline__updated"><span class="timeline__updated-dot"></span>更新至 2026.10.20</span>
       </div>
       <div class="timeline__body">
         <div class="timeline__legend">
@@ -2105,9 +2153,15 @@
           <span class="timeline__color-item"><span class="game-tag game-tag--sim">模拟建造</span></span>
           <span class="timeline__color-item"><span class="game-tag game-tag--shooter">MOBA射击</span></span>
         </div>
-        <p class="timeline__note">* 游戏所在年份为第一次接触的时间，可能存在误差。很多游戏玩过但想不起来了。</p>
-        <p class="timeline__scroll-hint">← 左右滑动查看完整时间线 →</p>
-        <div class="timeline__scroll">
+        <p class="timeline__note">* 年份为第一次接触的时间，非发售时间；时长为粗略估计，很多玩过的游戏已经想不起来了。</p>
+        <div class="timeline__toolbar" id="timelineToolbar" hidden>
+          <p class="timeline__scroll-hint">左右滑动，或点箭头浏览</p>
+          <div class="timeline__nav" id="timelineNav" hidden>
+            <button type="button" class="timeline__nav-btn" data-dir="-1" aria-label="浏览更早的年份">←</button>
+            <button type="button" class="timeline__nav-btn" data-dir="1" aria-label="浏览更近的年份">→</button>
+          </div>
+        </div>
+        <div class="timeline__scroll" id="timelineScroll" tabindex="0" role="region" aria-label="2011 至 2026 年游戏时间线">
           <div class="timeline__grid">
             <!-- 单机游戏（时间线上方） -->
             <div class="timeline__row timeline__row--sp">
@@ -2133,8 +2187,9 @@
                 <span class="game-tag game-tag--casual">爱洗澡的鳄鱼</span>
                 <span class="game-tag game-tag--casual">燃烧的蔬菜</span>
               </div>
-              <div class="timeline__year-cell" style="--col: 16">
+              <div class="timeline__year-cell timeline__year-cell--latest" style="--col: 16">
                 <span class="game-tag game-tag--action">杀戮尖塔2</span>
+                <span class="game-tag game-tag--strategy">迈达斯</span>
               </div>
               <div class="timeline__year-cell" style="--col: 5">
                 <span class="game-tag game-tag--sandbox">饥荒 200h</span>
@@ -2215,7 +2270,7 @@
                 <span class="timeline__dot" style="--col: 13"></span>
                 <span class="timeline__dot" style="--col: 14"></span>
                 <span class="timeline__dot" style="--col: 15"></span>
-                <span class="timeline__dot" style="--col: 16"></span>
+                <span class="timeline__dot timeline__dot--current" style="--col: 16"></span>
               </div>
               <div class="timeline__years">
                 <span class="timeline__year" style="--col: 1">2011</span>
@@ -2233,7 +2288,7 @@
                 <span class="timeline__year" style="--col: 13">2023</span>
                 <span class="timeline__year" style="--col: 14">2024</span>
                 <span class="timeline__year" style="--col: 15">2025</span>
-                <span class="timeline__year" style="--col: 16">2026</span>
+                <span class="timeline__year timeline__year--current" style="--col: 16">2026</span>
               </div>
             </div>
             <!-- 网络游戏（时间线下方） -->
@@ -2304,8 +2359,10 @@
               <div class="timeline__year-cell" style="--col: 15">
                 <span class="game-tag game-tag--action">鸣潮</span>
               </div>
-              <div class="timeline__year-cell" style="--col: 16">
-                <span class="game-tag game-tag--action">洛克王国世界</span>
+              <div class="timeline__year-cell timeline__year-cell--latest" style="--col: 16">
+                <span class="game-tag game-tag--sim game-tag--wrap">俄罗斯钓鱼4</span>
+                <span class="game-tag game-tag--casual game-tag--wrap" title="MECCHA CHAMELEON">超级变色龙</span>
+                <span class="game-tag game-tag--action game-tag--wrap">洛克王国世界</span>
                 <span class="game-tag game-tag--action">异环</span>
               </div>
             </div>
@@ -2313,7 +2370,7 @@
         </div>
 
       <div class="timeline__insights">
-        <h3 class="timeline__insights-title">从中获得的三个设计认知</h3>
+        <h3 class="timeline__insights-title">这些游戏教我的三件事</h3>
         <div class="timeline__insights-grid">
           <div class="timeline__insight-card">
             <h4>《泰拉瑞亚》2000h → "套装效果"不是奖励，是引导</h4>
@@ -2438,9 +2495,15 @@
       </div>
       <div class="footer__bottom">
         <p class="footer__copy">&copy; 2026 张子墨. All rights reserved.</p>
+        <p class="footer__updated">最近更新 <time datetime="2026-10-20">2026.10.20</time></p>
       </div>
     </div>
   </footer>
+
+  <!-- Back to top -->
+  <button class="back-to-top" id="backToTop" type="button" aria-label="回到顶部">
+    <svg class="icon" aria-hidden="true"><use href="#icon-chevron-down"/></svg>
+  </button>
 
   <!-- Lightbox -->
   <div class="lightbox" id="lightbox" role="dialog" aria-label="图片预览" aria-modal="true">
@@ -2448,6 +2511,5 @@
     <img class="lightbox__img" alt="">
   </div>
 
-  <script src="js/main.js"></script>
 </body>
 </html>

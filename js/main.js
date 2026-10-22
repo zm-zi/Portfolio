@@ -1,3 +1,6 @@
+/* 告诉 index.html 里的保底计时器：main.js 已经开始执行，不用再兜底显示文字了 */
+window.__mainJsReady = true;
+
 document.addEventListener('DOMContentLoaded', () => {
   // ===== Hero entrance animation =====
   const heroItems = [
@@ -117,6 +120,37 @@ document.addEventListener('DOMContentLoaded', () => {
         nav.classList.toggle('nav--scrolled', scrolled);
       }
     }, { passive: true });
+  }
+
+  // ===== Nav scrollspy (highlight current section) =====
+  const navSectionLinks = [...document.querySelectorAll('.nav__link')];
+  const navSections = navSectionLinks
+    .map(link => document.querySelector(link.getAttribute('href')))
+    .filter(Boolean);
+
+  if (navSections.length) {
+    let spyFrame = null;
+    const updateActiveNav = () => {
+      spyFrame = null;
+      const probe = window.scrollY + 140;
+      let currentId = '';
+      navSections.forEach(section => {
+        if (section.offsetTop <= probe) currentId = section.id;
+      });
+      navSectionLinks.forEach(link => {
+        const isActive = link.getAttribute('href') === '#' + currentId;
+        link.classList.toggle('is-active', isActive);
+        if (isActive) {
+          link.setAttribute('aria-current', 'true');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    };
+    window.addEventListener('scroll', () => {
+      if (!spyFrame) spyFrame = requestAnimationFrame(updateActiveNav);
+    }, { passive: true });
+    updateActiveNav();
   }
 
   // ===== Mobile menu toggle =====
@@ -354,6 +388,55 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 150);
   });
 
+  // ===== Horizontal timeline navigation =====
+  const timelineScroll = document.getElementById('timelineScroll');
+  const timelineToolbar = document.getElementById('timelineToolbar');
+  const timelineNav = document.getElementById('timelineNav');
+
+  if (timelineScroll && timelineToolbar && timelineNav) {
+    const timelineButtons = [...timelineNav.querySelectorAll('button')];
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const updateTimelineNav = () => {
+      const maxScroll = timelineScroll.scrollWidth - timelineScroll.clientWidth;
+      const scrollable = maxScroll > 2;
+      timelineToolbar.hidden = !scrollable;
+      timelineNav.hidden = !scrollable;
+      if (!scrollable || timelineButtons.length < 2) return;
+      timelineButtons[0].disabled = timelineScroll.scrollLeft <= 2;
+      timelineButtons[1].disabled = timelineScroll.scrollLeft >= maxScroll - 2;
+    };
+
+    timelineButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const direction = Number(button.dataset.dir) || 1;
+        timelineScroll.scrollBy({
+          left: direction * Math.max(220, timelineScroll.clientWidth * 0.65),
+          behavior: reduceMotion.matches ? 'auto' : 'smooth'
+        });
+      });
+    });
+
+    timelineScroll.addEventListener('scroll', updateTimelineNav, { passive: true });
+    window.addEventListener('resize', updateTimelineNav);
+    window.addEventListener('load', updateTimelineNav);
+    updateTimelineNav();
+  }
+
+  // ===== Back to top =====
+  const backToTop = document.getElementById('backToTop');
+  if (backToTop) {
+    const toggleBackToTop = () => {
+      backToTop.classList.toggle('is-visible', window.scrollY > 700);
+    };
+    window.addEventListener('scroll', toggleBackToTop, { passive: true });
+    toggleBackToTop();
+    backToTop.addEventListener('click', () => {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
+  }
+
   // ===== Scroll reveal for project sections =====
   const revealEls = document.querySelectorAll('.reveal');
 
@@ -376,11 +459,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== Lightbox =====
   const lightbox = document.getElementById('lightbox');
   let closeLightbox = () => {};
+  let lightboxTrigger = null;
   if (lightbox) {
     const lightboxImg = lightbox.querySelector('.lightbox__img');
     const lightboxClose = lightbox.querySelector('.lightbox__close');
 
     function openLightbox(el) {
+      lightboxTrigger = el;
       if (lightboxImg) {
         lightboxImg.src = el.dataset.src;
         const thumbImg = el.querySelector('img');
@@ -395,6 +480,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // Make elements keyboard accessible
       el.setAttribute('tabindex', '0');
       el.setAttribute('role', 'button');
+      if (!el.hasAttribute('aria-label')) {
+        const caption = el.querySelector('span, figcaption')?.textContent?.trim();
+        const alt = el.querySelector('img')?.alt?.trim();
+        el.setAttribute('aria-label', `查看${caption || alt || '图片'}大图`);
+      }
 
       // Click handler
       el.addEventListener('click', () => openLightbox(el));
@@ -409,12 +499,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     closeLightbox = () => {
+      const wasOpen = lightbox.classList.contains('lightbox--open');
       lightbox.classList.remove('lightbox--open');
       document.body.classList.remove('modal-open');
       if (lightboxImg) {
         lightboxImg.removeAttribute('src');
         lightboxImg.alt = '';
       }
+      // Return focus to the thumbnail that opened the lightbox
+      if (wasOpen && lightboxTrigger) lightboxTrigger.focus();
+      lightboxTrigger = null;
     };
 
     if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);

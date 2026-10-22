@@ -1,0 +1,3 @@
+# 实习文档目录：不索引、不跟随（Cloudflare Pages）
+/assets/internship/*
+  X-Robots-Tag: noindex, nofollow
