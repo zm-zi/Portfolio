@@ -16,29 +16,41 @@
       setTimeout(function () {
         if (!window.__mainJsReady) root.classList.remove('js-anim');
       }, 3000);
+      try {
+        if (localStorage.getItem('sunmiss_theme_remember') === '1') {
+          var savedTheme = localStorage.getItem('sunmiss_theme');
+          if (savedTheme === 'arcade' || savedTheme === 'modern') {
+            root.setAttribute('data-theme', savedTheme);
+          }
+        }
+        if (localStorage.getItem('sunmiss_arcade_crt') === 'off') {
+          root.setAttribute('data-crt', 'off');
+        }
+      } catch (e) {}
     })();
   </script>
   <script src="js/main.js" defer></script>
+  <script src="js/arcade-theme.js" defer></script>
   <title>张子墨 | Sunmiss — 游戏策划作品集</title>
   <meta name="description" content="张子墨（Sunmiss）的游戏策划作品集。系统与数值策划方向，具备商业手游研发实习经历，展示《超时空激战》《泊车小镇》《俄罗斯钓鱼4自动化助手》《猎魂传奇》《AnimeChatWeb》等可运行原型与工具项目。">
   <meta name="author" content="张子墨">
-  <link rel="canonical" href="https://portfolio-1ry.pages.dev/">
+  <link rel="canonical" href="https://sunmiss.xyz/">
   <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0f0f1a" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="assets/头像.png" type="image/png">
   <meta property="og:title" content="张子墨 | Sunmiss — 游戏策划作品集">
   <meta property="og:description" content="系统与数值策划作品集：商业手游实习、2D/3D 可玩原型与视觉音频自动化工具。">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://portfolio-1ry.pages.dev/">
+  <meta property="og:url" content="https://sunmiss.xyz/">
   <meta property="og:site_name" content="张子墨 | Sunmiss">
-  <meta property="og:image" content="https://portfolio-1ry.pages.dev/assets/%E8%B6%85%E6%97%B6%E7%A9%BA%E6%BF%80%E6%88%98%E9%A2%84%E8%A7%88%E5%9B%BE.webp">
+  <meta property="og:image" content="https://sunmiss.xyz/assets/%E8%B6%85%E6%97%B6%E7%A9%BA%E6%BF%80%E6%88%98%E9%A2%84%E8%A7%88%E5%9B%BE.webp">
   <meta property="og:image:alt" content="《超时空激战》游戏画面">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:height" content="720">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="张子墨 | Sunmiss — 游戏策划作品集">
   <meta name="twitter:description" content="系统与数值策划作品集：商业手游实习、2D/3D 可玩原型与视觉音频自动化工具。">
-  <meta name="twitter:image" content="https://portfolio-1ry.pages.dev/assets/%E8%B6%85%E6%97%B6%E7%A9%BA%E6%BF%80%E6%88%98%E9%A2%84%E8%A7%88%E5%9B%BE.webp">
+  <meta name="twitter:image" content="https://sunmiss.xyz/assets/%E8%B6%85%E6%97%B6%E7%A9%BA%E6%BF%80%E6%88%98%E9%A2%84%E8%A7%88%E5%9B%BE.webp">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -47,8 +59,8 @@
     "alternateName": "Sunmiss",
     "jobTitle": "游戏策划",
     "description": "游戏策划（系统 / 数值方向），擅长快速落地 2D/3D 可玩原型、统计建模与自动化验证工具",
-    "url": "https://portfolio-1ry.pages.dev/",
-    "image": "https://portfolio-1ry.pages.dev/assets/头像.png",
+    "url": "https://sunmiss.xyz/",
+    "image": "https://sunmiss.xyz/assets/头像.png",
     "sameAs": ["https://github.com/zm-zi"],
     "alumniOf": {
       "@type": "CollegeOrUniversity",
@@ -57,7 +69,12 @@
     "knowsAbout": ["游戏策划", "系统设计", "数值设计", "Roguelike", "Unity", "Three.js", "JavaScript", "Python", "OpenCV"]
   }
   </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/fusion-pixel-12px-proportional-sc@latest/index.css">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/arcade-theme.css">
   <link rel="preload" as="image" href="assets/头像.png">
 </head>
 <body>
@@ -85,15 +102,59 @@
   </svg>
 
   <a href="#featured" class="skip-link">跳转到主要内容</a>
+
+  <!-- ===== Retro Arcade Global Overlays & HUD (Visible only in Arcade Theme) ===== -->
+  <div class="arcade-progress arcade-only" aria-hidden="true">
+    <div class="arcade-progress__fill" id="arcadeProgressFill"></div>
+  </div>
+  <div class="arcade-hud arcade-only arcade-only--flex" id="arcadeHud" role="region" aria-label="街机状态栏">
+    <div class="arcade-hud__inner">
+      <div class="arcade-hud__stats">
+        <div class="arcade-hud__item">
+          <span class="arcade-hud__label">1UP</span>
+          <span class="arcade-hud__value" id="arcadeScore">000000</span>
+        </div>
+        <div class="arcade-hud__item arcade-hud__item--hi">
+          <span class="arcade-hud__label arcade-hud__label--hi">HI-SCORE</span>
+          <span class="arcade-hud__value" id="arcadeHiScore">002400</span>
+        </div>
+        <div class="arcade-hud__item arcade-hud__item--stage">
+          <span class="arcade-hud__label arcade-hud__label--stage">STAGE</span>
+          <span class="arcade-hud__value" id="arcadeStage">1-1 TITLE</span>
+        </div>
+      </div>
+      <div class="arcade-hud__controls">
+        <button type="button" class="arcade-hud__btn arcade-hud__btn--coin" id="arcadeCoinBtn" title="投入街机币 (+100 PTS)">
+          <svg viewBox="0 0 12 12" class="arcade-hud__coin-svg" style="shape-rendering:crispEdges" aria-hidden="true">
+            <rect x="3" y="1" width="6" height="10" fill="#ffe600"/>
+            <rect x="1" y="3" width="10" height="6" fill="#ffe600"/>
+            <rect x="4" y="3" width="4" height="6" fill="#ffae00"/>
+            <rect x="5" y="4" width="2" height="4" fill="#fff7b2"/>
+          </svg>
+          <span>CR <b id="arcadeCoinCount">01</b></span>
+        </button>
+        <button type="button" class="arcade-hud__btn" id="arcadeSfxBtn" aria-pressed="true" title="开关 8-bit 音效">
+          <span aria-hidden="true">♪</span>
+          <span class="arcade-hud__btn-txt">SFX:ON</span>
+        </button>
+        <button type="button" class="arcade-hud__btn" id="arcadeCrtBtn" aria-pressed="true" title="开关 CRT 扫描线">
+          <span aria-hidden="true">▣</span>
+          <span class="arcade-hud__btn-txt">CRT:ON</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="arcade-crt-overlay arcade-only" id="arcadeCrtOverlay" aria-hidden="true"></div>
+  <canvas class="arcade-fx-canvas arcade-only" id="arcadeFxCanvas" aria-hidden="true"></canvas>
+  <div class="arcade-toast-stack arcade-only" id="arcadeToastStack" aria-live="polite"></div>
+  <div class="arcade-boot" id="arcadeBootOverlay" aria-hidden="true">
+    <div class="arcade-boot__beam"></div>
+  </div>
+
   <!-- ===== Navigation ===== -->
   <nav class="nav" id="nav">
     <div class="nav__inner">
       <a href="#hero" class="nav__logo">张子墨</a>
-      <button class="nav__toggle" aria-label="打开菜单" aria-expanded="false">
-        <span class="nav__toggle-bar"></span>
-        <span class="nav__toggle-bar"></span>
-        <span class="nav__toggle-bar"></span>
-      </button>
       <div class="nav__links">
         <a href="#internship" class="nav__link">实习</a>
         <a href="#skills" class="nav__link">技能</a>
@@ -104,11 +165,31 @@
         <a href="#art" class="nav__link">美术</a>
         <a href="#contact" class="nav__link">联系</a>
       </div>
+      <div class="nav__actions">
+        <button type="button" class="theme-trigger" data-open-theme-modal aria-label="切换网页主题">
+          <span class="theme-trigger__icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16">
+              <rect x="6" y="1" width="4" height="4" fill="#ff2a85"/>
+              <rect x="7" y="5" width="2" height="5" fill="#00f5ff"/>
+              <rect x="2" y="10" width="12" height="4" fill="currentColor"/>
+              <rect x="4" y="11" width="2" height="2" fill="#ffe600"/>
+              <rect x="10" y="11" width="2" height="2" fill="#39ff14"/>
+            </svg>
+          </span>
+          <span class="theme-trigger__label">街机主题</span>
+        </button>
+        <button class="nav__toggle" aria-label="打开菜单" aria-expanded="false">
+          <span class="nav__toggle-bar"></span>
+          <span class="nav__toggle-bar"></span>
+          <span class="nav__toggle-bar"></span>
+        </button>
+      </div>
     </div>
   </nav>
 
   <!-- ===== Section 1: Hero ===== -->
   <section class="hero" id="hero">
+    <canvas class="arcade-hero-canvas arcade-only" id="arcadeHeroCanvas" aria-hidden="true"></canvas>
     <div class="hero__glow hero__glow--1" aria-hidden="true"></div>
     <div class="hero__glow hero__glow--2" aria-hidden="true"></div>
     <div class="hero__glow hero__glow--3" aria-hidden="true"></div>
@@ -119,6 +200,10 @@
       <div class="hero__flip-char" style="--i:3"><span>划</span></div>
     </div>
     <div class="hero__content">
+      <div class="arcade-hero-badge arcade-only arcade-only--inline" aria-hidden="true">
+        <span class="arcade-hero-badge__dot"></span>
+        <span>PLAYER 1 READY · SUNMISS ARCADE 198X</span>
+      </div>
       <img class="hero__avatar" src="assets/头像.png" alt="张子墨的头像" width="199" height="200" fetchpriority="high" decoding="async">
       <h1 class="hero__name">张子墨</h1>
       <p class="hero__alias">Sunmiss · 2004 · 游戏策划</p>
@@ -136,11 +221,37 @@
           <span class="hero__keep">自动化工具</span>
         </p>
       </div>
+      <div class="arcade-hero-cta arcade-only arcade-only--flex">
+        <a href="#featured" class="arcade-btn">▶ PRESS START · 浏览作品</a>
+        <button type="button" class="arcade-btn arcade-btn--ghost" data-open-theme-modal>◈ 切换风格</button>
+      </div>
+      <div class="arcade-shooter-hint arcade-only arcade-only--inline">
+        <span>★ CLICK SKY TO FIRE LASER · KILLS: <strong id="arcadeKills">0</strong> ★</span>
+      </div>
     </div>
     <a href="#featured" class="hero__scroll" aria-label="向下滚动">
       <svg class="hero__scroll-arrow icon"><use href="#icon-chevron-down"/></svg>
     </a>
   </section>
+
+  <!-- ===== Arcade Marquee Ticker (Visible only in Arcade Theme) ===== -->
+  <div class="arcade-marquee arcade-only" aria-hidden="true">
+    <div class="arcade-marquee__track">
+      <span class="arcade-marquee__item">★ INSERT COIN TO CONTINUE</span>
+      <span class="arcade-marquee__item arcade-marquee__item--cyan">▸ SYSTEM &amp; NUMERICAL GAME DESIGNER</span>
+      <span class="arcade-marquee__item arcade-marquee__item--pink">✦ SHOOT PIXEL INVADERS &amp; COLLECT COINS FOR HI-SCORE</span>
+      <span class="arcade-marquee__item arcade-marquee__item--lime">★ SECRET CODE: ↑ ↑ ↓ ↓ ← → ← → B A</span>
+      <span class="arcade-marquee__item">▸ 2 PLAYABLE PROTOTYPES · 5 PROJECTS</span>
+      <span class="arcade-marquee__item arcade-marquee__item--cyan">★ 1UP READY · SUNMISS ARCADE 198X</span>
+      <!-- Duplicate track for seamless endless loop -->
+      <span class="arcade-marquee__item">★ INSERT COIN TO CONTINUE</span>
+      <span class="arcade-marquee__item arcade-marquee__item--cyan">▸ SYSTEM &amp; NUMERICAL GAME DESIGNER</span>
+      <span class="arcade-marquee__item arcade-marquee__item--pink">✦ SHOOT PIXEL INVADERS &amp; COLLECT COINS FOR HI-SCORE</span>
+      <span class="arcade-marquee__item arcade-marquee__item--lime">★ SECRET CODE: ↑ ↑ ↓ ↓ ← → ← → B A</span>
+      <span class="arcade-marquee__item">▸ 2 PLAYABLE PROTOTYPES · 5 PROJECTS</span>
+      <span class="arcade-marquee__item arcade-marquee__item--cyan">★ 1UP READY · SUNMISS ARCADE 198X</span>
+    </div>
+  </div>
 
   <!-- ===== Section 2: Featured ===== -->
   <section class="featured" id="featured">
@@ -2087,6 +2198,10 @@
         <p class="footer__copy">&copy; 2026 张子墨. All rights reserved.</p>
         <p class="footer__updated">最近更新 <time datetime="2026-11-24">2026.11.24</time></p>
       </div>
+      <div class="arcade-footer-secret arcade-only arcade-only--flex">
+        <span class="arcade-footer-secret__text">★ GAME OVER? TRY KONAMI CODE: ↑ ↑ ↓ ↓ ← → ← → B A</span>
+        <button type="button" class="arcade-footer-secret__btn" id="arcadeSecretBtn">⚡ ACTIVATE FEVER MODE</button>
+      </div>
     </div>
   </footer>
 
@@ -2099,6 +2214,99 @@
   <div class="lightbox" id="lightbox" role="dialog" aria-label="图片预览" aria-modal="true">
     <button class="lightbox__close" aria-label="关闭">&times;</button>
     <img class="lightbox__img" alt="">
+  </div>
+
+  <!-- ===== Entry Theme Selection Modal ===== -->
+  <div class="theme-modal" id="themeModal" role="dialog" aria-modal="true" aria-labelledby="themeModalTitle" aria-hidden="true">
+    <div class="theme-modal__panel">
+      <div class="theme-modal__header">
+        <div class="theme-modal__kicker">
+          <span class="theme-modal__kicker-dot" aria-hidden="true"></span>
+          <span>SELECT YOUR MODE · 主题选择</span>
+        </div>
+        <h2 class="theme-modal__title" id="themeModalTitle">欢迎来到张子墨（Sunmiss）的作品集</h2>
+        <p class="theme-modal__subtitle">请选择你喜欢的视觉风格进入浏览，之后随时可以在页面右上角一键切换。</p>
+      </div>
+
+      <div class="theme-modal__grid">
+        <!-- Modern Minimal Theme Card -->
+        <button type="button" class="theme-card theme-card--modern" data-theme-choice="modern">
+          <div class="theme-card__preview" aria-hidden="true">
+            <div class="theme-preview-modern">
+              <div class="theme-preview-modern__nav">
+                <span class="theme-preview-modern__logo"></span>
+                <div class="theme-preview-modern__links">
+                  <span></span><span></span><span></span>
+                </div>
+              </div>
+              <div class="theme-preview-modern__hero">
+                <span class="theme-preview-modern__avatar"></span>
+                <span class="theme-preview-modern__name"></span>
+                <span class="theme-preview-modern__sub"></span>
+              </div>
+              <div class="theme-preview-modern__cards">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+          <div class="theme-card__body">
+            <div class="theme-card__head">
+              <span class="theme-card__name">简约现代</span>
+              <span class="theme-card__en">MODERN STUDIO</span>
+            </div>
+            <p class="theme-card__desc">干净克制、留白舒适的经典作品集排版，适合 HR 与面试官高效阅读简历、文档与系统拆解。</p>
+            <div class="theme-card__tags">
+              <span>极简留白</span>
+              <span>专注阅读</span>
+              <span>自适应深浅色</span>
+            </div>
+            <span class="theme-card__cta">进入简约现代模式</span>
+          </div>
+        </button>
+
+        <!-- Retro Arcade Theme Card -->
+        <button type="button" class="theme-card theme-card--arcade is-selected" data-theme-choice="arcade">
+          <span class="theme-card__ribbon">NEW · 互动彩蛋</span>
+          <div class="theme-card__preview" aria-hidden="true">
+            <div class="theme-preview-arcade">
+              <img class="theme-preview-arcade__img" src="assets/arcade/arcade-preview.webp" alt="复古街机主题预览画面" width="640" height="360">
+              <div class="theme-preview-arcade__scanlines"></div>
+              <div class="theme-preview-arcade__hud">
+                <span>1UP 002400</span>
+                <span>CREDIT 01</span>
+              </div>
+              <div class="theme-preview-arcade__start">▶ PRESS START</div>
+            </div>
+          </div>
+          <div class="theme-card__body">
+            <div class="theme-card__head">
+              <span class="theme-card__name">复古街机 198X</span>
+              <span class="theme-card__en">RETRO ARCADE</span>
+            </div>
+            <p class="theme-card__desc">霓虹像素 CRT 街机厅体验！内置 8-bit 芯片音效、可交互太空入侵者射击背景、金币收集、成就系统与科乐美秘籍。</p>
+            <div class="theme-card__tags">
+              <span>8-BIT 音效</span>
+              <span>可玩射击背景</span>
+              <span>成就 &amp; 金币</span>
+              <span>CRT 扫描线</span>
+            </div>
+            <span class="theme-card__cta">▶ INSERT COIN · 启动街机模式</span>
+          </div>
+        </button>
+      </div>
+
+      <div class="theme-modal__footer">
+        <label class="theme-modal__remember">
+          <input type="checkbox" id="themeRemember">
+          <span>记住我的选择，下次直接进入</span>
+        </label>
+        <div class="theme-modal__kbd" aria-hidden="true">
+          <span>键盘操作：</span>
+          <kbd>←</kbd><kbd>→</kbd> <span>切换</span>
+          <kbd>Enter</kbd> <span>确认</span>
+        </div>
+      </div>
+    </div>
   </div>
 
 </body>

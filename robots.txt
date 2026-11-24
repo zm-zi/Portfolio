@@ -3,4 +3,4 @@ Allow: /
 # 实习设计文档不参与搜索引擎索引（保密）
 Disallow: /assets/internship/
 
-Sitemap: https://portfolio-1ry.pages.dev/sitemap.xml
+Sitemap: https://sunmiss.xyz/sitemap.xml
