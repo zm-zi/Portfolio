@@ -1,18 +1,3 @@
-// 宝石掉落系统
-let _gemImgs = {};
-
-function initGems(img5, img10, img20) {
-    _gemImgs[5] = img5;
-    _gemImgs[10] = img10;
-    _gemImgs[20] = img20;
-}
-
-function _getGemImg(score) {
-    if (score >= 20) return _gemImgs[20];
-    if (score >= 10) return _gemImgs[10];
-    return _gemImgs[5];
-}
-
 const GEM_SIZE = 24;
 const GEM_ATTRACT_DIST_BASE = 120;
 const GEM_ATTRACT_SPEED = 6;
@@ -120,7 +105,7 @@ function updateGems() {
             const speed = Math.min(GEM_ATTRACT_SPEED + (attractDist - dist) * 0.05, 14);
             g.x += (dx / dist) * speed * dt;
             g.y += (dy / dist) * speed * dt;
-            g.scale = 0.9 + Math.sin(Date.now() * 0.01) * 0.1;
+            g.scale = 0.9 + Math.sin(gameNow() * 0.01) * 0.1;
         }
 
         // 限制左右不出边界
@@ -184,67 +169,4 @@ function _spawnGemPickupFx(x, y, color) {
             drawPass: PASS_CORE
         });
     }
-}
-
-function drawGems(ctx) {
-    ctx.save();
-
-    // 绘制宝石
-    for (const g of G.gems) {
-        const img = _getGemImg(g.score);
-        const cx = g.x + g.width / 2;
-        const cy = g.y + g.height / 2;
-        const color = _gemColor(g.score);
-
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.scale(g.scale, g.scale);
-
-        // 宝石底光（合并闪光和拖尾为一次 shadowBlur）
-        ctx.shadowBlur = g.phase === 'attract' ? 10 : 8;
-        ctx.shadowColor = color;
-
-        if (img && img.complete && img.naturalWidth > 0) {
-            ctx.drawImage(img, -g.width / 2, -g.height / 2, g.width, g.height);
-        } else {
-            ctx.fillStyle = color;
-            ctx.fillRect(-g.width / 2, -g.height / 2, g.width, g.height);
-        }
-        ctx.shadowBlur = 0;
-
-        ctx.restore();
-    }
-
-    // 绘制浮动加分文字
-    for (const ft of G.floatTexts) {
-        const alpha = ft.life / ft.maxLife;
-        const ox = ft.shake > 0.1 ? (Math.random() - 0.5) * ft.shake : 0;
-        const oy = ft.shake > 0.1 ? (Math.random() - 0.5) * ft.shake : 0;
-
-        // 大分值用更大的字号
-        const fontSize = ft.score >= 20 ? 18 : ft.score >= 10 ? 16 : 14;
-
-        ctx.save();
-        ctx.globalAlpha = alpha;
-        ctx.textAlign = 'center';
-        ctx.font = `bold ${fontSize}px "Press Start 2P", monospace`;
-        ctx.translate(ft.x + ox, ft.y + oy);
-        ctx.scale(ft.scale, ft.scale);
-
-        // 外层光晕
-        ctx.shadowBlur = 14 * alpha;
-        ctx.shadowColor = ft.color;
-        ctx.fillStyle = ft.color;
-        ctx.fillText(ft.text, 0, 0);
-
-        // 内层白色高亮
-        ctx.shadowBlur = 0;
-        ctx.globalAlpha = alpha * 0.5;
-        ctx.fillStyle = '#ffffff';
-        ctx.fillText(ft.text, 0, 0);
-
-        ctx.restore();
-    }
-
-    ctx.restore();
 }

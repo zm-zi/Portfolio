@@ -1,799 +1,76 @@
-<!DOCTYPE html>
-<html lang="zh">
+<!doctype html>
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>超时空激战</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
-
-        @font-face {
-            font-family: 'HYPixel';
-            src: url('font/HYPixel11pxU-2.ttf') format('truetype');
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --sci-bg:             #05080f;
-            --sci-bg-panel:       rgba(8, 14, 28, 0.88);
-            --sci-bg-card:        rgba(12, 18, 38, 0.92);
-            --sci-primary:        #00e5ff;
-            --sci-primary-dim:    rgba(0, 229, 255, 0.12);
-            --sci-primary-glow:   rgba(0, 229, 255, 0.35);
-            --sci-accent:         #00ffcc;
-            --sci-gold:           #ffd700;
-            --sci-green:          #00ff88;
-            --sci-red:            #ff3355;
-            --sci-magenta:        #ff00e5;
-            --sci-white:          #e8e8f0;
-            --sci-dim:            rgba(255, 255, 255, 0.3);
-            --sci-border:         rgba(0, 229, 255, 0.2);
-            --sci-border-bright:  rgba(0, 229, 255, 0.5);
-            --sci-glow-cyan:      0 0 15px rgba(0, 229, 255, 0.25), 0 0 40px rgba(0, 229, 255, 0.08);
-            --sci-glow-green:     0 0 12px rgba(0, 255, 136, 0.3);
-            --sci-glow-red:       0 0 12px rgba(255, 51, 85, 0.3);
-            --sci-glow-gold:      0 0 12px rgba(255, 215, 0, 0.3);
-            --sci-rare:           #00ff88;
-            --sci-epic:           #bb66ff;
-            --sci-legendary:      #ff3355;
-        }
-
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background:
-                radial-gradient(ellipse at 30% 20%, rgba(0, 80, 120, 0.12) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 80%, rgba(40, 0, 100, 0.08) 0%, transparent 50%),
-                var(--sci-bg);
-            font-family: 'VT323', monospace;
-            overflow: hidden;
-            touch-action: manipulation;
-        }
-
-        /* 细网格背景装饰 */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image:
-                linear-gradient(rgba(0, 229, 255, 0.015) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 229, 255, 0.015) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        #game-wrap {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            position: relative;
-            z-index: 1;
-        }
-
-        #game-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* ── 通用面板样式 ── */
-        .sci-panel {
-            background: var(--sci-bg-panel);
-            border: 1px solid var(--sci-border);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            position: relative;
-        }
-        .sci-panel::before {
-            content: '';
-            position: absolute;
-            top: -1px; left: -1px; right: -1px; bottom: -1px;
-            border-radius: inherit;
-            background: linear-gradient(135deg, rgba(0,229,255,0.15) 0%, transparent 40%, transparent 60%, rgba(0,229,255,0.08) 100%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* ── 角落装饰 ── */
-        .sci-corner {
-            position: relative;
-        }
-        .sci-corner::after {
-            content: '';
-            position: absolute;
-            top: -1px; left: -1px;
-            width: 12px; height: 12px;
-            border-top: 2px solid var(--sci-primary);
-            border-left: 2px solid var(--sci-primary);
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        /* ── Top Bar ── */
-        #top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 600px;
-            padding: 7px 18px;
-            background: var(--sci-bg-panel);
-            border: 1px solid var(--sci-border);
-            border-radius: 2px;
-            box-shadow: var(--sci-glow-cyan);
-            position: relative;
-            overflow: hidden;
-        }
-        #top-bar::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--sci-primary), transparent);
-            opacity: 0.4;
-        }
-
-        #top-bar .life {
-            color: var(--sci-green);
-            font-family: 'VT323', monospace;
-            font-size: 22px;
-            font-weight: 400;
-            width: 100px;
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-            letter-spacing: 1px;
-        }
-
-        #top-bar .score {
-            color: var(--sci-gold);
-            font-family: 'Press Start 2P', monospace;
-            font-size: 11px;
-            font-weight: 400;
-            width: 150px;
-            text-align: right;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-            letter-spacing: 1px;
-        }
-
-        /* ── Boss Bar ── */
-        #top-bar .boss-bar-wrap {
-            display: none;
-            flex: 1;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            margin: 0 12px;
-        }
-        #top-bar .boss-bar-wrap.active { display: flex; }
-
-        #top-bar .boss-name {
-            color: var(--sci-red);
-            font-family: 'VT323', monospace;
-            font-size: 14px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(255, 51, 85, 0.5);
-        }
-
-        #top-bar .boss-bar-bg {
-            width: 100%;
-            max-width: 280px;
-            height: 14px;
-            background: rgba(255, 51, 85, 0.06);
-            border: 1px solid rgba(255, 51, 85, 0.25);
-            border-radius: 1px;
-            overflow: hidden;
-            box-shadow: inset 0 0 6px rgba(0,0,0,0.6);
-        }
-
-        #top-bar .boss-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ff3355, #ff6644, #ff3355);
-            background-size: 200% 100%;
-            animation: bossBarShimmer 2s linear infinite;
-            width: 100%;
-            transition: width 0.15s ease-out;
-            border-radius: 1px;
-            box-shadow: 0 0 10px rgba(255, 51, 85, 0.5);
-        }
-
-        @keyframes bossBarShimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        /* ── Energy Bar ── */
-        #energy-bar-wrap {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            width: 600px;
-            padding: 2px 18px;
-        }
-
-        #energy-label {
-            color: var(--sci-primary);
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            white-space: nowrap;
-            letter-spacing: 2px;
-            text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
-        }
-
-        #energy-bar-bg {
-            flex: 1;
-            height: 12px;
-            background: rgba(0, 229, 255, 0.04);
-            border: 1px solid rgba(0, 229, 255, 0.15);
-            border-radius: 1px;
-            overflow: hidden;
-            box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-        }
-
-        #energy-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #003366, #00e5ff, #00ffcc);
-            width: 0%;
-            transition: width 0.15s ease-out;
-            border-radius: 1px;
-            box-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
-            position: relative;
-        }
-        #energy-bar-fill::after {
-            content: '';
-            position: absolute;
-            top: 0; right: 0;
-            width: 4px; height: 100%;
-            background: rgba(255,255,255,0.6);
-            border-radius: 1px;
-        }
-
-        #energy-bar-fill.full {
-            background: linear-gradient(90deg, #ff8800, #ffd700, #fff3b0);
-            box-shadow: 0 0 16px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.3);
-            animation: energyPulse 0.4s ease-in-out infinite alternate;
-        }
-
-        @keyframes energyPulse {
-            0% { box-shadow: 0 0 10px rgba(255,215,0,0.5), 0 0 20px rgba(255,215,0,0.2); }
-            100% { box-shadow: 0 0 20px rgba(255,215,0,1), 0 0 40px rgba(255,215,0,0.5); }
-        }
-
-        #energy-key-hint {
-            color: rgba(0, 229, 255, 0.35);
-            font-family: 'VT323', monospace;
-            font-size: 14px;
-            white-space: nowrap;
-            letter-spacing: 1px;
-        }
-
-        /* ── Canvas ── */
-        #canvas-wrap {
-            position: relative;
-            display: inline-block;
-        }
-
-        #canvas-inner {
-            position: relative;
-            display: inline-block;
-        }
-
-        canvas {
-            border: 1px solid var(--sci-border-bright);
-            border-radius: 2px;
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
-            display: block;
-            box-shadow:
-                0 0 30px rgba(0, 229, 255, 0.08),
-                0 0 60px rgba(0, 229, 255, 0.04),
-                0 4px 30px rgba(0, 0, 0, 0.7),
-                inset 0 0 60px rgba(0, 229, 255, 0.02);
-            position: relative;
-            z-index: 1;
-            touch-action: none;
-        }
-        /* Canvas 四角光标装饰 */
-        #canvas-wrap::before,
-        #canvas-wrap::after {
-            content: '';
-            position: absolute;
-            width: 18px; height: 18px;
-            z-index: 2;
-            pointer-events: none;
-        }
-        #canvas-wrap::before {
-            top: -1px; left: -1px;
-            border-top: 2px solid var(--sci-primary);
-            border-left: 2px solid var(--sci-primary);
-            opacity: 0.7;
-            box-shadow: -2px -2px 8px rgba(0, 229, 255, 0.2);
-        }
-        #canvas-wrap::after {
-            bottom: -1px; right: -1px;
-            border-bottom: 2px solid var(--sci-primary);
-            border-right: 2px solid var(--sci-primary);
-            opacity: 0.7;
-            box-shadow: 2px 2px 8px rgba(0, 229, 255, 0.2);
-        }
-
-        #crt-overlay {
-            display: none;
-        }
-
-        /* ── Level Bar ── */
-        #level-bar {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 56px;
-            height: 700px;
-            padding: 10px 5px;
-            gap: 6px;
-            background: var(--sci-bg-panel);
-            border: 1px solid var(--sci-border);
-            border-radius: 2px;
-            position: relative;
-        }
-        #level-bar::after {
-            content: '';
-            position: absolute;
-            top: -1px; right: -1px;
-            width: 10px; height: 10px;
-            border-top: 2px solid var(--sci-primary);
-            border-right: 2px solid var(--sci-primary);
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        #level-label {
-            color: var(--sci-primary);
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            letter-spacing: 3px;
-            text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
-        }
-
-        #level-num {
-            color: var(--sci-gold);
-            font-family: 'Press Start 2P', monospace;
-            font-size: 22px;
-            line-height: 1;
-            text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
-        }
-
-        #level-track {
-            width: 10px;
-            height: 100%;
-            background: rgba(0, 229, 255, 0.04);
-            border: 1px solid var(--sci-border);
-            border-radius: 1px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-        }
-
-        #level-fill {
-            width: 100%;
-            background: linear-gradient(180deg, #00ffcc, #00e5ff);
-            border-radius: 1px;
-            transition: height 0.3s ease-out;
-            height: 0%;
-            flex-shrink: 0;
-            box-shadow: 0 0 6px rgba(0, 229, 255, 0.5);
-        }
-
-        #level-next {
-            color: var(--sci-dim);
-            font-family: 'VT323', monospace;
-            font-size: 12px;
-            text-align: center;
-            min-height: 14px;
-            letter-spacing: 0.5px;
-        }
-
-        #buff-list {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            width: 100%;
-            padding: 4px 0;
-        }
-
-        .buff-tag {
-            font-family: 'HYPixel', monospace;
-            font-size: 14px;
-            padding: 2px 6px;
-            border-radius: 1px;
-            background: rgba(0, 229, 255, 0.04);
-            border-left: 2px solid var(--sci-white);
-            border: 1px solid rgba(0, 229, 255, 0.08);
-            border-left: 2px solid var(--sci-white);
-            white-space: nowrap;
-            width: 100%;
-            text-align: center;
-        }
-
-        /* ── Mobile Layout Overrides ── */
-        .is-mobile body {
-            justify-content: flex-start;
-            overflow: hidden;
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            height: 100dvh;
-        }
-
-        .is-mobile #game-wrap {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh;
-            gap: 0;
-            transform: none !important;
-            transform-origin: initial;
-        }
-
-        .is-mobile #top-bar,
-        .is-mobile #energy-bar-wrap {
-            display: none !important;
-        }
-
-        .is-mobile #game-row {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-            min-height: 0;
-            gap: 0;
-            width: 100%;
-        }
-
-        .is-mobile #game-row > div:first-child {
-            display: none;
-        }
-
-        .is-mobile #level-bar {
-            display: none !important;
-        }
-
-        .is-mobile #canvas-wrap {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            flex: 1;
-            min-height: 0;
-            overflow: hidden;
-        }
-
-        .is-mobile #canvas-inner {
-            position: relative;
-            display: inline-block;
-            line-height: 0;
-        }
-
-        .is-mobile #canvas-wrap::before,
-        .is-mobile #canvas-wrap::after {
-            display: none;
-        }
-
-        .is-mobile canvas {
-            border: none;
-            border-radius: 0;
-            box-shadow: none;
-            display: block;
-            margin: 0 auto;
-        }
-
-        /* ── Mobile HUD Overlay ── */
-        #mobile-hud-overlay { display: none; }
-        .is-mobile #mobile-hud-overlay {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            padding: 6px 10px;
-            padding-top: calc(6px + env(safe-area-inset-top, 0px));
-            background: linear-gradient(180deg, rgba(5,8,15,0.75) 0%, rgba(5,8,15,0.3) 70%, transparent 100%);
-            z-index: 5;
-            pointer-events: none;
-        }
-
-        .mhud-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .mhud-life {
-            color: #00ff88;
-            font-family: 'VT323', monospace;
-            font-size: 20px;
-            text-shadow: 0 0 8px rgba(0,255,136,0.5);
-        }
-        .mhud-level {
-            color: #ffd700;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 10px;
-            text-shadow: 0 0 8px rgba(255,215,0,0.5);
-        }
-        .mhud-score {
-            color: #ffd700;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 10px;
-            text-shadow: 0 0 8px rgba(255,215,0,0.5);
-        }
-        .mhud-energy-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .mhud-energy-bg {
-            flex: 1;
-            height: 8px;
-            background: rgba(0,229,255,0.08);
-            border: 1px solid rgba(0,229,255,0.2);
-            border-radius: 1px;
-            overflow: hidden;
-        }
-        .mhud-energy-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #003366, #00e5ff, #00ffcc);
-            width: 0%;
-            transition: width 0.15s ease-out;
-            border-radius: 1px;
-        }
-        .mhud-energy-fill.full {
-            background: linear-gradient(90deg, #ff8800, #ffd700, #fff3b0);
-            animation: energyPulse 0.4s ease-in-out infinite alternate;
-        }
-        .mhud-energy-hint {
-            color: rgba(0,229,255,0.5);
-            font-family: 'VT323', monospace;
-            font-size: 13px;
-            white-space: nowrap;
-            min-width: 55px;
-        }
-        .mhud-boss-row {
-            display: none;
-            align-items: center;
-            gap: 6px;
-        }
-        .mhud-boss-row.active { display: flex; }
-        .mhud-boss-name {
-            color: #ff3355;
-            font-family: 'VT323', monospace;
-            font-size: 12px;
-            letter-spacing: 2px;
-            white-space: nowrap;
-        }
-        .mhud-boss-bg {
-            flex: 1;
-            height: 10px;
-            background: rgba(255,51,85,0.08);
-            border: 1px solid rgba(255,51,85,0.25);
-            border-radius: 1px;
-            overflow: hidden;
-        }
-        .mhud-boss-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ff3355, #ff6644, #ff3355);
-            width: 100%;
-            transition: width 0.15s ease-out;
-            border-radius: 1px;
-        }
-
-        /* ── Mobile Buff Overlay ── */
-        #mobile-buff-overlay { display: none; }
-        .is-mobile #mobile-buff-overlay {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 3px;
-            position: absolute;
-            bottom: 4px;
-            left: 4px;
-            max-width: 50%;
-            z-index: 5;
-            pointer-events: none;
-        }
-        .is-mobile #mobile-buff-overlay:empty { display: none; }
-        .mbuff-tag {
-            font-family: 'HYPixel', monospace;
-            font-size: 11px;
-            padding: 1px 4px;
-            background: rgba(5,8,15,0.7);
-            border-left: 2px solid #e8e8f0;
-            white-space: nowrap;
-        }
-
-        /* ── Mobile Level Overlay ── */
-        #mobile-level-overlay { display: none; }
-        .is-mobile #mobile-level-overlay {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            position: absolute;
-            bottom: 88px;
-            right: 4px;
-            padding: 2px 6px;
-            background: rgba(5,8,15,0.6);
-            border: 1px solid rgba(0,229,255,0.15);
-            border-radius: 2px;
-            z-index: 5;
-            pointer-events: none;
-        }
-        #mlevel-num {
-            color: #ffd700;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 10px;
-        }
-        .mlevel-bar-bg {
-            width: 40px;
-            height: 6px;
-            background: rgba(0,229,255,0.08);
-            border: 1px solid rgba(0,229,255,0.15);
-            border-radius: 1px;
-            overflow: hidden;
-        }
-        .mlevel-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00ffcc, #00e5ff);
-            width: 0%;
-            transition: width 0.3s ease-out;
-            border-radius: 1px;
-        }
-        #mlevel-next {
-            color: rgba(255,255,255,0.3);
-            font-family: 'VT323', monospace;
-            font-size: 11px;
-        }
-
-        /* ── Mobile Controls Area ── (hidden, replaced by canvas overlays) */
-        #mobile-controls { display: none !important; }
-
-        /* ── Mobile Canvas Overlay Buttons ── */
-        .mobile-overlay-btn {
-            display: none;
-            position: absolute;
-            z-index: 10;
-            pointer-events: auto;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-        .is-mobile .mobile-overlay-btn { display: flex; }
-
-        #mobile-oc-overlay {
-            right: 12px;
-            bottom: 16px;
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: rgba(255,215,0,0.1);
-            border: 2px solid rgba(255,215,0,0.35);
-            align-items: center;
-            justify-content: center;
-            color: rgba(255,215,0,0.8);
-            font-family: 'Press Start 2P', monospace;
-            font-size: 10px;
-        }
-
-        #mobile-pause-overlay {
-            left: 8px;
-            top: 8px;
-            width: 40px;
-            height: 40px;
-            border-radius: 2px;
-            background: rgba(8,14,28,0.82);
-            border: 1px solid rgba(0,229,255,0.25);
-            align-items: center;
-            justify-content: center;
-            gap: 3px;
-        }
-        #mobile-pause-overlay span {
-            display: block;
-            width: 4px;
-            height: 14px;
-            background: rgba(0,229,255,0.6);
-            border-radius: 1px;
-        }
-
-        /* ── Mobile Landscape ── */
-        @media (orientation: landscape) {
-            .is-mobile #mobile-oc-overlay {
-                width: 56px;
-                height: 56px;
-                font-size: 9px;
-            }
-        }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#172629">
+    <title>超时空激战 · 航迹飞行局</title>
+    <link rel="icon" href="art/roundel.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="interface.css">
+    <link rel="stylesheet" href="arcade-menu.css">
+    <link rel="stylesheet" href="flight.css">
 </head>
 <body>
-    <div id="game-wrap">
-        <div id="top-bar">
-            <span class="life">&#9829; <span id="life-val">5</span></span>
-            <span id="stage-info" style="display:none;color:#00e5ff;font-family:'Press Start 2P',monospace;font-size:9px;letter-spacing:2px;text-shadow:0 0 10px rgba(0,229,255,0.6);"></span>
-            <div class="boss-bar-wrap" id="boss-bar-wrap">
-                <span class="boss-name" id="boss-name">BOSS</span>
-                <div class="boss-bar-bg">
-                    <div class="boss-bar-fill" id="boss-bar-fill"></div>
-                </div>
-            </div>
-            <span class="score">SCORE <span id="score-val">0</span></span>
+    <header class="mast">
+        <div class="mast-inner">
+            <button class="brand" data-action="hangar" id="nav-hangar" aria-label="返回飞行机库" aria-current="page">
+                <img src="art/roundel.svg" width="48" height="40" alt=""><span><b>航迹飞行局</b><small>AIR ATLAS</small></span>
+            </button>
+            <div class="pilot-record" aria-label="最高纪录"><i data-icon="laurel"></i><span lang="en">HI-SCORE</span><b id="best-score" class="mono">00000</b></div>
+            <button class="command" data-action="routes" id="nav-routes"><i data-icon="route"></i><span>航线图</span></button>
+            <button class="command" id="open-settings" data-action="settings" aria-label="设置"><i data-icon="sliders"></i><span>设置</span></button>
         </div>
-        <div id="energy-bar-wrap">
-            <span id="energy-label">POWER</span>
-            <div id="energy-bar-bg">
-                <div id="energy-bar-fill"></div>
-            </div>
-            <span id="energy-key-hint">SPACE(100)</span>
+    </header>
+    <main id="lobby" aria-labelledby="game-title">
+        <div class="command-deck">
+            <section class="poster" aria-labelledby="game-title">
+                <canvas id="hangar-sky" aria-hidden="true"></canvas>
+                <div class="poster-title"><h1 id="game-title"><span>超时空</span><strong>激战</strong></h1><span class="title-kicker" lang="en">SKYWARD ARCADE</span></div>
+                <div class="flyby"><div class="formation"><span class="wing-trail left"></span><span class="wing-trail right"></span><span class="engine-flare"></span><img id="poster-plane" src="art/default.webp" alt=""></div></div>
+                <div class="pilot-tag"><i data-icon="wing"></i><div><small id="plane-code" class="en"></small><strong id="plane-title"></strong><span id="plane-role"></span></div></div>
+            </section>
+            <section class="fleet" aria-labelledby="fleet-title">
+                <header class="section-bar"><h2 id="fleet-title"><i data-icon="wing"></i>选择座机</h2><span id="fleet-count" class="mono"></span></header>
+                <div id="fleet-options"></div>
+            </section>
+            <section class="dispatch" aria-labelledby="dispatch-title">
+                <header class="section-bar"><h2 id="dispatch-title"><i data-icon="compass"></i>飞行模式</h2></header>
+                <div id="mode-options" role="group" aria-labelledby="dispatch-title"></div>
+                <div class="sortie-line"><p id="mode-brief"></p><button type="button" class="primary launch" id="launch" data-action="launch"><span>出击</span><kbd>ENTER</kbd><i data-icon="arrow"></i></button></div>
+            </section>
         </div>
-        <div id="game-row">
-            <div>
-                <div id="buff-list"></div>
-            </div>
-            <div id="canvas-wrap">
-                <div id="canvas-inner">
-                    <canvas id="gameCanvas"></canvas>
-                    <div id="crt-overlay"></div>
-                    <!-- Mobile overlay buttons (hidden on desktop via CSS) -->
-                    <div id="mobile-pause-overlay" class="mobile-overlay-btn"><span></span><span></span></div>
-                    <div id="mobile-oc-overlay" class="mobile-overlay-btn">OC</div>
-                    <!-- Mobile HUD overlays (hidden on desktop via CSS) -->
-                    <div id="mobile-hud-overlay">
-                        <div class="mhud-row">
-                            <span class="mhud-life">&#9829; <span id="mhud-life-val">5</span></span>
-                            <span class="mhud-level">Lv.<span id="mhud-level-num">0</span></span>
-                            <span class="mhud-score">SCORE <span id="mhud-score-val">0</span></span>
-                        </div>
-                        <div class="mhud-energy-row">
-                            <div class="mhud-energy-bg">
-                                <div class="mhud-energy-fill" id="mhud-energy-fill"></div>
-                            </div>
-                            <span class="mhud-energy-hint" id="mhud-energy-hint">OC(100)</span>
-                        </div>
-                        <div class="mhud-boss-row" id="mhud-boss-row">
-                            <span class="mhud-boss-name" id="mhud-boss-name">BOSS</span>
-                            <div class="mhud-boss-bg">
-                                <div class="mhud-boss-fill" id="mhud-boss-fill"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="mobile-buff-overlay"></div>
-                    <div id="mobile-level-overlay">
-                        <span id="mlevel-num">0</span>
-                        <div class="mlevel-bar-bg"><div class="mlevel-bar-fill" id="mlevel-fill"></div></div>
-                        <span id="mlevel-next"></span>
-                    </div>
-                </div>
-            </div>
-            <div id="mobile-controls"></div>
-            <div id="level-bar">
-                <div id="level-label">LV</div>
-                <div id="level-num">0</div>
-                <div id="level-track">
-                    <div id="level-fill"></div>
-                </div>
-                <div id="level-next"></div>
-            </div>
+    </main>
+    <main id="routes" class="desk" hidden>
+        <div class="route-layout">
+            <section class="route-poster">
+                <div class="section-eyebrow">ROUTE ATLAS</div><h1>航线图</h1>
+                <div id="map-diagram"></div><div class="route-map-note"><b id="map-name"></b><span id="map-progress"></span></div>
+            </section>
+            <section class="schedule"><header class="section-bar"><h2>选择作战航段</h2><span class="mono">01 — 07</span></header><div id="route-list"></div><button class="primary" data-action="start-level">执飞此航段 <i data-icon="arrow"></i></button></section>
         </div>
-    </div>
-    <script>var IS_MOBILE=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)||('ontouchstart' in window&&Math.min(window.innerWidth,window.innerHeight)<768);if(IS_MOBILE)document.body.classList.add('is-mobile');</script>
+    </main>
+    <main id="flight" hidden>
+        <div class="flight-layout">
+            <div class="airspace">
+                <canvas id="gameCanvas" width="600" height="800" tabindex="-1" aria-label="飞行空域，使用方向键、WASD 或触屏拖动战机"></canvas>
+                <div class="field-alert" id="field-alert" role="status" hidden></div>
+            </div>
+            <aside class="instruments" aria-label="飞行仪表">
+                <header class="instrument-title"><div><small class="en" id="flight-heading">FLIGHT LOG</small><h2 id="flight-mode"></h2></div><button data-action="pause" id="pause" aria-label="暂停飞行"><i data-icon="pause"></i></button></header>
+                <div class="score-read"><span>飞行得分</span><b id="flight-score" class="mono"></b></div>
+                <div class="dials">
+                    <div class="dial"><span>机体</span><div class="life-pips" id="life-pips"></div></div>
+                    <div class="dial"><span>升级进度</span><div class="meter" id="xp-meter" role="progressbar" aria-label="升级进度" aria-valuemin="0" aria-valuemax="100"><i id="xp-bar"></i></div><b id="level-read"></b></div>
+                </div>
+                <div class="log-craft"><img id="flight-craft" alt=""><div><small class="en" id="flight-code"></small><b id="flight-name"></b></div></div>
+                <section class="loadout"><h3>已装配</h3><p id="buff-log"></p></section>
+                <button class="boost" id="boost" data-action="boost"><i data-icon="bolt"></i><span>超频</span><b class="mono" id="energy-read"></b></button>
+                <p class="control-note" id="control-note"></p>
+            </aside>
+        </div>
+    </main>
+    <dialog id="sheet" aria-labelledby="sheet-title"><div class="sheet-body"><header class="sheet-head"><div><small class="en" id="sheet-code"></small><h2 id="sheet-title"></h2></div><button class="icon-button" id="sheet-close" data-action="back" aria-label="返回"><i data-icon="close"></i></button></header><div id="sheet-content"></div></div></dialog>
+    <div id="save-status" role="status" hidden></div>
     <script src="js/core.js"></script>
     <script src="js/constants.js"></script>
     <script src="js/save.js"></script>
@@ -801,28 +78,16 @@
     <script src="js/state.js"></script>
     <script src="js/levels.js"></script>
     <script src="js/entities/particle.js"></script>
-    <script src="js/systems/background.js"></script>
     <script src="js/systems/collision.js"></script>
-    <script src="js/ui/common.js"></script>
-
-    <!-- 战机注册表 + 具体战机 -->
     <script src="js/entities/craft.js"></script>
     <script src="js/crafts/default.js"></script>
     <script src="js/crafts/skysovereign.js"></script>
     <script src="js/crafts/mozi.js"></script>
     <script src="js/crafts/chiHong.js"></script>
     <script src="js/systems/buff.js"></script>
-    <script src="js/ui/hud.js"></script>
-    <script src="js/ui/startScreen.js"></script>
-    <script src="js/ui/levelMap.js"></script>
-    <script src="js/ui/debugger.js"></script>
-    <script src="js/ui/pauseOverlay.js"></script>
-    <script src="js/ui/gameOver.js"></script>
     <script src="js/entities/player.js"></script>
     <script src="js/entities/bullet.js"></script>
     <script src="js/entities/gem.js"></script>
-
-    <!-- 敌人注册表 + 具体敌人 -->
     <script src="js/entities/enemy.js"></script>
     <script src="js/entities/enemies/basic.js"></script>
     <script src="js/entities/enemies/shooter.js"></script>
@@ -830,17 +95,17 @@
     <script src="js/entities/enemies/minion.js"></script>
     <script src="js/entities/enemies/spinner.js"></script>
     <script src="js/entities/enemies/phantom.js"></script>
-
-    <!-- Boss 注册表 + 具体 Boss -->
     <script src="js/entities/boss.js"></script>
     <script src="js/entities/bosses/one_eye_king.js"></script>
     <script src="js/entities/bosses/night_fury.js"></script>
     <script src="js/entities/bosses/ice_evil_king.js"></script>
     <script src="js/entities/bosses/julingshen.js"></script>
-
+    <script src="js/flightArt.js"></script>
+    <script src="js/arcadeFx.js"></script>
+    <script src="js/ui/debugger.js"></script>
+    <script src="js/ui/dispatch.js"></script>
     <script src="js/input.js"></script>
     <script src="js/gameLoop.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/mobile.js"></script>
 </body>
 </html>

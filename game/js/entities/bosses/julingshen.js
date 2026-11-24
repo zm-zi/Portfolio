@@ -7,8 +7,6 @@ BOSS.register({
     width: 350,
     height: 240,
     skillInterval: 4000,
-    imgSrc: 'image/Boss4-巨灵神.png',
-    actionImgSrc: 'image/Boss4-巨灵神动作帧.png',
 
     // ─── 技能参数 ───
     // 技能1：天降神雨
@@ -236,255 +234,6 @@ BOSS.register({
                 glowColor: '#ffaa00'
             });
         }
-    },
-
-    draw(b, ctx) {
-        BOSS.drawFrame(b, ctx, 150, 4);
-
-        const cx = b.x + b.width / 2;
-        const cy = b.y + b.height / 2;
-        const now = Date.now();
-
-        // ─── 待机：底部金色微光 ───
-        if (b.skillState === 'idle') {
-            ctx.save();
-            ctx.globalCompositeOperation = 'lighter';
-            const pulseA = 0.12 + Math.sin(now / 150) * 0.06;
-            ctx.globalAlpha = pulseA;
-            ctx.fillStyle = '#ffaa00';
-            ctx.shadowColor = '#ffaa00';
-            ctx.shadowBlur = 15;
-            ctx.beginPath();
-            ctx.ellipse(cx, b.y + b.height + 5, b.width * 0.3, 8, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-
-        // ─── 天降神雨预警：Boss 蓄力 + 屏幕顶部金光带 ───
-        if (b.skillState === 'rain_warn') {
-            const elapsed = now - b.skillStartTime;
-            const progress = elapsed / b.def.rainWarnDuration;
-            const warnPulse = 0.3 + Math.sin(now / 60) * 0.2;
-
-            ctx.save();
-            ctx.globalCompositeOperation = 'lighter';
-
-            // Boss 底部蓄力金光
-            ctx.globalAlpha = warnPulse * 0.8;
-            ctx.fillStyle = '#ffaa00';
-            ctx.shadowColor = '#ffcc00';
-            ctx.shadowBlur = 30;
-            ctx.beginPath();
-            ctx.ellipse(cx, b.y + b.height + 5, 40 + Math.sin(now / 80) * 15, 14, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            // 内核白光
-            ctx.globalAlpha = warnPulse * 0.4;
-            ctx.fillStyle = '#fff8dd';
-            ctx.beginPath();
-            ctx.ellipse(cx, b.y + b.height + 5, 18, 6, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            // 屏幕顶部预警光带（从上往下扩散）
-            const bandHeight = 60 * progress;
-            const bandAlpha = 0.15 + Math.sin(now / 80) * 0.08;
-            ctx.globalAlpha = bandAlpha * progress;
-            const bandGrad = ctx.createLinearGradient(0, 0, 0, bandHeight);
-            bandGrad.addColorStop(0, '#ffcc00');
-            bandGrad.addColorStop(0.5, '#ff8800');
-            bandGrad.addColorStop(1, 'transparent');
-            ctx.fillStyle = bandGrad;
-            ctx.fillRect(0, 0, LOGICAL_W, bandHeight);
-
-            // 预警列标记线
-            ctx.globalAlpha = bandAlpha * 0.5 * progress;
-            ctx.strokeStyle = '#ffcc44';
-            ctx.lineWidth = 1;
-            ctx.setLineDash([6, 8]);
-            const colGap = b.def.rainColGap;
-            const startX = (LOGICAL_W - colGap * (b.def.rainColumns - 1)) / 2;
-            for (let i = 0; i < b.def.rainColumns; i++) {
-                const lx = startX + i * colGap;
-                ctx.beginPath();
-                ctx.moveTo(lx, 0);
-                ctx.lineTo(lx, bandHeight + 40 * progress);
-                ctx.stroke();
-            }
-            ctx.setLineDash([]);
-
-            ctx.restore();
-        }
-
-        // ─── 天降神雨施放中：底部金光脉冲 ───
-        if (b.skillState === 'rain') {
-            ctx.save();
-            ctx.globalCompositeOperation = 'lighter';
-            const rainPulse = 0.4 + Math.sin(now / 40) * 0.2;
-            ctx.globalAlpha = rainPulse;
-            ctx.fillStyle = '#ffcc00';
-            ctx.shadowColor = '#ffaa00';
-            ctx.shadowBlur = 25;
-            ctx.beginPath();
-            ctx.ellipse(cx, b.y + b.height + 5, 35, 12, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.globalAlpha = rainPulse * 0.5;
-            ctx.fillStyle = '#fff8dd';
-            ctx.beginPath();
-            ctx.ellipse(cx, b.y + b.height + 5, 15, 5, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            // 屏幕顶部持续金光
-            ctx.globalAlpha = 0.08 + Math.sin(now / 100) * 0.04;
-            const topGrad = ctx.createLinearGradient(0, 0, 0, 80);
-            topGrad.addColorStop(0, '#ffcc00');
-            topGrad.addColorStop(1, 'transparent');
-            ctx.fillStyle = topGrad;
-            ctx.fillRect(0, 0, LOGICAL_W, 80);
-
-            ctx.restore();
-        }
-
-        // ─── 神力横扫预警：两侧金色能量汇聚 ───
-        if (b.skillState === 'sweep_warn') {
-            ctx.save();
-            ctx.globalCompositeOperation = 'lighter';
-            const sweepWarnPulse = 0.3 + Math.sin(now / 50) * 0.2;
-            ctx.globalAlpha = sweepWarnPulse;
-            ctx.fillStyle = '#ffaa00';
-            ctx.shadowColor = '#ffcc00';
-            ctx.shadowBlur = 25;
-            ctx.beginPath();
-            ctx.ellipse(cx, b.y + b.height + 5, 35 + Math.sin(now / 60) * 10, 12, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-
-        // ─── 神力横扫中：炮口金光 ───
-        if (b.skillState === 'sweep') {
-            ctx.save();
-            ctx.globalCompositeOperation = 'lighter';
-            const muzzlePulse = 0.5 + Math.sin(now / 30) * 0.3;
-            ctx.globalAlpha = muzzlePulse;
-            ctx.shadowColor = '#ffaa00';
-            ctx.shadowBlur = 20;
-            ctx.fillStyle = '#ffcc44';
-            ctx.beginPath();
-            ctx.ellipse(cx, b.y + b.height + 3, 25, 10, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.globalAlpha = muzzlePulse * 0.6;
-            ctx.fillStyle = '#fff8dd';
-            ctx.beginPath();
-            ctx.ellipse(cx, b.y + b.height + 3, 12, 5, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-
-        // ─── 天罚之柱预警：锁定标记 ───
-        if (b.skillState === 'pillar_warn') {
-            const targetX = b.pillarTargetX;
-            const elapsed = now - b.skillStartTime;
-            const progress = elapsed / b.def.pillarWarnDuration;
-            const lockPulse = 0.3 + Math.sin(now / 80) * 0.2;
-
-            ctx.save();
-            ctx.globalCompositeOperation = 'lighter';
-
-            // 锁定十字
-            ctx.globalAlpha = lockPulse * 0.6;
-            ctx.strokeStyle = '#ffcc00';
-            ctx.lineWidth = 2;
-            ctx.shadowColor = '#ffaa00';
-            ctx.shadowBlur = 15;
-            const crossSize = 30 + Math.sin(now / 100) * 8;
-            ctx.beginPath();
-            ctx.moveTo(targetX - crossSize, LOGICAL_H / 2);
-            ctx.lineTo(targetX + crossSize, LOGICAL_H / 2);
-            ctx.moveTo(targetX, LOGICAL_H / 2 - crossSize);
-            ctx.lineTo(targetX, LOGICAL_H / 2 + crossSize);
-            ctx.stroke();
-
-            // 锁定圆环（随进度收缩）
-            const lockR = 60 * (1 - progress * 0.5) + 15;
-            ctx.globalAlpha = lockPulse * 0.4;
-            ctx.strokeStyle = '#ffdd44';
-            ctx.lineWidth = 2;
-            ctx.setLineDash([8, 6]);
-            ctx.beginPath();
-            ctx.arc(targetX, LOGICAL_H / 2, lockR, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.setLineDash([]);
-
-            // 预警光柱轮廓（从上到下的虚线）
-            ctx.globalAlpha = lockPulse * 0.25 * progress;
-            ctx.fillStyle = '#ffcc00';
-            ctx.shadowBlur = 20;
-            const pw = b.def.pillarWidth * progress;
-            ctx.fillRect(targetX - pw / 2, 0, pw, LOGICAL_H);
-
-            // Boss 底部蓄力
-            ctx.globalAlpha = lockPulse * 0.7;
-            ctx.fillStyle = '#ffaa00';
-            ctx.shadowBlur = 25;
-            ctx.beginPath();
-            ctx.ellipse(cx, b.y + b.height + 5, 30 + Math.sin(now / 60) * 10, 12, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.restore();
-        }
-
-        // ─── 天罚之柱施放中：金色光柱 ───
-        if (b.skillState === 'pillar_fire') {
-            const targetX = b.pillarTargetX;
-            const elapsed = now - b.skillStartTime;
-            const fadeIn = Math.min(elapsed / 200, 1);
-            const fadeOut = elapsed > b.def.pillarDuration - 300
-                ? (b.def.pillarDuration - elapsed) / 300 : 1;
-            const alpha = fadeIn * fadeOut;
-
-            ctx.save();
-            ctx.globalCompositeOperation = 'lighter';
-
-            // 主光柱
-            const pw = b.def.pillarWidth;
-            const pillarAlpha = alpha * (0.25 + Math.sin(now / 30) * 0.08);
-            ctx.globalAlpha = pillarAlpha;
-            const pillarGrad = ctx.createLinearGradient(targetX - pw / 2, 0, targetX + pw / 2, 0);
-            pillarGrad.addColorStop(0, 'transparent');
-            pillarGrad.addColorStop(0.2, '#ffaa00');
-            pillarGrad.addColorStop(0.5, '#ffdd44');
-            pillarGrad.addColorStop(0.8, '#ffaa00');
-            pillarGrad.addColorStop(1, 'transparent');
-            ctx.fillStyle = pillarGrad;
-            ctx.fillRect(targetX - pw / 2, 0, pw, LOGICAL_H);
-
-            // 光柱内核（更亮更窄）
-            ctx.globalAlpha = pillarAlpha * 0.6;
-            ctx.fillStyle = '#fff8dd';
-            ctx.fillRect(targetX - pw * 0.15, 0, pw * 0.3, LOGICAL_H);
-
-            // 光柱边缘射线
-            ctx.globalAlpha = alpha * 0.15;
-            ctx.strokeStyle = '#ffcc44';
-            ctx.lineWidth = 1;
-            for (let i = 0; i < 6; i++) {
-                const rx = targetX + (Math.random() - 0.5) * pw;
-                ctx.beginPath();
-                ctx.moveTo(rx, 0);
-                ctx.lineTo(rx + (Math.random() - 0.5) * 20, LOGICAL_H);
-                ctx.stroke();
-            }
-
-            // Boss 底部能量汇聚
-            ctx.globalAlpha = alpha * 0.6;
-            ctx.fillStyle = '#ffcc00';
-            ctx.shadowColor = '#ffaa00';
-            ctx.shadowBlur = 30;
-            ctx.beginPath();
-            ctx.ellipse(cx, b.y + b.height + 5, 35, 14, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.restore();
-        }
     }
 });
 
@@ -513,7 +262,7 @@ function _fireRainWave(boss, G, def, waveIndex) {
             height: 14,
             vx: 0,
             vy: def.rainBulletSpeed + Math.random() * 0.2,
-            isBoss: true,
+            isBoss: true, warhead: 'crown',
             color: '#ffcc00',
             emberTrail: true
         });
@@ -554,7 +303,7 @@ function _fireSweepBullets(boss, G, def) {
         const t = count > 1 ? i / (count - 1) : 0.5;
         const angle = (t - 0.5) * 50; // -25° ~ +25°
         const rad = angle * Math.PI / 180;
-        const speed = def.sweepBulletSpeed + Math.sin(Date.now() / 200 + i) * 0.15;
+        const speed = def.sweepBulletSpeed + Math.sin(gameNow() / 200 + i) * 0.15;
 
         G.enemyBullets.push({
             x: cx - 6,
@@ -563,7 +312,7 @@ function _fireSweepBullets(boss, G, def) {
             height: 12,
             vx: Math.sin(rad) * speed,
             vy: Math.cos(rad) * speed,
-            isBoss: true,
+            isBoss: true, warhead: 'crown',
             color: '#ffbb22',
             emberTrail: true
         });
@@ -605,7 +354,7 @@ function _firePillarBurst(boss, G, def) {
             height: 10,
             vx: Math.cos(rad) * speed,
             vy: Math.sin(rad) * speed,
-            isBoss: true,
+            isBoss: true, warhead: 'crown',
             color: '#ffcc00',
             emberTrail: true
         });

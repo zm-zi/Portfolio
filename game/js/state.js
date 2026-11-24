@@ -9,6 +9,8 @@ const G = {
         isStarted: false,
         buffChooseMode: false,
         buffChoices: [],
+        buffRerolls: 2,
+        routeNextScore: 150,
         lastBuffScore: 0,
         buffIsFreePick: false,
         difficultyLevel: 0,
@@ -146,8 +148,15 @@ function resetState() {
     gm.isGameOver = false;
     gm.isStarted = false;
     gm.buffChooseMode = false;
+    gm.buffStarter = false;
+    gm.buffRerolls = 2;
+    gm.routeChoice = false;
+    gm.routeChosen = false;
+    gm.routeNextScore = 150;
+    gm.eliteUntil = 0;
     gm.buffChoices = [];
     gm.lastBuffScore = 0;
+    gm.lastChosenBuff = null;
     gm.buffIsFreePick = false;
     gm.difficultyLevel = 0;
     gm.gameMode = savedGameMode;
@@ -160,7 +169,6 @@ function resetState() {
         G.iceShields, G.iceVortexes,
         G.lightningChains
     );
-    if (typeof _bgPlanes !== 'undefined') _bgPlanes.length = 0;
 
     G.screenShake = 0;
     G.screenFlash = 0;
@@ -185,5 +193,5 @@ function resetState() {
     G.levelLastBossDefeatScore = 0;
 
     // 重置背景切换系统
-    if (typeof resetBgTransition === 'function') resetBgTransition();
+    resetBgTransition();
 }

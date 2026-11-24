@@ -1,10 +1,10 @@
-// 紫色更有韵味：单发直上 · 均衡型
 CRAFT.register({
     id: 'default',
-    name: '紫色更有韵味',
-    desc: '单发直上 · 均衡型',
-    color: '#9944cc',
-    imgSrc: 'image/紫色更有韵味.png',
+    name: '朱隼',
+    callsign: 'FALCON',
+    weapon: '单发直射',
+    desc: '直线射击，覆盖正前方空域',
+    imgSrc: 'art/default.webp',
     fireRate: 200,
     details: ['射速: 200ms', '伤害: 1.0', '射程: 无限', '单发直射'],
 
@@ -17,14 +17,5 @@ CRAFT.register({
             b2.purple = true;
             G.bullets.push(b2);
         }
-    },
-
-    trailColors: {
-        outer: '#7722aa',
-        outerOC: '#ffaa00',
-        inner: '#bb66ee',
-        innerOC: '#ffdd44',
-        glow: '#5511aa',
-        glowOC: '#ff8800'
     }
 });

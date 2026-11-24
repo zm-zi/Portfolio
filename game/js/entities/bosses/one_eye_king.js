@@ -13,12 +13,15 @@ BOSS.register({
     shieldWarnDuration: 500,
     summonCount: 4,
     bulletCount: 3,
-    imgSrc: 'image/Boss1-独眼王.png',
-    actionImgSrc: 'image/Boss1-独眼王动作帧.png',
 
     update(b, G, now) {
         const def = b.def;
         const dt = G.game.dt;
+        if (!b.phaseTwo && b.hp <= b.maxHp * 0.5) {
+            b.phaseTwo = true;
+            G.screenFlash = Math.max(G.screenFlash, 0.35);
+            G.screenShake = Math.max(G.screenShake, 3);
+        }
 
         if (b.skillState === 'idle') {
             b.x += Math.sin(now / 1000) * 0.5 * dt;
@@ -41,7 +44,7 @@ BOSS.register({
                 });
             }
 
-            if (now - b.lastSkillTime >= def.skillInterval) {
+            if (now - b.lastSkillTime >= def.skillInterval * (b.phaseTwo ? 0.75 : 1)) {
                 if (!b.skillVariant) b.skillVariant = 0;
                 const variant = b.skillVariant % 3;
                 if (variant === 0) {
@@ -103,7 +106,7 @@ BOSS.register({
             if (elapsed < def.sweepDuration && now - (b.lastBulletTime || 0) > fireRate) {
                 const centerX = b.x + b.width / 2;
                 const centerY = b.y + b.height;
-                const count = def.bulletCount;
+                const count = def.bulletCount + (b.phaseTwo ? 2 : 0);
 
                 for (let i = 0; i < count; i++) {
                     const t = count > 1 ? i / (count - 1) : 0.5;
@@ -122,7 +125,7 @@ BOSS.register({
                         width: isCore ? 12 : 8,
                         height: isCore ? 12 : 8,
                         vx, vy,
-                        isBoss: true,
+                        isBoss: true, warhead: 'ember',
                         color: isCore ? '#ff2200' : '#cc1100',
                         emberTrail: true // 火焰拖尾
                     });
@@ -234,7 +237,7 @@ BOSS.register({
                         x: sx - 4, y: sy,
                         width: 8, height: 10,
                         vx: side * 0.5, vy: 2.5,
-                        isBoss: true,
+                        isBoss: true, warhead: 'ember',
                         color: '#cc0000',
                         emberTrail: true
                     });
@@ -339,213 +342,6 @@ BOSS.register({
                 b.summoned = false;
                 BOSS.endSkillAnim(b);
             }
-        }
-    },
-
-    draw(b, ctx) {
-        // 使用通用动画绘制（150ms间隔，循环4次）
-        BOSS.drawFrame(b, ctx, 150, 4);
-
-        const cx = b.x + b.width / 2;
-        const cy = b.y + b.height / 2;
-        const now = Date.now();
-
-        // ─── 待机时：机甲底部微光 ───
-        if (b.skillState === 'idle') {
-            ctx.save();
-            ctx.globalCompositeOperation = 'lighter';
-            const pulseA = 0.15 + Math.sin(now / 150) * 0.08;
-            ctx.globalAlpha = pulseA;
-            ctx.fillStyle = '#ff0000';
-            ctx.beginPath();
-            ctx.ellipse(cx, b.y + b.height + 5, b.width * 0.3, 8, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-
-        // ─── 扫射预警：底部红光蓄力带 ───
-        if (b.skillState === 'sweep_warn') {
-            ctx.save();
-            ctx.globalAlpha = (b.sweepWarnAlpha || 0.3) * 0.6;
-            ctx.fillStyle = '#ff0000';
-            ctx.shadowColor = '#ff0000';
-            ctx.shadowBlur = 25;
-            // 蓄力能量带
-            ctx.beginPath();
-            ctx.ellipse(cx, b.y + b.height + 5, 40 + Math.sin(now / 80) * 15, 12, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-
-        // ─── 扫射中：炮口发光 + 两侧能量纹路 ───
-        if (b.skillState === 'sweep') {
-            ctx.save();
-            ctx.globalCompositeOperation = 'lighter';
-
-            // 底部炮口辉光
-            const muzzlePulse = 0.5 + Math.sin(now / 30) * 0.3;
-            ctx.globalAlpha = muzzlePulse;
-            ctx.shadowColor = '#ff2200';
-            ctx.shadowBlur = 20;
-            ctx.fillStyle = '#ff4400';
-            ctx.beginPath();
-            ctx.ellipse(cx, b.y + b.height + 3, 25, 10, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            // 炮口内核白光
-            ctx.globalAlpha = muzzlePulse * 0.6;
-            ctx.fillStyle = '#ffcc88';
-            ctx.beginPath();
-            ctx.ellipse(cx, b.y + b.height + 3, 12, 5, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.restore();
-        }
-
-        // ─── 护盾预警：红色能量环收缩 ───
-        if (b.skillState === 'shield_warn') {
-            ctx.save();
-            const warnA = b.shieldWarnAlpha || 0.2;
-            const rw = b.width / 2 + 30 + (1 - warnA) * 30;
-            const rh = b.height / 2 + 30 + (1 - warnA) * 30;
-
-            ctx.globalAlpha = warnA * 0.7;
-            ctx.strokeStyle = '#ff0000';
-            ctx.lineWidth = 2;
-            ctx.shadowColor = '#ff0000';
-            ctx.shadowBlur = 15;
-            ctx.setLineDash([8, 8]);
-            ctx.beginPath();
-            ctx.ellipse(cx, cy, rw, rh, 0, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.setLineDash([]);
-
-            ctx.restore();
-        }
-
-        // ─── 护盾激活：暗红能量护盾（多层 + 旋转齿轮纹路） ───
-        if (b.skillState === 'shield' && b.isInvincible) {
-            ctx.save();
-            const alpha = b.shieldAlpha || 0.35;
-            const rw = b.width / 2 + 25;
-            const rh = b.height / 2 + 25;
-            const rotAngle = b.shieldAngle || 0;
-
-            // 外层暗红辉光
-            ctx.globalAlpha = alpha * 0.4;
-            ctx.shadowColor = '#ff0000';
-            ctx.shadowBlur = 30;
-            ctx.strokeStyle = '#cc0000';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.ellipse(cx, cy, rw + 5, rh + 5, 0, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // 主护盾壳体（半透明填充）
-            ctx.globalAlpha = alpha * 0.15;
-            ctx.fillStyle = '#ff0000';
-            ctx.beginPath();
-            ctx.ellipse(cx, cy, rw, rh, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            // 护盾边界线
-            ctx.globalAlpha = alpha;
-            ctx.strokeStyle = '#ff2200';
-            ctx.lineWidth = 2.5;
-            ctx.shadowBlur = 15;
-            ctx.beginPath();
-            ctx.ellipse(cx, cy, rw, rh, 0, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // 旋转齿轮纹路（8条放射线）
-            ctx.globalAlpha = alpha * 0.5;
-            ctx.strokeStyle = '#880000';
-            ctx.lineWidth = 2;
-            ctx.shadowBlur = 8;
-            ctx.shadowColor = '#ff0000';
-            for (let i = 0; i < 8; i++) {
-                const a = rotAngle + (i / 8) * Math.PI * 2;
-                const innerR = 0.6;
-                const outerR = 1.0 + Math.sin(now / 150 + i * 0.8) * 0.08;
-                ctx.beginPath();
-                ctx.moveTo(cx + Math.cos(a) * rw * innerR, cy + Math.sin(a) * rh * innerR);
-                ctx.lineTo(cx + Math.cos(a) * rw * outerR, cy + Math.sin(a) * rh * outerR);
-                ctx.stroke();
-            }
-
-            // 能量节点（旋转线段端点的小光点）
-            ctx.globalCompositeOperation = 'lighter';
-            for (let i = 0; i < 8; i++) {
-                const a = rotAngle + (i / 8) * Math.PI * 2;
-                const r = 1.0 + Math.sin(now / 150 + i * 0.8) * 0.08;
-                const nx = cx + Math.cos(a) * rw * r;
-                const ny = cy + Math.sin(a) * rh * r;
-                ctx.globalAlpha = alpha * 0.6;
-                ctx.fillStyle = '#ff4400';
-                ctx.beginPath();
-                ctx.arc(nx, ny, 3, 0, 6.28);
-                ctx.fill();
-            }
-
-            // 内层脉冲环
-            ctx.globalAlpha = alpha * 0.3;
-            ctx.strokeStyle = '#ff4400';
-            ctx.lineWidth = 1;
-            const innerPulse = 0.7 + Math.sin(now / 120) * 0.05;
-            ctx.beginPath();
-            ctx.ellipse(cx, cy, rw * innerPulse, rh * innerPulse, 0, 0, Math.PI * 2);
-            ctx.stroke();
-
-            ctx.restore();
-        }
-
-        // ─── 召唤施法中：召唤阵 ───
-        if (b.skillState === 'summon_cast') {
-            ctx.save();
-            const alpha = b.summonWarnAlpha || 0;
-            const r = 55;
-
-            // 外圈法阵
-            ctx.globalAlpha = alpha * 0.6;
-            ctx.strokeStyle = '#ff0000';
-            ctx.lineWidth = 2;
-            ctx.shadowColor = '#ff0000';
-            ctx.shadowBlur = 20;
-            ctx.beginPath();
-            ctx.arc(cx, cy, r, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // 内圈
-            ctx.globalAlpha = alpha * 0.4;
-            ctx.beginPath();
-            ctx.arc(cx, cy, r * 0.6, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // 六芒星
-            ctx.globalAlpha = alpha * 0.5;
-            ctx.lineWidth = 1.5;
-            for (let t = 0; t < 2; t++) {
-                ctx.beginPath();
-                for (let i = 0; i < 3; i++) {
-                    const a = (i / 3) * Math.PI * 2 + t * Math.PI / 3 + now / 800;
-                    const px = cx + Math.cos(a) * r * 0.85;
-                    const py = cy + Math.sin(a) * r * 0.85;
-                    if (i === 0) ctx.moveTo(px, py);
-                    else ctx.lineTo(px, py);
-                }
-                ctx.closePath();
-                ctx.stroke();
-            }
-
-            // 中心红点脉冲
-            ctx.globalCompositeOperation = 'lighter';
-            ctx.globalAlpha = alpha * (0.4 + Math.sin(now / 80) * 0.3);
-            ctx.fillStyle = '#ff0000';
-            ctx.beginPath();
-            ctx.arc(cx, cy, 8 + Math.sin(now / 100) * 3, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.restore();
         }
     }
 });

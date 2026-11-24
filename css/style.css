@@ -66,6 +66,10 @@ body {
   --project-accent: #0ea5e9;
   --project-accent-bg: rgba(14, 165, 233, 0.06);
 }
+.project--theme-teal {
+  --project-accent: #0d9488;
+  --project-accent-bg: rgba(13, 148, 136, 0.06);
+}
 .project--theme-blue .project__label { border-color: rgba(59,130,246,0.3); color: #3b82f6; }
 .project--theme-blue .project__stat-num { color: #3b82f6; }
 .project--theme-blue .project__toggle:hover { border-color: #3b82f6; color: #3b82f6; background: rgba(59,130,246,0.05); }
@@ -88,6 +92,11 @@ body {
 .project--theme-sky .project__toggle:hover { border-color: #0ea5e9; color: #0ea5e9; background: rgba(14,165,233,0.05); }
 .project--theme-sky .project__demo-btn { background: #0ea5e9; }
 .project--theme-sky .project__demo-btn:hover { background: #0284c7; }
+.project--theme-teal .project__label { border-color: rgba(13,148,136,0.3); color: #0d9488; }
+.project--theme-teal .project__stat-num { color: #0d9488; }
+.project--theme-teal .project__toggle:hover { border-color: #0d9488; color: #0d9488; background: rgba(13,148,136,0.05); }
+.project--theme-teal .project__demo-btn { background: #0d9488; }
+.project--theme-teal .project__demo-btn:hover { background: #0f766e; }
 
 /* ===== SVG Icon Sprite ===== */
 .icon {
@@ -2725,11 +2734,12 @@ body {
 
 .featured__grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.4rem;
 }
 
 .featured__card {
+  grid-column: span 2;
   display: block;
   text-decoration: none;
   color: inherit;
@@ -2771,6 +2781,33 @@ body {
   font-weight: 500;
   margin-bottom: 0.3rem;
   letter-spacing: 0.04em;
+}
+
+.featured__card--wide {
+  grid-column: span 3;
+}
+
+.featured__card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.featured__card-head h3 {
+  margin-bottom: 0;
+}
+
+.featured__card-badge {
+  font-size: 0.68rem;
+  padding: 0.16rem 0.52rem;
+  border-radius: 999px;
+  background: rgba(13, 148, 136, 0.1);
+  color: #0f766e;
+  border: 1px solid rgba(13, 148, 136, 0.25);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .featured__card-info p {
@@ -3301,8 +3338,32 @@ body {
 
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
+  .hero__content {
+    max-width: 100%;
+    padding: 0 1.25rem;
+  }
+
+  .hero__alias {
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+  }
+
+  .hero__statement--disciplines {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.15rem 0.2rem;
+    letter-spacing: 0.05em;
+    font-size: 0.76rem;
+  }
+
   .featured__grid {
     grid-template-columns: 1fr;
+  }
+
+  .featured__card,
+  .featured__card--wide {
+    grid-column: auto;
   }
 
   .skills__grid {
@@ -3780,6 +3841,8 @@ body {
   .project--theme-green { --project-accent: #34d399; --project-accent-bg: rgba(52, 211, 153, 0.08); }
   .project--theme-pink { --project-accent: #f472b6; --project-accent-bg: rgba(244, 114, 182, 0.08); }
   .project--theme-sky { --project-accent: #38bdf8; --project-accent-bg: rgba(56, 189, 248, 0.08); }
+  .project--theme-teal { --project-accent: #2dd4bf; --project-accent-bg: rgba(45, 212, 191, 0.08); }
+  .featured__card-badge { background: rgba(45, 212, 191, 0.14); color: #5eead4; border-color: rgba(45, 212, 191, 0.3); }
 
   .project--theme-blue .project__label { border-color: rgba(96,165,250,0.3); color: #60a5fa; }
   .project--theme-blue .project__stat-num { color: #60a5fa; }

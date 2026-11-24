@@ -3,7 +3,6 @@ ENEMY.register({
     type: 'shooter',
     score: ENEMY2_SCORE,
     color: '#44ff44',
-    imgSrc: 'image/二级敌人.png',
     lastSpawnTime: 0,
 
     spawn(G, now, spawnMult, hpMult) {
@@ -25,17 +24,16 @@ ENEMY.register({
     update(e, G, now) {
         if (e.y < e.hoverY) e.y += ENEMY2_SPEED * G.game.dt;
         if (now - e.lastFireTime >= ENEMY2_FIRE_RATE) {
-            G.enemyBullets.push({
-                x: e.x + e.width / 2 - 4,
-                y: e.y + e.height,
-                width: 8, height: 12,
-                color: '#44ff88'
-            });
+            const cx = e.x + e.width / 2;
+            // The introductory stage keeps a single line. Later sorties use a three-shot fan.
+            const angles = G.game.gameMode === 'level' && G.game.currentLevel === 0 ? [0] : [-.25,0,.25];
+            for (const angle of angles) {
+                G.enemyBullets.push({
+                    x: cx - 4, y: e.y + e.height, width: 8, height: 12,
+                    vx: Math.sin(angle) * ENEMY2_BULLET_SPEED, vy: Math.cos(angle) * ENEMY2_BULLET_SPEED
+                });
+            }
             e.lastFireTime = now;
         }
-    },
-
-    draw(e, ctx) {
-        drawWithOutline(ctx, this._img, e.x, e.y, e.width, e.height, 1, true, e.hitFlash);
     }
 });

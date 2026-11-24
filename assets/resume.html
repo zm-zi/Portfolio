@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>张子墨 - 游戏策划简历</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #e5e7eb;
+      color: #374151;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    @media print {
+      html, body {
+        width: 210mm;
+        height: 297mm;
+        background: #ffffff;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .a4-container {
+        box-shadow: none !important;
+        margin: 0 !important;
+        page-break-after: avoid;
+      }
+    }
+
+    /* Toolbar (screen only) */
+    .toolbar {
+      text-align: center;
+      padding: 18px 16px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-print {
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 22px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.28);
+      transition: background 0.2s;
+    }
+    .btn-print:hover {
+      background: #1d4ed8;
+    }
+    .toolbar-hint {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    #save-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #111827;
+      color: #ffffff;
+      font-size: 12px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    #save-toast.show {
+      opacity: 1;
+    }
+
+    /* A4 Sheet */
+    .a4-container {
+      width: 210mm;
+      height: 297mm;
+      background: #ffffff;
+      margin: 12px auto 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Left Sidebar (30%) */
+    .sidebar {
+      width: 30%;
+      min-width: 30%;
+      height: 100%;
+      background-color: #f9fafb;
+      border-right: 1px solid #f0f0f0;
+      padding: 26px 18px 22px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow: hidden;
+    }
+
+    .section-title-left {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: 0.08em;
+      border-bottom: 2px solid #111827;
+      padding-bottom: 3px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    /* Contact */
+    .contact-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .contact-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11.5px;
+      color: #374151;
+      font-weight: 500;
+      word-break: break-all;
+    }
+    .contact-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #eff6ff;
+      color: #3b82f6;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-icon--gray {
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+    .contact-icon svg {
+      width: 11px;
+      height: 11px;
+    }
+
+    /* Education */
+    .edu-date {
+      font-size: 10.5px;
+      color: #3b82f6;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .edu-school {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+    .edu-major {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: #4b5563;
+      margin-top: 2px;
+    }
+    .edu-desc {
+      font-size: 10.5px;
+      color: #6b7280;
+      line-height: 1.55;
+      margin-top: 5px;
+    }
+
+    /* Core Strengths */
+    .strength-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .strength-list li {
+      position: relative;
+      padding-left: 11px;
+      font-size: 10.7px;
+      color: #4b5563;
+      line-height: 1.52;
+    }
+    .strength-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 5.5px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #3b82f6;
+    }
+    .strength-list b {
+      color: #1f2937;
+    }
+
+    /* Tech Stack */
+    .skill-groups {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .skill-group-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #374151;
+      margin-bottom: 3px;
+    }
+    .tag-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .tag {
+      font-size: 9.4px;
+      font-weight: 500;
+      padding: 2px 6px;
+      border-radius: 4px;
+      line-height: 1.35;
+    }
+    .tag--blue  { background: #eff6ff; color: #2563eb; }
+    .tag--amber { background: #fffbeb; color: #d97706; }
+    .tag--pink  { background: #fdf2f8; color: #db2777; }
+    .tag--green { background: #f0fdf4; color: #16a34a; }
+
+    .games-text {
+      font-size: 10.4px;
+      color: #6b7280;
+      line-height: 1.56;
+    }
+
+    /* Right Main Content (70%) */
+    .main-content {
+      width: 70%;
+      height: 100%;
+      padding: 24px 26px 20px 26px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      border-bottom: 1px solid #f3f4f6;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .header-name {
+      font-size: 30px;
+      font-weight: 900;
+      color: #111827;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      margin-bottom: 4px;
+    }
+    .header-role {
+      font-size: 16px;
+      font-weight: 700;
+      color: #2563eb;
+      letter-spacing: 0.08em;
+    }
+    .qr-block {
+      text-align: center;
+      flex-shrink: 0;
+      margin-left: 14px;
+    }
+    .qr-caption {
+      font-size: 9px;
+      color: #6b7280;
+      margin-bottom: 3px;
+    }
+    .qr-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 7px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      display: block;
+      margin: 0 auto;
+    }
+    .qr-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      margin-top: 3px;
+      font-size: 9.2px;
+      font-weight: 600;
+      color: #2563eb;
+      text-decoration: none;
+      border-bottom: 1px solid #bfdbfe;
+    }
+    .qr-link svg {
+      width: 9.5px;
+      height: 9.5px;
+      color: #60a5fa;
+    }
+
+    .intro-callout {
+      font-size: 11px;
+      color: #4b5563;
+      line-height: 1.52;
+      background: #eff6ff;
+      padding: 7px 11px;
+      border-radius: 6px;
+      border-left: 3.5px solid #3b82f6;
+      font-weight: 500;
+    }
+
+    /* Section Title Right */
+    .section-title-right {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 10px;
+      position: relative;
+      padding-left: 12px;
+    }
+    .section-title-right::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 2px;
+      bottom: 2px;
+      width: 3.5px;
+      background-color: #3b82f6;
+      border-radius: 2px;
+    }
+
+    /* Timeline Items */
+    .timeline-item {
+      position: relative;
+      padding-left: 16px;
+      border-left: 2px solid #bfdbfe;
+      margin-bottom: 11px;
+    }
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+    .timeline-item--amber {
+      border-left-color: #fcd34d;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: -6.5px;
+      top: 4px;
+      width: 11px;
+      height: 11px;
+      background: #ffffff;
+      border: 2px solid #3b82f6;
+      border-radius: 50%;
+    }
+    .timeline-item--amber .timeline-dot {
+      border-color: #f59e0b;
+    }
+
+    .item-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+    .item-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #111827;
+    }
+    .item-badge {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .item-badge--amber {
+      background: #fffbeb;
+      color: #d97706;
+    }
+    .item-badge--blue {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .item-meta {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 500;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+    .item-meta svg {
+      width: 10.5px;
+      height: 10.5px;
+      color: #9ca3af;
+      flex-shrink: 0;
+    }
+
+    .proj-bullet {
+      list-style: disc;
+      margin-left: 14px;
+      font-size: 10.9px;
+      color: #374151;
+      line-height: 1.48;
+    }
+    .proj-bullet li {
+      margin-bottom: 2.5px;
+    }
+    .proj-bullet li:last-child {
+      margin-bottom: 0;
+    }
+    .proj-bullet b {
+      color: #111827;
+      font-weight: 600;
+    }
+
+    /* Footer compact note */
+    .other-box {
+      margin-top: 10px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 6.5px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .other-line {
+      font-size: 10.4px;
+      color: #4b5563;
+      line-height: 1.45;
+    }
+    .other-line b {
+      color: #111827;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="save-toast">✓ 内容已本地暂存</div>
+
+  <div class="toolbar no-print">
+    <button class="btn-print" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      导出为 PDF
+    </button>
+    <div class="toolbar-hint">点击页面内任意文本均可直接编辑，刷新后保留修改</div>
+  </div>
+
+  <div class="a4-container">
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <!-- 联系方式 -->
+      <div>
+        <h2 class="section-title-left">联系方式</h2>
+        <ul class="contact-list">
+          <li>
+            <span class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </span>
+            <span>158 5557 5512</span>
+          </li>
+          <li>
+            <span class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </span>
+            <span>微信：z1916489807</span>
+          </li>
+          <li>
+            <span class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </span>
+            <span>1916489807@qq.com</span>
+          </li>
+          <li>
+            <span class="contact-icon contact-icon--gray">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            </span>
+            <span>github.com/zm-zi</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 教育背景 -->
+      <div>
+        <h2 class="section-title-left">教育背景</h2>
+        <div class="edu-date">2023.09 – 2027.06</div>
+        <div class="edu-school">合肥城市学院</div>
+        <div class="edu-major">数据科学与大数据技术 · 本科</div>
+        <p class="edu-desc">系统学习概率统计与数据分析，在校自学《游戏设计艺术》，持续输出可玩原型与产品拆解笔记。</p>
+      </div>
+
+      <!-- 核心能力 -->
+      <div>
+        <h2 class="section-title-left">核心优势</h2>
+        <ul class="strength-list">
+          <li><b>文档与原型双落地：</b>写过 20 篇规模的商业手游 GDD 与 UI 线框，也能独立用代码把玩法做成可试玩版本。</li>
+          <li><b>统计思维做数值与建模：</b>习惯用公式和概率分布验证设计，覆盖成长曲线、克制矩阵、权重池及行为节奏统计建模。</li>
+          <li><b>2D / 3D 跨方向实作：</b>从 Canvas 弹幕肉鸽、Three.js 3D 泊车到 Unity 搜打撤，均独立完成核心玩法与体验调优。</li>
+          <li><b>工程与自动化测试意识：</b>项目普遍配有内置调试面板或自动化回归脚本，靠实测数据和用例打磨手感。</li>
+        </ul>
+      </div>
+
+      <!-- 技术工具 -->
+      <div>
+        <h2 class="section-title-left">技术工具</h2>
+        <div class="skill-groups">
+          <div>
+            <div class="skill-group-title">引擎与图形</div>
+            <div class="tag-wrap">
+              <span class="tag tag--blue">Unity / C#</span>
+              <span class="tag tag--blue">Three.js</span>
+              <span class="tag tag--blue">Canvas 2D</span>
+              <span class="tag tag--blue">Godot</span>
+            </div>
+          </div>
+          <div>
+            <div class="skill-group-title">语言与 Web</div>
+            <div class="tag-wrap">
+              <span class="tag tag--amber">JavaScript</span>
+              <span class="tag tag--amber">Python</span>
+              <span class="tag tag--amber">C#</span>
+              <span class="tag tag--amber">Lua</span>
+              <span class="tag tag--amber">Next.js</span>
+            </div>
+          </div>
+          <div>
+            <div class="skill-group-title">自动化与 AI</div>
+            <div class="tag-wrap">
+              <span class="tag tag--pink">OpenCV</span>
+              <span class="tag tag--pink">WASAPI FFT</span>
+              <span class="tag tag--pink">DeepSeek / RAG</span>
+              <span class="tag tag--pink">Puppeteer</span>
+            </div>
+          </div>
+          <div>
+            <div class="skill-group-title">设计与协作</div>
+            <div class="tag-wrap">
+              <span class="tag tag--green">GDD / UI 线框</span>
+              <span class="tag tag--green">PS / AI</span>
+              <span class="tag tag--green">Git</span>
+              <span class="tag tag--green">Claude Code</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 深度游戏经历 -->
+      <div>
+        <h2 class="section-title-left">深度游戏经历</h2>
+        <p class="games-text">《泰拉瑞亚》2000h · 《三角洲行动》1000h · 《星露谷》1000h · 《城市天际线》1000h · 《杀戮尖塔》 · 《俄罗斯钓鱼4》</p>
+      </div>
+    </aside>
+
+    <!-- RIGHT MAIN CONTENT -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-top">
+          <div>
+            <h1 class="header-name">张子墨</h1>
+            <div class="header-role">游戏策划 · 系统 / 数值</div>
+          </div>
+          <div class="qr-block">
+            <div class="qr-caption">扫码试玩与看文档</div>
+            <img src="qrcode.png" alt="作品集二维码" class="qr-img">
+            <a href="https://portfolio-1ry.pages.dev/" class="qr-link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              portfolio-1ry.pages.dev
+            </a>
+          </div>
+        </div>
+        <p class="intro-callout">
+          大数据本科在读，有商业军事策略手游策划实习经历。擅长把系统规则和数值框架做成可运行原型与工具，用实测和统计思路验证体验，兼顾文档规范与 Unity / Web / Python 落地。
+        </p>
+      </header>
+
+      <!-- 项目与实习经历 -->
+      <section>
+        <h2 class="section-title-right">实习与项目经历</h2>
+
+        <!-- 实习 -->
+        <div class="timeline-item timeline-item--amber">
+          <span class="timeline-dot"></span>
+          <div class="item-head">
+            <h3 class="item-title">重返安博莱 · 现代军事策略竖屏对战手游</h3>
+            <span class="item-badge item-badge--amber">实习 · 北京红蓝火线</span>
+          </div>
+          <div class="item-meta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span>2026.05 – 2026.08 · 系统策划 / 数值策划 / 关卡框架 / UI 交互线框</span>
+          </div>
+          <ul class="proj-bullet">
+            <li><b>战斗循环与兵种数值：</b>负责「军令增长（100/秒）→ 满条四选一部署」循环；搭建 5 类 32 子类型 × 15+ 维数值框架与 5 目标克制矩阵，完成 21 个具体兵种及 5 学派将军配置。</li>
+            <li><b>局外经济与 PVE 关卡：</b>规划金币、钻石、体力消耗与产出及 0–60 级功能解锁顺序；梳理 6 章约 100 关 PVE 推进结构，靠 6 种路线形态与敌方编组拉开单章战术差异。</li>
+            <li><b>GDD 体系与 UI 规范：</b>将 6 篇大文档重整为 5 个功能域、约 20 篇专项文档并补齐术语表；绘制 27 张界面交互线框图，编写 5 篇模块状态文档协助程序对接。</li>
+          </ul>
+        </div>
+
+        <!-- 超时空激战 -->
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div class="item-head">
+            <h3 class="item-title">超时空激战 · Roguelike 弹幕射击（航空版画重构）</h3>
+            <span class="item-badge item-badge--blue">个人独立 · 在线试玩</span>
+          </div>
+          <div class="item-meta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            <span>JavaScript / HTML5 Canvas / 36 零依赖模块 / Python 冒烟测试</span>
+          </div>
+          <ul class="proj-bullet">
+            <li><b>构筑与模式：</b>四套注册表解耦 4 架差异化战机（朱隼 / 雨燕 / 信天翁 / 日冕）、24 种词条（含冰霜、雷霆、火力与僚机树状前置）及 4 个 Boss；支持无尽分岔航线、7 关战役与自由探索。</li>
+            <li><b>数值与实测迭代：</b>采用二次函数升级阈值（25l²+75l+50）与 4 档稀有度权重；经 7 人试玩发现超频选取偏低，补强击杀充能粒子汇聚提示后选取率显著提升。</li>
+            <li><b>视觉重构与优化：</b>推倒旧版霓虹风改做「航迹飞行局」版画美术，预烘焙离屏剪影与闪白层稳住移动端帧率，资源体积由 50 MB 压至 18 MB，内置调试面板提效验证。</li>
+          </ul>
+        </div>
+
+        <!-- 泊车小镇 -->
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div class="item-head">
+            <h3 class="item-title">泊车小镇 · 3D 低模粘土风泊车模拟</h3>
+            <span class="item-badge item-badge--blue">个人独立 · 在线试玩</span>
+          </div>
+          <div class="item-meta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            <span>Three.js / WebGL 2 / GLB 程序化建模 / Puppeteer 自动驾驶验收</span>
+          </div>
+          <ul class="proj-bullet">
+            <li><b>程序化场景与车队：</b>自建 ClayKit，用 14 种共享倒角模具以 InstancedMesh 合批搭建海湾医院街区；写脚本生成 4 款原创 GLB 车辆，并经 onBeforeCompile 局部注入车窗斜纹反光 Shader。</li>
+            <li><b>驾驶手感与判定：</b>采用阿克曼转向并随速动态限舵（0.62→0.20 rad）；综合中心偏移、朝向余弦（±12.8°）及 0.65s 稳停条件支持顺/倒向精准入位。</li>
+            <li><b>镜头与工具链：</b>实现横竖屏自适应街区/跟车/俯视三视角、离屏底图实时 GPS 小地图及触屏适配，配套 Puppeteer 自动驾驶脚本做渲染与交互回归。</li>
+          </ul>
+        </div>
+
+        <!-- 俄罗斯钓鱼 4 自动化助手 -->
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div class="item-head">
+            <h3 class="item-title">俄罗斯钓鱼 4 自动化助手 · 视觉与音频工具</h3>
+            <span class="item-badge item-badge--blue">个人独立 · 109 项单测</span>
+          </div>
+          <div class="item-meta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            <span>Python 3.11 / OpenCV / WASAPI FFT / Tkinter GUI / 约 9,800 行代码</span>
+          </div>
+          <ul class="proj-bullet">
+            <li><b>多模式状态机：</b>无内存读取，靠截屏模板匹配与 HUD 解析跑通路亚（含 ≤15m 双确认快收）、浮子盯漂与水底三竿轮巡（支持鱼口自适应 ±25% 间隔及人工左键瞬时抢占暂停）。</li>
+            <li><b>进程音频频谱检测：</b>基于 Windows WASAPI 按游戏 PID 采集音频，100ms 汉宁窗 FFT 对比 2.78 kHz 报警峰与两侧邻带能量比（≥5 倍触发），实现抗环境音干扰的听声抢检。</li>
+            <li><b>统计学拟人化模型：</b>摒弃固定均匀随机，叠加对数正态分布、OU 均值回复漂移、连续在线疲劳与低概率走神长尾；配 Tkinter 控制台、渔获 CSV 导出及邮件/Webhook 告警。</li>
+          </ul>
+        </div>
+
+        <!-- 猎魂传奇 -->
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div class="item-head">
+            <h3 class="item-title">猎魂传奇 · 2D Roguelike 搜打撤原型</h3>
+            <span class="item-badge item-badge--blue">个人独立开发</span>
+          </div>
+          <div class="item-meta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            <span>Unity 2D / C# / ScriptableObject / 31 脚本 / 程序化节点地图</span>
+          </div>
+          <ul class="proj-bullet">
+            <li><b>数据驱动与地图生成：</b>ScriptableObject 承载 9 维属性 × 5 品质 × 6 类物品及随机词条掉落；每局按权重生成 10–18 层节点地图（6 区域 × 4 难度），Manager 层通过事件总线与 UI 解耦。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 其他项目与拆解 -->
+      <div class="other-box">
+        <div class="other-line"><b>AnimeChatWeb（AI 角色互动）：</b>Next.js + DeepSeek / MiniMax + LanceDB 向量记忆，实现亲密度 [-100, +100]、四维情绪系数与防刷屏衰减。</div>
+        <div class="other-line"><b>产品拆解：</b>结合 1000 小时游玩记录编写《三角洲行动》搜打撤经济、航天基地向心动线与通胀方案拆解案（详见在线作品集）。</div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function showToast() {
+      const toast = document.getElementById('save-toast');
+      toast.classList.add('show');
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const selectors = [
+        '.sidebar span', '.sidebar h2', '.sidebar div.edu-date', '.sidebar div.edu-school',
+        '.sidebar div.edu-major', '.sidebar p', '.sidebar li',
+        '.main-content h1', '.main-content .header-role', '.main-content h2',
+        '.main-content h3', '.main-content p', '.main-content li', '.other-line'
+      ];
+      const seen = new Set();
+      const elements = Array.from(document.querySelectorAll(selectors.join(', ')))
+        .filter(el => {
+          if (seen.has(el) || el.closest('.qr-block') || el.classList.contains('contact-icon')) return false;
+          if (el.querySelector('svg') && el.tagName === 'LI') return false;
+          seen.add(el);
+          return true;
+        });
+
+      elements.forEach((el, i) => { el.dataset.saveKey = `zimo_v5_field_${i}`; });
+      elements.forEach(el => {
+        const saved = localStorage.getItem(el.dataset.saveKey);
+        if (saved !== null) el.innerHTML = saved;
+      });
+      elements.forEach(el => {
+        el.setAttribute('contenteditable', 'true');
+        el.style.outline = 'none';
+        el.style.borderRadius = '3px';
+        el.style.cursor = 'text';
+        let timer;
+        el.addEventListener('input', () => {
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            localStorage.setItem(el.dataset.saveKey, el.innerHTML);
+            showToast();
+          }, 500);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

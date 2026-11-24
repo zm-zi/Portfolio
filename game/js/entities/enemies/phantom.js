@@ -3,7 +3,6 @@ ENEMY.register({
     type: 'phantom',
     score: ENEMY5_SCORE,
     color: '#ff4444',
-    imgSrc: 'image/四级敌人2.png',
     lastSpawnTime: 0,
 
     spawn(G, now, spawnMult, hpMult) {
@@ -48,53 +47,6 @@ ENEMY.register({
                 color: '#ff6644'
             });
             e.lastFireTime = now;
-        }
-    },
-
-    draw(e, ctx) {
-        if (this._img) {
-            drawWithOutline(ctx, this._img, e.x, e.y, e.width, e.height, 1, true, e.hitFlash);
-        } else {
-            // 程序化绘制：灰红菱形幻影
-            const cx = e.x + e.width / 2;
-            const cy = e.y + e.height / 2;
-            const r = e.width / 2;
-            const pulse = 1 + 0.06 * Math.sin(Date.now() * 0.004 + cx * 0.1);
-            ctx.save();
-            ctx.translate(cx, cy);
-            ctx.scale(pulse, pulse);
-            // 受击闪白
-            if (e.hitFlash > 0) {
-                ctx.globalAlpha = Math.min(e.hitFlash / 6, 1);
-                ctx.fillStyle = '#ffffff';
-            } else {
-                ctx.globalAlpha = 1;
-            }
-            // 菱形主体（灰）
-            ctx.beginPath();
-            ctx.moveTo(0, -r);
-            ctx.lineTo(r * 0.7, 0);
-            ctx.lineTo(0, r);
-            ctx.lineTo(-r * 0.7, 0);
-            ctx.closePath();
-            ctx.fillStyle = e.hitFlash > 0 ? '#ffffff' : '#666677';
-            ctx.fill();
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            // 红色核心
-            ctx.beginPath();
-            ctx.arc(0, 0, r * 0.3, 0, Math.PI * 2);
-            ctx.fillStyle = e.hitFlash > 0 ? '#ffffff' : '#ff3333';
-            ctx.fill();
-            // 核心光晕
-            if (e.hitFlash <= 0) {
-                ctx.beginPath();
-                ctx.arc(0, 0, r * 0.5, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 50, 50, 0.2)';
-                ctx.fill();
-            }
-            ctx.restore();
         }
     }
 });

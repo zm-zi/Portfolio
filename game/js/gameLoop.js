@@ -1,224 +1,89 @@
-// 游戏主循环
-let _lastFrameTime = 0;
-const BASE_INTERVAL = 1000 / BASE_FPS; // 5ms
+const BASE_INTERVAL = 1000 / BASE_FPS;
+const SIMULATION_STEP = 1000 / 60;
+const MAX_FRAME_TIME = 250;
+let _lastFrameTime = null;
+let _simulationAccumulator = 0;
+let _gameTime = Date.now();
+let lastPaintedTime = null;
 
-// Mobile HUD overlay visibility helper
-function _setMobileHudVisible(visible) {
-    if (!IS_MOBILE) return;
-    var el = document.getElementById('mobile-hud-overlay');
-    var bf = document.getElementById('mobile-buff-overlay');
-    var lv = document.getElementById('mobile-level-overlay');
-    if (el) el.style.display = visible ? '' : 'none';
-    if (bf) bf.style.display = visible ? '' : 'none';
-    if (lv) lv.style.display = visible ? '' : 'none';
+function gameNow() { return _gameTime; }
+
+document.addEventListener('visibilitychange', () => {
+    _lastFrameTime = null;
+    _simulationAccumulator = 0;
+});
+
+function advanceFlight() {
+    const gm = G.game;
+    _gameTime += SIMULATION_STEP;
+    gm.dt = SIMULATION_STEP / BASE_INTERVAL;
+    advanceTerrain();
+    updatePlayer();
+    if (gm.gameMode === 'explore') {
+        updateParticles();
+        updateInvincible();
+        return;
+    }
+    updateBullets();
+    gm.difficultyLevel = Math.floor(gm.score / DIFFICULTY_SCORE_INTERVAL);
+    checkBossWarning();
+    spawnEnemies();
+    updateEnemies();
+    updateBoss();
+    if (G.iceVortexes.length && G.boss?.skillState !== 'ice_vortex_active') {
+        G.player._vortexSlowdown = false;
+        _updateIceVortexesGlobal(G, gameNow());
+    }
+    updateParticles();
+    updateInvincible();
+    checkCollisions();
+    fireBullets();
+    updateHomingMissiles();
+    updateGems();
+    checkBuffTrigger();
+    updateRoute();
+    if (gm.gameMode === 'level') checkLevelComplete();
+    if (gm.life < 1) {
+        gm.isGameOver = true;
+        gm.highScore = Math.max(gm.highScore, gm.score);
+        Save.save();
+        stopBGM();
+        createExplosion(G.player.x + G.player.width / 2, G.player.y + G.player.height / 2);
+    }
+    for (let i = G.lightningChains.length - 1; i >= 0; i--) {
+        if (--G.lightningChains[i].life <= 0) G.lightningChains.splice(i, 1);
+    }
+    for (const wall of G.iceShields) wall.shakeTimer = Math.max(0,(wall.shakeTimer || 0) - gm.dt);
+    G.screenShake = G.screenShake < .1 ? 0 : G.screenShake * .87;
+    G.screenFlash = G.screenFlash < .01 ? 0 : G.screenFlash * .8;
 }
 
 function gameLoop(timestamp) {
-    // 帧率节流
-    const fps = G.game.targetFPS;
-    if (fps > 0) {
-        const interval = 1000 / fps;
-        if (timestamp - _lastFrameTime < interval) {
-            requestAnimationFrame(gameLoop);
-            return;
-        }
-    }
-
-    // 计算 dt：实际帧间隔与基准帧间隔的比值
-    // 200fps 时 dt=1，60fps 时 dt≈3.33，120fps 时 dt≈1.67
-    const rawDt = (timestamp - _lastFrameTime) || BASE_INTERVAL;
-    const dt = Math.min(rawDt / BASE_INTERVAL, 4); // 防止卡顿导致 dt 过大
-    G.game.dt = dt;
-
-    _lastFrameTime = timestamp;
-
-    const gm = G.game;
-
-    // 未开始：显示开始界面
-    if (!gm.isStarted) {
-        // 加载屏幕期间不绘制开始界面
-        if (typeof _loadingState !== 'undefined' && !_loadingState.entered) {
-            _setMobileHudVisible(false);
-            requestAnimationFrame(gameLoop);
-            return;
-        }
-        drawStartScreen();
-        _setMobileHudVisible(false);
-        requestAnimationFrame(gameLoop);
-        return;
-    }
-
-    if (!gm.isPaused && !gm.isGameOver && !gm.buffChooseMode && !gm.levelCompleted) {
-        // 星球探索模式：只更新玩家、背景滚动
-        if (gm.gameMode === 'explore') {
-            if (typeof _syncKeys === 'function') _syncKeys();
-            updatePlayer();
-            updateExploreBg(1.0);
-            updateParticles();
-            updateInvincible();
-        } else {
-        // 每帧校正按键状态（防止 keyup 事件丢失导致的卡键）
-        if (typeof _syncKeys === 'function') _syncKeys();
-        updatePlayer();
-        updateBullets();
-        updateEndlessBg(1.0);
-        updateStars();
-        updateMeteorites();
-        // 动态难度
-        G.game.difficultyLevel = Math.floor(G.game.score / DIFFICULTY_SCORE_INTERVAL);
-        // 检查是否触发Boss警戒
-        checkBossWarning();
-        spawnEnemies();
-        updateEnemies();
-        updateBoss();
-        // 冰霜漩涡独立更新（Boss 死亡后残余漩涡仍需生效）
-        if (G.iceVortexes.length > 0 && !(G.boss && G.boss.skillState === 'ice_vortex_active')) {
-            G.player._vortexSlowdown = false;
-            _updateIceVortexesGlobal(G, Date.now());
-        }
-        updateParticles();
-        updateInvincible();
-        checkCollisions();
-        fireBullets();
-        updateHomingMissiles();
-        updateGems();
-        checkBuffTrigger();
-
-        // 关卡通关检测
-        if (G.game.gameMode === 'level') {
-            checkLevelComplete();
-        }
-
-        if (gm.life < 1) {
-            gm.isGameOver = true;
-            // 更新最高分
-            if (G.game.score > (G.game.highScore || 0)) {
-                G.game.highScore = G.game.score;
-            }
-            Save.save();
-            stopBGM();
-            createExplosion(
-                G.player.x + G.player.width / 2,
-                G.player.y + G.player.height / 2,
-                '#44aaff'
-            );
-        }
-        }
-    }
-
-    Game.ctx.fillStyle = '#000000';
-    Game.ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
-
-    // 屏幕震动
-    Game.ctx.save();
-    if (G.screenShake > 0.5) {
-        const dx = (Math.random() * 2 - 1) * G.screenShake * 1.5;
-        const dy = (Math.random() * 2 - 1) * G.screenShake * 1.5;
-        Game.ctx.translate(dx, dy);
-    }
-
-    // 受伤屏幕抖动
-    if (G.player.hitEffect > 8) {
-        const hx = (Math.random() * 2 - 1) * 3;
-        const hy = (Math.random() * 2 - 1) * 3;
-        Game.ctx.translate(hx, hy);
-    }
-
-    if (gm.gameMode === 'explore') {
-        drawExploreBg(Game.ctx);
-        drawParticles(Game.ctx);
-        drawPlayer();
-        drawPauseBtn();
-    } else {
-    drawEndlessBg(Game.ctx);
-    drawStars(Game.ctx);
-    drawMeteorites(Game.ctx);
-    drawGems(Game.ctx);
-    drawEnemies();
-    drawBoss();
-    drawIceShields();
-    drawIceVortexes();
-    drawBullets();
-    drawEnemyBullets();
-    drawWingmanBullets();
-    drawHomingMissiles();
-    drawParticles(Game.ctx);
-    drawLightningChains(Game.ctx);
-    drawWingman();
-    drawPlayer();
-    drawLaser();
-    drawPauseBtn();
-    }
-
-    // 屏幕闪白（最上层）
-    if (G.screenFlash > 0.01) {
-        Game.ctx.fillStyle = `rgba(255, 255, 255, ${G.screenFlash})`;
-        Game.ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
-    }
-
-    // 超频金色光晕
-    if (G.player.isOverclock) {
-        Game.ctx.fillStyle = 'rgba(255, 215, 0, 0.05)';
-        Game.ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
-    }
-
-    Game.ctx.restore();
-
-    // 屏幕震动衰减
-    if (G.screenShake > 0) {
-        G.screenShake *= 0.9;
-        if (G.screenShake < 0.1) G.screenShake = 0;
-    }
-    // 屏幕闪白衰减
-    if (G.screenFlash > 0) {
-        G.screenFlash *= 0.85;
-        if (G.screenFlash < 0.01) G.screenFlash = 0;
-    }
-
-    if (gm.isPaused) drawPauseOverlay();
-    if (gm.settingsOpen) drawSettingsPanel();
-    if (!gm.isPaused && !gm.isGameOver) drawHitEffect();
-    // 警戒效果（词条选择时不显示，避免遮挡词条 UI）
-    if (G.bossWarning && !gm.buffChooseMode) {
-        drawBossWarning();
-    }
-
-    if (gm.buffChooseMode) drawBuffChoose(Game.ctx);
-
-    // 关卡通关画面
-    if (gm.levelCompleted) {
-        drawLevelComplete();
-    }
-
-    if (gm.isGameOver) {
-        drawGameOver();
-    }
-
-    // CRT噪声叠加
-    if (gm.isStarted && !gm.isPaused && !gm.isGameOver) {
-        drawNoiseOverlay(Game.ctx, 10);
-    }
-
-    // 更新 HTML UI（关卡通关画面覆盖时跳过，避免覆盖下状态的 HUD）
-    if (!gm.levelCompleted) updateHUD();
-
-    // Mobile HUD visibility: hide during game over and level complete screens
-    _setMobileHudVisible(gm.isStarted && !gm.isGameOver && !gm.levelCompleted);
-
+    if (!Number.isFinite(timestamp)) timestamp = performance.now();
     requestAnimationFrame(gameLoop);
-}
-
-// ─── CRT噪声叠加 ───
-function drawNoiseOverlay(ctx, intensity) {
-    ctx.fillStyle = 'rgba(255,255,255,0.025)';
-    for (let i = 0; i < intensity; i++) {
-        const nx = Math.random() * LOGICAL_W;
-        const ny = Math.random() * LOGICAL_H;
-        ctx.fillRect(nx, ny, 2, 2);
+    const interval = G.game.targetFPS ? 1000 / G.game.targetFPS : 0;
+    if (_lastFrameTime !== null && timestamp - _lastFrameTime + .5 < interval) return;
+    const elapsed = _lastFrameTime === null ? 0 : Math.max(0, Math.min(timestamp - _lastFrameTime, MAX_FRAME_TIME));
+    _lastFrameTime = timestamp;
+    if (isFlying() && !document.hidden) {
+        _simulationAccumulator += elapsed;
+        while (_simulationAccumulator >= SIMULATION_STEP && isFlying()) {
+            _simulationAccumulator -= SIMULATION_STEP;
+            advanceFlight();
+        }
+    } else {
+        _simulationAccumulator = 0;
     }
+    if (!G.game.isStarted) {
+        lastPaintedTime = null;
+        drawHangarSky(timestamp);
+    } else if (lastPaintedTime !== _gameTime) {
+        renderFlight(Game.ctx);
+        lastPaintedTime = _gameTime;
+    }
+    syncUI();
 }
 
-// Boss警戒检测
 function checkBossWarning() {
     if (G.bossSpawned) return;
 
@@ -235,7 +100,7 @@ function checkBossWarning() {
             if ((G.levelBossIndex || 0) >= level.bossId.length) return;
         }
 
-        const now = Date.now();
+        const now = gameNow();
         if (!G.bossWarning) {
             if (G.game.score >= triggerScore) {
                 G.bossWarning = true;
@@ -254,7 +119,7 @@ function checkBossWarning() {
             const def = BOSS.getByIndex(G.bossIndex);
             if (def) G.bossNextScore = def.spawnScore;
         }
-        const now = Date.now();
+        const now = gameNow();
         if (!G.bossWarning) {
             if (G.game.score >= G.bossNextScore) {
                 G.bossWarning = true;
@@ -266,42 +131,4 @@ function checkBossWarning() {
             }
         }
     }
-}
-
-// 警戒效果绘制（增强版：故障抖动+扫描线+四边红框）
-function drawBossWarning() {
-    const now = Date.now();
-    const elapsed = now - G.bossWarningStart;
-    const blink = Math.sin(elapsed / 100 * Math.PI) > 0;
-    if (blink) {
-        Game.ctx.fillStyle = 'rgba(255, 51, 85, 0.15)';
-        Game.ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
-
-        // 扫描线效果
-        Game.ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
-        for (let sy = 0; sy < LOGICAL_H; sy += 4) {
-            Game.ctx.fillRect(0, sy, LOGICAL_W, 1);
-        }
-
-        // 四边红色边框闪烁
-        Game.ctx.fillStyle = 'rgba(255, 51, 85, 0.3)';
-        Game.ctx.fillRect(0, 0, LOGICAL_W, 3);
-        Game.ctx.fillRect(0, LOGICAL_H - 3, LOGICAL_W, 3);
-        Game.ctx.fillRect(0, 0, 3, LOGICAL_H);
-        Game.ctx.fillRect(LOGICAL_W - 3, 0, 3, LOGICAL_H);
-    }
-
-    const cx = LOGICAL_W / 2;
-    const cy = LOGICAL_H / 2;
-
-    // WARNING 故障抖动
-    const shakeX = (Math.random() - 0.5) * 4;
-    const shakeY = (Math.random() - 0.5) * 2;
-
-    Game.ctx.textAlign = 'center';
-    drawSciTitle(Game.ctx, 'WARNING', cx + shakeX, cy - 15 + shakeY, '28px ' + FONT_PIXEL, SCI.red, 25);
-
-    Game.ctx.fillStyle = 'rgba(0, 229, 255, 0.6)';
-    Game.ctx.font = '14px ' + FONT_PIXEL;
-    Game.ctx.fillText('BOSS INCOMING', cx, cy + 22);
 }

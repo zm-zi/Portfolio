@@ -3,7 +3,6 @@ ENEMY.register({
     type: 'rusher',
     score: ENEMY3_SCORE,
     color: '#44ff44',
-    imgSrc: 'image/三级敌人.png',
     lastSpawnTime: 0,
 
     spawn(G, now, spawnMult, hpMult) {
@@ -63,9 +62,5 @@ ENEMY.register({
                 }
             }
         }
-    },
-
-    draw(e, ctx) {
-        drawWithOutline(ctx, this._img, e.x, e.y, e.width, e.height, 1, true, e.hitFlash);
     }
 });

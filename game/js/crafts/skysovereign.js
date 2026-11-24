@@ -1,10 +1,10 @@
-// 苍穹号：3发散射 · 白色主题
 CRAFT.register({
     id: 'skysovereign',
-    name: '苍穹号',
-    desc: '3发散射 · 白色主题',
-    color: '#ddeeff',
-    imgSrc: 'image/苍穹号.png',
+    name: '雨燕',
+    callsign: 'SWIFT',
+    weapon: '三向散射',
+    desc: '三枚扇形弹，擅长近距离拦截',
+    imgSrc: 'art/skysovereign.webp',
     fireRate: 220,
     details: ['射速: 220ms', '伤害: 0.8×3', '射程: 320px', '弹速: -30%', '20°散射'],
 
@@ -22,14 +22,5 @@ CRAFT.register({
             b.skySovereign = true;
             G.bullets.push(b);
         }
-    },
-
-    trailColors: {
-        outer: '#ccddee',
-        outerOC: '#ffaa00',
-        inner: '#ffffff',
-        innerOC: '#ffdd44',
-        glow: '#aabbcc',
-        glowOC: '#ff8800'
     }
 });

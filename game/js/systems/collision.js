@@ -1,87 +1,6 @@
 // 碰撞检测
 const _aabb = Game.Util.aabb;
 
-// ═══════════════════════════════════════════
-//  墨子号炸弹爆炸
-// ═══════════════════════════════════════════
-
-function createBombExplosion(x, y) {
-    // 核心闪光
-    for (let i = 0; i < 5; i++) {
-        const a = Math.random() * 6.2832;
-        const s = Math.random() * 2 + 0.5;
-        G.particles.push({
-            x: x + (Math.random() - 0.5) * 6,
-            y: y + (Math.random() - 0.5) * 6,
-            vx: Math.cos(a) * s, vy: Math.sin(a) * s,
-            life: 12 + Math.random() * 10, maxLife: 22,
-            color: '#ffffff', size: 5 + Math.random() * 8,
-            gravity: 0.02, isPixel: true, drawPass: PASS_FLASH,
-            rot: Math.random() * 6.28, rotV: (Math.random() - 0.5) * 0.6
-        });
-    }
-    // 主色碎片（深蓝系）
-    const mc = ['#2244aa', '#3355bb', '#1133aa', '#4466cc', '#2255cc'];
-    for (let i = 0; i < 10; i++) {
-        const a = Math.random() * 6.2832;
-        const s = Math.random() * 5.5 + 2;
-        G.particles.push({
-            x, y,
-            vx: Math.cos(a) * s, vy: Math.sin(a) * s,
-            life: 36 + Math.random() * 28, maxLife: 64,
-            color: mc[(Math.random() * 5) | 0], size: 5 + Math.random() * 10,
-            gravity: 0.10, isPixel: true, drawPass: PASS_CORE,
-            rot: Math.random() * 6.28, rotV: (Math.random() - 0.5) * 0.35
-        });
-    }
-    // 亮色碎块
-    const bc = ['#6688ff', '#88aaff', '#5577ee', '#99bbff'];
-    for (let i = 0; i < 12; i++) {
-        const a = Math.random() * 6.2832;
-        const s = Math.random() * 7 + 3;
-        G.particles.push({
-            x, y,
-            vx: Math.cos(a) * s, vy: Math.sin(a) * s,
-            life: 20 + Math.random() * 24, maxLife: 44,
-            color: bc[(Math.random() * 4) | 0], size: 2 + Math.random() * 5,
-            gravity: 0.05, isPixel: true, drawPass: PASS_CORE,
-            rot: Math.random() * 6.28, rotV: (Math.random() - 0.5) * 0.5
-        });
-    }
-    // 火花条
-    for (let i = 0; i < 8; i++) {
-        const a = Math.random() * 6.2832;
-        const s = Math.random() * 8 + 4;
-        G.particles.push({
-            x, y,
-            vx: Math.cos(a) * s, vy: Math.sin(a) * s,
-            life: 24 + Math.random() * 16, maxLife: 40,
-            color: `rgb(${(50+Math.random()*60)|0},${(100+Math.random()*80)|0},255)`,
-            size: 2 + Math.random() * 3,
-            gravity: 0.02, isPixel: true, drawPass: PASS_SPARK,
-            sparkLen: 20 + Math.random() * 28,
-            sparkDx: Math.cos(a), sparkDy: Math.sin(a)
-        });
-    }
-    // 烟雾
-    for (let i = 0; i < 4; i++) {
-        const a = Math.random() * 6.2832;
-        const s = Math.random() * 1.2 + 0.3;
-        G.particles.push({
-            x: x + (Math.random() - 0.5) * 12,
-            y: y + (Math.random() - 0.5) * 12,
-            vx: Math.cos(a) * s, vy: Math.sin(a) * s,
-            life: 60 + Math.random() * 30, maxLife: 90,
-            color: '#334455', size: 10 + Math.random() * 14,
-            gravity: -0.04, isPixel: true, drawPass: PASS_SMOKE,
-            rot: Math.random() * 6.28, rotV: (Math.random() - 0.5) * 0.08
-        });
-    }
-    // 冲击波
-    G.flashes.push({ x, y, r: 3, maxR: 50, life: 28, maxLife: 28, color: 4 });
-    G.flashes.push({ x, y, r: 2, maxR: 30, life: 16, maxLife: 16, color: 2 });
-}
-
 function _processBombExplosions() {
     for (let i = G.bullets.length - 1; i >= 0; i--) {
         const b = G.bullets[i];
@@ -131,7 +50,7 @@ function _processBombExplosions() {
         const ey = by;
         const dmg = b.explosionDamage || MOZI_EXPLOSION_DAMAGE;
 
-        createBombExplosion(ex, ey);
+        createExplosion(ex, ey, 'bomb');
 
         // AOE 对敌人造成伤害
         for (let j = G.enemies.length - 1; j >= 0; j--) {
@@ -279,11 +198,7 @@ function _checkBulletsVsEnemies(bulletList, getDamage, onEnemyHit, onBossHit) {
 function _killBoss() {
     const bx = G.boss.x + G.boss.width / 2;
     const by = G.boss.y + G.boss.height / 2;
-    createExplosion(bx, by, '#ff0000');
-    setTimeout(() => createExplosion(bx - 25, by - 20, '#ff4400'), 60);
-    setTimeout(() => createExplosion(bx + 25, by + 15, '#ff6600'), 120);
-    setTimeout(() => createExplosion(bx - 15, by + 25, '#ff4400'), 180);
-    setTimeout(() => createExplosion(bx + 20, by - 18, '#ff0000'), 240);
+    createExplosion(bx, by, 'fortress');
     G.screenFlash = 0.4;
     G.player.energy = Math.min(OVERCLOCK_MAX_ENERGY, G.player.energy + 30);
     _spawnBossGemRain(bx, by, 200);
@@ -295,7 +210,7 @@ function _killBoss() {
     G.iceShields.length = 0;
     G.boss = null;
     G.bossSpawned = false;
-    G.bossDefeatTime = Date.now();
+    G.bossDefeatTime = gameNow();
     _advanceBoss();
 }
 
@@ -321,11 +236,10 @@ function _spawnBossGemRain(x, y, total) {
 }
 
 function _awardKill(enemy, enemyList, index, skipLightning) {
-    const color = Game.Util.enemyColor(enemy.type);
     const score = Game.Util.enemyScore(enemy.type);
     const cx = enemy.x + enemy.width / 2;
     const cy = enemy.y + enemy.height / 2;
-    createExplosion(cx, cy, color);
+    createExplosion(cx, cy);
     playExplosionSound();
     spawnGem(cx, cy, score);
     // 贪婪：30%概率额外掉落一颗宝石
@@ -343,7 +257,7 @@ function _awardKill(enemy, enemyList, index, skipLightning) {
             _triggerLightningChain(cx, cy, lcLevel, enemyList);
         }
     }
-    G.player.energy = Math.min(OVERCLOCK_MAX_ENERGY, G.player.energy + OVERCLOCK_BASE_ENERGY_PER_KILL + (G.player.overclockEnergyBonus || 0));
+    G.player.energy = Math.min(OVERCLOCK_MAX_ENERGY, G.player.energy + OVERCLOCK_BASE_ENERGY_PER_KILL + (G.player.overclockEnergyBonus || 0) + (G.player.lightningCharge ? 2 : 0));
 }
 
 function _damageEnemy(enemyList, index, bulletList, bulletIndex) {
@@ -353,8 +267,8 @@ function _damageEnemy(enemyList, index, bulletList, bulletIndex) {
 
     // 穿透弹：防重复伤害同一敌人
     if (b && b.hitSet) {
-        if (b.hitSet.has(index)) return;
-        b.hitSet.add(index);
+        if (b.hitSet.has(e)) return;
+        b.hitSet.add(e);
     }
 
     // 穿透弹：有剩余穿透次数则不销毁子弹
@@ -364,7 +278,23 @@ function _damageEnemy(enemyList, index, bulletList, bulletIndex) {
         bulletList.splice(bulletIndex, 1);
     }
 
-    e.hp -= dmg;
+    let dealt = dmg;
+    if (G.player.cryoRounds && bulletList === G.bullets) {
+        if (e.frozenUntil > gameNow() && G.player.cryoShatter) {
+            dealt += 2;
+            e.frozenUntil = 0;
+            e.cryoHits = 0;
+            G.flashes.push({ x: e.x + e.width / 2, y: e.y + e.height / 2, r: 3, maxR: 35, life: 12, maxLife: 12, color: 4 });
+        } else {
+            e.cryoHits = (e.cryoHits || 0) + 1;
+            if (e.cryoHits >= (G.player.cryoQuickfreeze ? 2 : 3)) {
+                e.cryoHits = 0;
+                e.frozenUntil = gameNow() + (G.player.cryoLongfreeze ? 2000 : 1000);
+            }
+        }
+    }
+    impactSparks(e.x+e.width/2,e.y+e.height*.6,G.player.cryoRounds ? 'ice' : 'sun');
+    e.hp -= dealt;
     if (e.hp <= 0) {
         _awardKill(e, enemyList, index);
     } else {
@@ -377,6 +307,7 @@ function _damagePlayer() {
         // 镀层：免疫一次伤害
         if (G.player.hasPlating) {
             G.player.hasPlating = false;
+            impactSparks(G.player.x+G.player.width/2,G.player.y+G.player.height/2,'ice');
             G.player.platingBroken = 15; // 破碎特效帧数
             playHitSound();
             return;
@@ -385,6 +316,7 @@ function _damagePlayer() {
         G.player.isInvincible = true;
         G.player.invincibleTime = INVINCIBLE_DURATION;
         G.player.hitEffect = 15;
+        impactSparks(G.player.x+G.player.width/2,G.player.y+G.player.height/2);
         playHitSound();
     }
 }
@@ -435,7 +367,7 @@ function _triggerLightningChain(fromX, fromY, chainCount, enemyList) {
         });
 
         // 造成伤害
-        t.ref.hp -= 2;
+        t.ref.hp -= 2 + (G.player.lightningOverload ? 1 : 0);
         if (t.isBoss) {
             if (t.ref.hp <= 0) _killBoss();
         } else {
@@ -453,78 +385,6 @@ function _triggerLightningChain(fromX, fromY, chainCount, enemyList) {
         curX = t.cx;
         curY = t.cy;
     }
-}
-
-function drawLightningChains(ctx) {
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
-    for (let i = G.lightningChains.length - 1; i >= 0; i--) {
-        const l = G.lightningChains[i];
-        l.life--;
-        if (l.life <= 0) { G.lightningChains.splice(i, 1); continue; }
-
-        const alpha = l.life / l.maxLife;
-        const dx = l.x2 - l.x1;
-        const dy = l.y2 - l.y1;
-        const dist = Math.hypot(dx, dy);
-        const segments = Math.max(3, Math.floor(dist / 15));
-
-        // 外层光晕
-        ctx.globalAlpha = alpha * 0.3;
-        ctx.strokeStyle = '#4488ff';
-        ctx.lineWidth = 6;
-        ctx.beginPath();
-        ctx.moveTo(l.x1, l.y1);
-        for (let s = 1; s < segments; s++) {
-            const t = s / segments;
-            const mx = l.x1 + dx * t + (Math.random() - 0.5) * 16;
-            const my = l.y1 + dy * t + (Math.random() - 0.5) * 16;
-            ctx.lineTo(mx, my);
-        }
-        ctx.lineTo(l.x2, l.y2);
-        ctx.stroke();
-
-        // 主闪电
-        ctx.globalAlpha = alpha * 0.8;
-        ctx.strokeStyle = '#88ccff';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(l.x1, l.y1);
-        for (let s = 1; s < segments; s++) {
-            const t = s / segments;
-            const mx = l.x1 + dx * t + (Math.random() - 0.5) * 10;
-            const my = l.y1 + dy * t + (Math.random() - 0.5) * 10;
-            ctx.lineTo(mx, my);
-        }
-        ctx.lineTo(l.x2, l.y2);
-        ctx.stroke();
-
-        // 核心白线
-        ctx.globalAlpha = alpha;
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(l.x1, l.y1);
-        for (let s = 1; s < segments; s++) {
-            const t = s / segments;
-            const mx = l.x1 + dx * t + (Math.random() - 0.5) * 6;
-            const my = l.y1 + dy * t + (Math.random() - 0.5) * 6;
-            ctx.lineTo(mx, my);
-        }
-        ctx.lineTo(l.x2, l.y2);
-        ctx.stroke();
-
-        // 命中点闪光
-        if (l.life > l.maxLife - 3) {
-            ctx.globalAlpha = alpha * 0.5;
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.arc(l.x2, l.y2, 8 * alpha, 0, 6.2832);
-            ctx.fill();
-        }
-    }
-    ctx.globalAlpha = 1;
-    ctx.restore();
 }
 
 // ═══════════════════════════════════════════
@@ -662,7 +522,7 @@ function checkCollisions() {
         (i, j, s) => {
             G.bullets.splice(i, 1);
             if (s.hp <= 0) {
-                createExplosion(s.x + s.width / 2, s.y + s.height / 2, '#88ddff');
+                createExplosion(s.x + s.width / 2, s.y + s.height / 2, 'ice');
                 G.iceShields.splice(j, 1);
             }
         }
@@ -681,6 +541,7 @@ function checkCollisions() {
             } else {
                 G.bullets.splice(i, 1);
             }
+            impactSparks(b.x+b.width/2,b.y,'sun');
             G.boss.hp -= (b.damage || 1);
             if (G.boss.hp <= 0) _killBoss();
         }
@@ -693,7 +554,7 @@ function checkCollisions() {
         (i, j, s) => {
             G.wingmanBullets.splice(i, 1);
             if (s.hp <= 0) {
-                createExplosion(s.x + s.width / 2, s.y + s.height / 2, '#88ddff');
+                createExplosion(s.x + s.width / 2, s.y + s.height / 2, 'ice');
                 G.iceShields.splice(j, 1);
             }
         }
@@ -707,6 +568,7 @@ function checkCollisions() {
         (i) => {
             const b = G.wingmanBullets[i];
             G.wingmanBullets.splice(i, 1);
+            impactSparks(b.x+b.width/2,b.y,'sun');
             G.boss.hp -= (b.damage || 1);
             if (G.boss.hp <= 0) _killBoss();
         }
@@ -716,7 +578,7 @@ function checkCollisions() {
     for (let i = G.enemies.length - 1; i >= 0; i--) {
         const e = G.enemies[i];
         if (_rectTriHit(e.x, e.y, e.width, e.height, _pt1x,_pt1y, _pt2x,_pt2y, _pt3x,_pt3y)) {
-            createExplosion(e.x + e.width / 2, e.y + e.height / 2, Game.Util.enemyColor(e.type));
+            createExplosion(e.x + e.width / 2, e.y + e.height / 2);
             G.enemies.splice(i, 1);
             _damagePlayer();
         }
@@ -744,9 +606,9 @@ function checkCollisions() {
         m => m.damage,
         (i, j, s) => {
             const m = G.homingMissiles[i];
-            createExplosion(m.x + m.width / 2, m.y + m.height / 2, '#88ddff');
+            createExplosion(m.x + m.width / 2, m.y + m.height / 2, 'ice');
             if (s.hp <= 0) {
-                createExplosion(s.x + s.width / 2, s.y + s.height / 2, '#88ddff');
+                createExplosion(s.x + s.width / 2, s.y + s.height / 2, 'ice');
                 G.iceShields.splice(j, 1);
             }
             G.homingMissiles.splice(i, 1);
@@ -760,7 +622,7 @@ function checkCollisions() {
         (i, j) => {
             const m = G.homingMissiles[i];
             G.enemies[j].hp -= m.damage;
-            createExplosion(m.x + m.width / 2, m.y + m.height / 2, '#FF8800');
+            createExplosion(m.x + m.width / 2, m.y + m.height / 2);
             if (G.enemies[j].hp <= 0) {
                 _awardKill(G.enemies[j], G.enemies, j);
             }
@@ -769,7 +631,7 @@ function checkCollisions() {
         (i) => {
             const m = G.homingMissiles[i];
             G.boss.hp -= m.damage;
-            createExplosion(m.x + m.width / 2, m.y + m.height / 2, '#FF8800');
+            createExplosion(m.x + m.width / 2, m.y + m.height / 2);
             if (G.boss.hp <= 0) _killBoss();
             G.homingMissiles.splice(i, 1);
         }

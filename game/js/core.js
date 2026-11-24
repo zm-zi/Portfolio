@@ -19,21 +19,5 @@ Game.Util = {
     enemyScore(type) {
         const d = ENEMY.get(type);
         return d ? d.score : 10;
-    },
-
-    // 敌人类型 → 爆炸颜色（查注册表）
-    enemyColor(type) {
-        const d = ENEMY.get(type);
-        return d ? d.color : '#ff4444';
-    },
-
-    // 等比缩放绘制图片，适配到 bw×bh 包围盒内并居中
-    drawImageFit(ctx, img, x, y, bw, bh) {
-        const ir = (img.naturalWidth || img.width) / (img.naturalHeight || img.height);
-        const br = bw / bh;
-        let dw, dh;
-        if (ir > br) { dw = bw; dh = bw / ir; }
-        else { dh = bh; dw = bh * ir; }
-        ctx.drawImage(img, x + (bw - dw) / 2, y + (bh - dh) / 2, dw, dh);
     }
 };

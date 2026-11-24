@@ -3,7 +3,6 @@ ENEMY.register({
     type: 'basic',
     score: ENEMY1_SCORE,
     color: '#ff4444',
-    imgSrc: 'image/一级敌人.png',
     lastSpawnTime: 0,
 
     spawn(G, now, spawnMult, hpMult) {
@@ -21,9 +20,5 @@ ENEMY.register({
 
     update(e) {
         e.y += ENEMY1_SPEED * G.game.dt;
-    },
-
-    draw(e, ctx) {
-        drawWithOutline(ctx, this._img, e.x, e.y, e.width, e.height, 1, true, e.hitFlash);
     }
 });

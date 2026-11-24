@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#91cfda">
+<title>泊车小镇 · 海湾医院</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="./src/hud.css">
+</head>
+<body>
+<svg class="symbols" xmlns="http://www.w3.org/2000/svg"><defs>
+  <symbol id="i-camera" viewBox="0 0 32 32"><path d="M4 10h6l2-4h8l2 4h6v16H4z" fill="#fff1c6"/><circle cx="16" cy="17" r="6" fill="#77c4c1"/><circle cx="16" cy="17" r="2.4" fill="#304957"/><path d="M24 13h1"/></symbol>
+  <symbol id="i-retry" viewBox="0 0 32 32"><path d="M7 15a10 10 0 1 1 1.5 8" fill="none" stroke-width="4.5"/><path d="M3 9l4 9 8-5z" fill="#fff1c6"/></symbol>
+  <symbol id="i-keys" viewBox="0 0 32 32"><rect x="2.5" y="7.5" width="27" height="18" rx="4" fill="#fff4dc"/><path d="M7 13h1m4 0h1m4 0h1m4 0h1M8 17h1m4 0h1m4 0h1m4 0h1m-13 4h10"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 32 32"><path d="M13 2h6m-3 0v4m8 2 2-2"/><circle cx="16" cy="18" r="11" fill="#fffbec"/><path d="M16 10v8l4 3" fill="none"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 32 32"><path d="M7 28V5" stroke-width="3"/><path d="M8 5c6-3 10 4 18 1v13c-8 3-12-4-18-1z" fill="#fff7db"/><path d="M9 6l5 .3v4.5H9zm5 5 6 1v4.5l-6-1zm6-3.5 5 .2v4.5l-5-.2z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 32 32"><path d="M26 13c0 8-10 16-10 16S6 21 6 13a10 10 0 1 1 20 0z" fill="#ffc451"/><circle cx="16" cy="13" r="3" fill="#fff8dd"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 32 32"><ellipse cx="16" cy="16" rx="11" ry="12" fill="#ffb82e"/><ellipse cx="16" cy="16" rx="7" ry="8.5" fill="#ffdb52"/><path d="M17 11v10m-3-8 3-2"/></symbol>
+</defs></svg>
+<canvas id="scene" aria-label="可驾驶的海湾医院停车场"></canvas>
+<div class="hud">
+  <header class="logo" aria-label="泊车小镇 Pocket Parking">
+    <div class="logo-mark" aria-hidden="true">P</div>
+    <div><h1>泊车小镇</h1><div class="logo-sub"><i></i> POCKET PARKING <i></i></div></div>
+  </header>
+  <aside class="stats" aria-label="本次练习数据">
+    <div class="timer" title="本次任务用时"><svg><use href="#i-clock"/></svg><b id="clock">00:00</b></div>
+    <div class="points"><svg><use href="#i-coin"/></svg><b id="points">0</b><span>PTS</span></div>
+  </aside>
+  <nav class="tools" aria-label="驾驶工具">
+    <button id="camera-btn" title="切换视角 (C)" type="button"><span class="tool-icon cam"><svg><use href="#i-camera"/></svg></span><span>视角</span></button>
+    <button id="retry-btn" title="重新开始本次练习 (R)" type="button"><span class="tool-icon retry"><svg><use href="#i-retry"/></svg></span><span>重试</span></button>
+    <button id="help-btn" title="查看操作说明" aria-expanded="false" aria-controls="guide" type="button"><span class="tool-icon keys"><svg><use href="#i-keys"/></svg></span><span>操作</span></button>
+  </nav>
+  <section id="guide" hidden aria-label="操作指南">
+    <div class="guide-title"><b>驾驶操作</b><button id="close-guide" aria-label="关闭操作说明">×</button></div>
+    <p><kbd>W</kbd><kbd>S</kbd> 加速 / 刹车倒车</p><p><kbd>A</kbd><kbd>D</kbd> 左转 / 右转</p>
+    <p><kbd>Space</kbd> 手刹</p><p><kbd>C</kbd> 切换视角 <kbd>R</kbd> 重试</p>
+    <small>方向键也可以驾驶。将车身停正并停稳，即可完成泊车。</small>
+  </section>
+  <div class="location"><svg><use href="#i-pin"/></svg><div><small>HARBOR DISTRICT</small><b>海湾街区 · 小镇医院</b></div></div>
+  <section class="ticket" aria-label="泊车任务">
+    <div class="ticket-tab">PARKING TICKET</div>
+    <div class="ticket-main">
+      <span class="flag"><svg><use href="#i-flag"/></svg></span>
+      <div class="mission-copy"><small id="mission-label">泊车任务</small><strong id="objective">驶入 A03 车位</strong></div>
+      <div class="distance"><svg><use href="#i-pin"/></svg><b id="distance">0</b><small>m</small></div>
+    </div>
+    <div class="ticket-foot"><span id="tip">沿车道驶向黄色标记</span><span class="reward"><svg><use href="#i-coin"/></svg> +100</span></div>
+    <button id="next" type="button" hidden>下一车位 →</button>
+  </section>
+  <aside class="gps" aria-label="街区地图与仪表">
+    <div class="gps-screen"><canvas id="map" width="336" height="208" aria-label="实时位置与目标车位"></canvas><span class="gps-label"><i></i> GPS</span><span class="north">▲ N</span></div>
+    <div class="dashboard"><b id="gear">N</b><strong id="speed">0</strong><span>KM/H</span></div>
+  </aside>
+  <div class="touchpad" aria-label="触屏驾驶"><button data-key="ArrowLeft" aria-label="左转">◀</button><button data-key="ArrowRight" aria-label="右转">▶</button><i></i><button data-key="ArrowDown" aria-label="刹车倒车">▼</button><button data-key="ArrowUp" aria-label="前进">▲</button><button data-key="Space" aria-label="手刹">停</button></div>
+</div>
+<div id="loading" role="status"><div class="spinner"></div><b>正在装载海湾街区…</b><div id="err"></div></div>
+<script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/addons/"}}</script>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

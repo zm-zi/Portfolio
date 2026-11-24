@@ -3,7 +3,6 @@ ENEMY.register({
     type: 'spinner',
     score: ENEMY4_SCORE,
     color: '#ff4444',
-    imgSrc: 'image/四级敌人.png',
     lastSpawnTime: 0,
 
     spawn(G, now, spawnMult, hpMult) {
@@ -27,52 +26,32 @@ ENEMY.register({
 
     update(e, G, now) {
         if (e.y < e.hoverY) e.y += ENEMY4_SPEED * G.game.dt;
-        // 第一波：3发，180度均分（-90°, 0°, 90°）
+        // Two interleaved fans form a flower with a different opening on each volley.
         if (!e.wave2Fired && now - e.lastFireTime >= ENEMY4_FIRE_RATE) {
-            const centerX = e.x + e.width / 2;
-            const centerY = e.y + e.height;
-            const angles = [-90, 0, 90];
-            for (const angle of angles) {
-                const rad = angle * Math.PI / 180;
-                G.enemyBullets.push({
-                    x: centerX - 4,
-                    y: centerY,
-                    width: 8, height: 12,
-                    vx: Math.sin(rad) * ENEMY4_BULLET_SPEED,
-                    vy: Math.cos(rad) * ENEMY4_BULLET_SPEED,
-                    color: '#cc44ff'
-                });
-            }
+            e.petalTilt = e.petalTilt === 1 ? -1 : 1;
+            spinnerPetals(e, [-68,-34,0,34,68], e.petalTilt * 5);
             e.wave2Fired = true;
             e.wave2Time = now;
         }
-        // 第二波：延迟200ms后发射，3发（-45°, 0°, 45°）
-        if (e.wave2Fired && !e.wave3Fired && now - e.wave2Time >= 200) {
-            const centerX = e.x + e.width / 2;
-            const centerY = e.y + e.height;
-            const angles = [-45, 0, 45];
-            for (const angle of angles) {
-                const rad = angle * Math.PI / 180;
-                G.enemyBullets.push({
-                    x: centerX - 4,
-                    y: centerY,
-                    width: 8, height: 12,
-                    vx: Math.sin(rad) * ENEMY4_BULLET_SPEED,
-                    vy: Math.cos(rad) * ENEMY4_BULLET_SPEED,
-                    color: '#cc44ff'
-                });
-            }
+        if (e.wave2Fired && !e.wave3Fired && now - e.wave2Time >= 240) {
+            spinnerPetals(e, [-51,-17,17,51], e.petalTilt * 5);
             e.wave3Fired = true;
         }
-        // 重置攻击状态
-        if (now - e.lastFireTime >= ENEMY4_FIRE_RATE + 400) {
+        if (e.wave3Fired && now - e.wave2Time >= 420) {
             e.lastFireTime = now;
             e.wave2Fired = false;
             e.wave3Fired = false;
         }
-    },
-
-    draw(e, ctx) {
-        drawWithOutline(ctx, this._img, e.x, e.y, e.width, e.height, 1, true, e.hitFlash);
     }
 });
+
+function spinnerPetals(enemy, angles, tilt) {
+    const x = enemy.x + enemy.width / 2 - 4;
+    for (const degrees of angles) {
+        const angle = (degrees + tilt) * Math.PI / 180;
+        G.enemyBullets.push({
+            x, y: enemy.y + enemy.height, width: 8, height: 12, petal: true,
+            vx: Math.sin(angle) * ENEMY4_BULLET_SPEED, vy: Math.cos(angle) * ENEMY4_BULLET_SPEED
+        });
+    }
+}

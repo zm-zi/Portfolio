@@ -213,10 +213,7 @@ function proceedToNextLevel() {
         G.game.gameMode = 'endless';
         G.game.currentLevel = 0;
         G.game.levelCompleted = false;
-        startScreenMode = 'main';
-        _levelProgress = -1;
-        Save.clearProgress();
-        resetState();
+        returnToHangar();
         return;
     }
 

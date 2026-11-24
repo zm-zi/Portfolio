@@ -14,8 +14,10 @@ const BUFF = {
     all() { return this._poolOrder.map(id => this._pool[id]); },
 
     // 按稀有度权重随机抽取 count 个不重复词条
-    randomPick(count) {
-        const pool = this.all().filter(d => !d.condition || d.condition(G));
+    randomPick(count, exclude = []) {
+        let pool = this.all().filter(d => !d.condition || d.condition(G));
+        const fresh = pool.filter(d => !exclude.includes(d.id));
+        if (fresh.length >= count) pool = fresh;
         if (pool.length === 0) return [];
         const n = Math.min(count, pool.length);
 
@@ -54,8 +56,10 @@ const BUFF = {
     },
 
     // 只抽取攻击类词条
-    randomPickAttack(count) {
-        const pool = this.all().filter(d => d.category === 'attack' && (!d.condition || d.condition(G)));
+    randomPickAttack(count, exclude = []) {
+        let pool = this.all().filter(d => d.category === 'attack' && (!d.condition || d.condition(G)));
+        const fresh = pool.filter(d => !exclude.includes(d.id));
+        if (fresh.length >= count) pool = fresh;
         if (pool.length === 0) return [];
         const n = Math.min(count, pool.length);
 
@@ -92,18 +96,15 @@ const BUFF = {
 };
 
 // ========= 词条选择 UI =========
-const _cardW = 170;
-const _cardH = 240;
-const _cardGap = 20;
-
-function initBuffUI() {
-}
-
 function startBuffChoice(freePick) {
     let choices;
-    if (G.game.gameMode === 'level') {
+    G.game.buffStarter = !!freePick && !G.game.routeReward;
+    if (freePick && !G.game.routeReward) {
+        choices = ['lightning_chain', 'rapid_fire', 'cryo_rounds'].map(id => BUFF.get(id)).filter(d => d && (!d.condition || d.condition(G)));
+        if (choices.length < 3) choices.push(BUFF.get('wingman'));
+    } else if (G.game.gameMode === 'level') {
         // 关卡模式：只从攻击类词条中选1个
-        choices = BUFF.randomPickAttack(1);
+        choices = BUFF.randomPickAttack(BUFF_CHOICE_COUNT);
     } else {
         choices = BUFF.randomPick(BUFF_CHOICE_COUNT);
     }
@@ -114,119 +115,15 @@ function startBuffChoice(freePick) {
     G.game.buffIsFreePick = !!freePick;
 }
 
-function drawBuffChoose(ctx) {
-    const choices = G.game.buffChoices;
-    const count = choices.length;
-    if (count === 0) return;
-
-    // 遮罩
-    ctx.fillStyle = 'rgba(5, 8, 15, 0.9)';
-    ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
-
-    // 标题
-    const cx = LOGICAL_W / 2;
-    ctx.textAlign = 'center';
-    drawSciTitle(ctx, '选择词条', cx, LOGICAL_H / 2 - _cardH / 2 - 40, 'bold 28px HYPixel, sans-serif', SCI.gold, 16);
-
-    // 副标题
-    ctx.fillStyle = 'rgba(0, 229, 255, 0.45)';
-    ctx.font = '20px HYPixel, sans-serif';
-    ctx.fillText(IS_MOBILE ? '点击卡片选择' : '按 1 / 2 / 3 选择', cx, LOGICAL_H / 2 - _cardH / 2 - 14);
-
-    const totalW = count * _cardW + (count - 1) * _cardGap;
-    const startX = (LOGICAL_W - totalW) / 2;
-    const cardY = LOGICAL_H / 2 - _cardH / 2;
-
-    const rarityColors = { common: '#e8e8f0', rare: '#00ff88', epic: '#bb66ff', legendary: '#ff3355' };
-    const rarityLabels = { common: 'COMMON', rare: 'RARE', epic: 'EPIC', legendary: 'LEGENDARY' };
-
-    for (let i = 0; i < count; i++) {
-        const def = BUFF.get(choices[i]);
-        if (!def) continue;
-        const cardX = startX + i * (_cardW + _cardGap);
-        const color = def.color || rarityColors[def.rarity] || '#555';
-
-        // 卡片背景
-        ctx.fillStyle = SCI.cardBg;
-        ctx.beginPath();
-        ctx.roundRect(cardX, cardY, _cardW, _cardH, 2);
-        ctx.fill();
-
-        // 卡片外发光
-        ctx.save();
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = color;
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 1;
-        ctx.globalAlpha = 0.7;
-        ctx.beginPath();
-        ctx.roundRect(cardX, cardY, _cardW, _cardH, 2);
-        ctx.stroke();
-        ctx.restore();
-
-        // 科幻角括号装饰
-        drawSciCorners(ctx, cardX, cardY, _cardW, _cardH, 8, color + '88');
-
-        // 顶部色带
-        ctx.save();
-        ctx.beginPath();
-        ctx.roundRect(cardX, cardY, _cardW, 40, [2, 2, 0, 0]);
-        ctx.clip();
-        ctx.fillStyle = color;
-        ctx.globalAlpha = 0.08;
-        ctx.fillRect(cardX, cardY, _cardW, 40);
-        ctx.globalAlpha = 1;
-        ctx.restore();
-
-        // 裁剪到卡片区域内
-        ctx.save();
-        ctx.beginPath();
-        ctx.rect(cardX + 1, cardY + 1, _cardW - 2, _cardH - 2);
-        ctx.clip();
-
-        // 稀有度标识
-        ctx.fillStyle = color;
-        ctx.font = 'bold 10px Press Start 2P, monospace';
-        ctx.textAlign = 'center';
-        ctx.shadowBlur = 6;
-        ctx.shadowColor = color;
-        ctx.fillText(rarityLabels[def.rarity] || def.rarity, cardX + _cardW / 2, cardY + 25);
-        ctx.shadowBlur = 0;
-
-        // 名称（自动换行）
-        ctx.fillStyle = '#e8e8f0';
-        ctx.font = 'bold 18px HYPixel, sans-serif';
-        const nameFontSize = 18;
-        const nameLines = _wrapText(def.name, nameFontSize, _cardW - 24);
-        const nameLineH = 20;
-        const nameStartY = cardY + 58;
-        const maxNameLines = 2;
-        for (let li = 0; li < nameLines.length && li < maxNameLines; li++) {
-            ctx.fillText(nameLines[li], cardX + _cardW / 2, nameStartY + li * nameLineH);
-        }
-
-        // 描述
-        ctx.fillStyle = 'rgba(0, 229, 255, 0.5)';
-        ctx.font = '14px HYPixel, sans-serif';
-        const desc = typeof def.desc === 'function' ? def.desc(G) : def.desc;
-        const descFontSize = 14;
-        const lines = _wrapText(desc, descFontSize, _cardW - 24);
-        const descLineH = 16;
-        const descStartY = nameStartY + nameLines.length * nameLineH + 10;
-        const descMaxY = cardY + _cardH - 28;
-        for (let li = 0; li < lines.length && descStartY + li * descLineH < descMaxY; li++) {
-            ctx.fillText(lines[li], cardX + _cardW / 2, descStartY + li * descLineH);
-        }
-
-        ctx.restore();
-
-        // 序号提示
-        ctx.fillStyle = 'rgba(0, 229, 255, 0.35)';
-        ctx.font = '10px Press Start 2P, monospace';
-        ctx.fillText('[' + (i + 1) + ']', cardX + _cardW / 2, cardY + _cardH - 14);
-    }
-
-    ctx.textAlign = 'left';
+function rerollBuffChoice() {
+    const gm = G.game;
+    if (!gm.buffChooseMode || gm.routeChoice || gm.buffStarter || gm.buffRerolls <= 0) return;
+    const choices = gm.gameMode === 'level'
+        ? BUFF.randomPickAttack(BUFF_CHOICE_COUNT, gm.buffChoices)
+        : BUFF.randomPick(BUFF_CHOICE_COUNT, gm.buffChoices);
+    if (!choices.length) return;
+    gm.buffChoices = choices.map(d => d.id);
+    gm.buffRerolls--;
 }
 
 function chooseBuff(index) {
@@ -236,6 +133,16 @@ function chooseBuff(index) {
 
     const def = BUFF.get(choices[index]);
     if (!def) return;
+
+    if (G.game.routeChoice) {
+        G.game.routeChoice = false;
+        G.game.routeChosen = true;
+        G.game.routeNextScore = G.game.score + 500;
+        G.game.buffChooseMode = false;
+        G.game.buffChoices = [];
+        def.apply(G);
+        return;
+    }
 
     def.apply(G);
     G.player.buffList.push(def.id);
@@ -253,44 +160,11 @@ function chooseBuff(index) {
         }
     }
     G.game.buffChooseMode = false;
+    G.game.buffStarter = false;
     G.game.buffChoices = [];
     G.game.buffIsFreePick = false;
 }
 
-function drawPlayerBuffs(ctx) {
-    const list = G.player.buffList;
-    if (list.length === 0) return;
-
-    const counts = {};
-    list.forEach(id => { counts[id] = (counts[id] || 0) + 1; });
-
-    const rarityColors = { common: '#e8e8f0', rare: '#00ff88', epic: '#bb66ff', legendary: '#ff3355' };
-    ctx.font = '16px HYPixel, sans-serif';
-    ctx.textAlign = 'left';
-    let y = 68;
-    for (const id in counts) {
-        const def = BUFF.get(id);
-        if (!def) continue;
-        const color = def.color || rarityColors[def.rarity] || '#fff';
-        const label = counts[id] > 1 ? def.name + ' x' + counts[id] : def.name;
-        const tw = ctx.measureText(label).width + 12;
-        // 标签背景
-        ctx.fillStyle = 'rgba(22, 22, 34, 0.8)';
-        ctx.beginPath();
-        ctx.roundRect(5, y - 12, tw, 17, 2);
-        ctx.fill();
-        // 左侧色标（更宽）
-        ctx.fillStyle = color;
-        ctx.fillRect(5, y - 12, 4, 17);
-        // 文字
-        ctx.fillStyle = color;
-        ctx.fillText(label, 13, y);
-        y += 20;
-    }
-    ctx.textAlign = 'left';
-}
-
-// ========= 词条触发检测 =========
 function checkBuffTrigger() {
     if (G.game.buffChooseMode) return;
     // 关卡模式：不自动弹出词条选择（每关只在开局选一次）
@@ -308,11 +182,11 @@ function checkBuffTrigger() {
 BUFF.register({
     id: 'rapid_fire',
     name: '速射',
-    desc: '射速提升25%',
+    desc: G => (CRAFT.get(G.player.aircraftType) || {}).isLaser ? '激光伤害提升25%' : '射速提升25%',
     rarity: 'common',
     category: 'attack',
     condition: (G) => (G.player._rapidFireCount || 0) < 3,
-    onInit(G) { G.player.currentFireRate = G.player.baseFireRate || FIRE_RATE; G.player._rapidFireCount = 0; },
+    onInit(G) { G.player.currentFireRate = G.player.baseFireRate || FIRE_RATE; G.player._rapidFireCount = 0; G.player.laserDamageMult = 1; },
     apply(G) {
         G.player._rapidFireCount = (G.player._rapidFireCount || 0) + 1;
         const def = CRAFT.get(G.player.aircraftType);
@@ -404,7 +278,7 @@ BUFF.register({
     rarity: 'epic',
     category: 'attack',
     condition: (G) => G.player.homingMissileLevel >= 1 && (G.player._swiftCount || 0) < 2,
-    onInit(G) {},
+    onInit(G) { G.player._swiftCount = 0; },
     apply(G) {
         G.player._swiftCount = (G.player._swiftCount || 0) + 1;
         G.player.homingMissileLevel = (G.player.homingMissileLevel || 0) + 1;
@@ -419,7 +293,7 @@ BUFF.register({
     rarity: 'epic',
     category: 'attack',
     condition: (G) => G.player.homingMissileLevel >= 1 && (G.player._missileCountStacks || 0) < 2,
-    onInit(G) {},
+    onInit(G) { G.player._missileCountStacks = 0; },
     apply(G) { G.player.homingMissileCount = (G.player.homingMissileCount || 1) + 1; G.player._missileCountStacks = (G.player._missileCountStacks || 0) + 1; }
 });
 
@@ -547,7 +421,7 @@ BUFF.register({
     apply(G) { G.player.greedChance = 0.3; }
 });
 
-// 词条13：闪电连锁 — 击杀敌人时闪电攻击最近的敌人，伤害2，需穿透弹满级解锁
+// 词条13：闪电连锁 — 击杀敌人时闪电攻击最近的敌人，伤害2
 // 每升一级增加一个连锁目标，最多5个
 BUFF.register({
     id: 'lightning_chain',
@@ -555,17 +429,104 @@ BUFF.register({
     category: 'attack',
     desc: (G) => {
         const lv = (G.player.lightningChainLevel || 0) + 1;
-        return '击杀时连锁' + lv + '个敌人，闪电伤害2';
+        return '击杀时连锁' + lv + '个敌人，闪电伤害' + (G.player.lightningOverload ? 3 : 2);
     },
     rarity: 'legendary',
     condition: (G) => {
-        const def = CRAFT.get(G.player.aircraftType);
-        // 激光战机：不需要穿透弹前置，直接可选
-        if (def && def.isLaser) return (G.player.lightningChainLevel || 0) < 5;
-        return G.player.pierceLevel >= 3 && (G.player.lightningChainLevel || 0) < 5;
+        return (G.player.lightningChainLevel || 0) < 5;
     },
     onInit(G) { G.player.lightningChainLevel = 0; },
     apply(G) {
         G.player.lightningChainLevel = (G.player.lightningChainLevel || 0) + 1;
     }
 });
+
+BUFF.register({
+    id: 'cryo_rounds', name: '冰霜弹', category: 'attack', rarity: 'rare', color: '#80eaff',
+    desc: '主武器命中敌机3次冻结1秒；对Boss无效',
+    condition: G => !G.player.cryoRounds && !(CRAFT.get(G.player.aircraftType) || {}).isLaser && G.player.aircraftType !== 'mozi',
+    onInit(G) { G.player.cryoRounds = false; },
+    apply(G) { G.player.cryoRounds = true; }
+});
+
+BUFF.register({
+    id: 'cryo_shatter', name: '碎冰弹', category: 'attack', rarity: 'epic', color: '#80eaff',
+    desc: '主武器击中冻结敌机时碎冰，额外造成2点伤害',
+    condition: G => G.player.cryoRounds && !G.player.cryoShatter,
+    onInit(G) { G.player.cryoShatter = false; },
+    apply(G) { G.player.cryoShatter = true; }
+});
+
+BUFF.register({
+    id: 'firepower_core', name: '火力核心', category: 'attack', rarity: 'epic', color: '#ffad55',
+    desc: '需要速射与双发：所有主武器子弹伤害+1',
+    condition: G => (G.player._rapidFireCount || 0) > 0 && G.player.doubleShot && !G.player.firepowerCore && ['default', 'skysovereign'].includes(G.player.aircraftType),
+    onInit(G) { G.player.firepowerCore = false; },
+    apply(G) { G.player.firepowerCore = true; G.player.bulletDamage += 1; }
+});
+
+BUFF.register({
+    id: 'cryo_quickfreeze', name: '急冻弹', category: 'attack', rarity: 'rare', color: '#80eaff',
+    desc: '冰霜弹只需命中2次即可冻结敌机',
+    condition: G => G.player.cryoRounds && !G.player.cryoQuickfreeze,
+    onInit(G) { G.player.cryoQuickfreeze = false; },
+    apply(G) { G.player.cryoQuickfreeze = true; }
+});
+BUFF.register({
+    id: 'cryo_longfreeze', name: '深度冻结', category: 'attack', rarity: 'rare', color: '#80eaff',
+    desc: '冰霜弹的冻结时间增加至2秒',
+    condition: G => G.player.cryoRounds && !G.player.cryoLongfreeze,
+    onInit(G) { G.player.cryoLongfreeze = false; },
+    apply(G) { G.player.cryoLongfreeze = true; }
+});
+BUFF.register({
+    id: 'lightning_overload', name: '雷霆增幅', category: 'attack', rarity: 'rare', color: '#aabaff',
+    desc: '闪电连锁每次跳跃额外造成1点伤害',
+    condition: G => G.player.lightningChainLevel > 0 && !G.player.lightningOverload,
+    onInit(G) { G.player.lightningOverload = false; },
+    apply(G) { G.player.lightningOverload = true; }
+});
+BUFF.register({
+    id: 'lightning_charge', name: '雷霆充能', category: 'attack', rarity: 'rare', color: '#aabaff',
+    desc: '拥有闪电连锁时，每次击杀额外获得2点超频能量',
+    condition: G => G.player.lightningChainLevel > 0 && !G.player.lightningCharge,
+    onInit(G) { G.player.lightningCharge = false; },
+    apply(G) { G.player.lightningCharge = true; }
+});
+BUFF.register({
+    id: 'fire_surge', name: '超频弹幕', category: 'attack', rarity: 'rare', color: '#ffad55',
+    desc: '需要速射：超频时主武器射击间隔再缩短20%',
+    condition: G => (G.player._rapidFireCount || 0) > 0 && !G.player.fireSurge && ['default', 'skysovereign'].includes(G.player.aircraftType),
+    onInit(G) { G.player.fireSurge = false; },
+    apply(G) { G.player.fireSurge = true; }
+});
+
+// 航线仅在无尽模式的分岔点出现，不进入普通词条池。
+BUFF.register({ id: 'route_elite', name: '精英航线', rarity: 'legendary',
+    desc: '20秒内敌人更密集、更强；完成后获得一次词条选择',
+    condition: () => false,
+    apply(G) { G.game.eliteUntil = gameNow() + 20000; }
+});
+BUFF.register({ id: 'route_supply', name: '补给航线', rarity: 'rare',
+    desc: '立即恢复1点生命（最多10点）', condition: () => false,
+    apply(G) { G.game.life = Math.min(10, G.game.life + 1); }
+});
+BUFF.register({ id: 'route_charge', name: '充能航线', rarity: 'epic',
+    desc: '立即获得50点超频能量', condition: () => false,
+    apply(G) { G.player.energy = Math.min(OVERCLOCK_MAX_ENERGY, G.player.energy + 50); }
+});
+
+function updateRoute() {
+    const gm = G.game;
+    if (gm.gameMode !== 'endless' || gm.buffChooseMode || gm.isGameOver) return;
+    if (gm.eliteUntil && gameNow() >= gm.eliteUntil) {
+        gm.eliteUntil = 0;
+        gm.routeReward = true;
+        startBuffChoice(true);
+        gm.routeReward = false;
+    } else if (!gm.eliteUntil && !G.bossSpawned && !G.bossWarning && gm.score >= gm.routeNextScore) {
+        gm.routeChoice = true;
+        gm.buffChooseMode = true;
+        gm.buffChoices = ['route_elite', 'route_supply', 'route_charge'];
+    }
+}
